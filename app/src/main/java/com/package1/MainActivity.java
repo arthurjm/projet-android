@@ -18,16 +18,26 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_menu);
 
+        //initialisation des images et bitmaps
         final ImageView imageSvg = (ImageView) findViewById(R.id.imageViewSvg);
         final ImageView imageChanged = (ImageView) findViewById(R.id.imageViewChange);
-        Drawable draw = ContextCompat.getDrawable((this),R.drawable.image3);
-        final Bitmap bitmapImageOg = ((BitmapDrawable) draw).getBitmap();
-        final Bitmap bitmapImageChanged = bitmapImageOg.copy(bitmapImageOg.getConfig(),true);
-        final Bitmap bitmapImageSvg = bitmapImageOg.copy(bitmapImageOg.getConfig(),true);
+        Drawable draw = ContextCompat.getDrawable((this),R.drawable.image1);
+        final Bitmap bitmapImageOg1 = ((BitmapDrawable) draw).getBitmap();
+        draw = ContextCompat.getDrawable((this),R.drawable.image2);
+        final Bitmap bitmapImageOg2 = ((BitmapDrawable) draw).getBitmap();
+        draw = ContextCompat.getDrawable((this),R.drawable.image3);
+        final Bitmap bitmapImageOg3 = ((BitmapDrawable) draw).getBitmap();
 
+        final Bitmap bitmapImageChanged = bitmapImageOg1.copy(bitmapImageOg1.getConfig(),true);
+        final Bitmap bitmapImageSvg = bitmapImageOg1.copy(bitmapImageOg1.getConfig(),true);
 
+        //initialisation des boutons
         final Button buttonMenu = (Button) findViewById(R.id.buttonBackMenu);
-        final Button buttonReset = (Button) findViewById(R.id.buttonReset);
+
+        final Button buttonImg1 = (Button) findViewById(R.id.buttonImage1);
+        final Button buttonImg2 = (Button) findViewById(R.id.buttonImage2);
+        final Button buttonImg3 = (Button) findViewById(R.id.buttonImage3);
+
         final Button buttonActionGrey = (Button) findViewById(R.id.buttonActionGrey);
         final Button buttonActionPartialDesaturation = (Button) findViewById(R.id.buttonActionDesaturation);
         final Button buttonActionColorization = (Button) findViewById(R.id.buttonActionColorization);
@@ -37,19 +47,23 @@ public class MainActivity extends AppCompatActivity {
         final Button buttonActionEqHistogram = (Button) findViewById(R.id.buttonActionEq);
         final Button buttonActionLinearExtension = (Button) findViewById(R.id.buttonActionExtension);
 
+        //initialisation des effets
         final ColorManipulation colorManipulation = new ColorManipulation();
         final Histogram histogram = new Histogram();
         final Convolution rightBlur = new Convolution((new int[][]{{0},{0},{0},{0},{0},{0},{0},{1},{1},{1},{1},{1},{1},{1},{1}}),15,1);
         final Convolution convolution = new Convolution(7);
         final Convolution convolutionGauss = new Convolution();
 
-        imageSvg.setImageBitmap(bitmapImageOg);
+        //initialisation des elements visibles
+        imageSvg.setImageBitmap(bitmapImageOg1);
         imageChanged.setImageBitmap(bitmapImageChanged);
         imageSvg.setVisibility(View.INVISIBLE);
         imageChanged.setVisibility(View.INVISIBLE);
         buttonMenu.setVisibility(View.INVISIBLE);
-        buttonReset.setVisibility(View.INVISIBLE);
 
+        buttonImg1.setVisibility(View.VISIBLE);
+        buttonImg2.setVisibility(View.VISIBLE);
+        buttonImg3.setVisibility(View.VISIBLE);
         buttonActionGrey.setVisibility(View.VISIBLE);
         buttonActionPartialDesaturation.setVisibility(View.VISIBLE);
         buttonActionColorization.setVisibility(View.VISIBLE);
@@ -59,14 +73,14 @@ public class MainActivity extends AppCompatActivity {
         buttonActionEqHistogram.setVisibility(View.VISIBLE);
         buttonActionLinearExtension.setVisibility(View.VISIBLE);
 
+
+        //debut de la gestion des interactions avec les boutons
         buttonActionGrey.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 imageSvg.setVisibility(View.VISIBLE);
                 imageChanged.setVisibility(View.VISIBLE);
                 buttonMenu.setVisibility(View.VISIBLE);
-                buttonReset.setVisibility(View.VISIBLE);
-
 
                 int[] tabpix = new int[bitmapImageChanged.getHeight()*bitmapImageChanged.getWidth()];
                 bitmapImageChanged.getPixels(tabpix,0,bitmapImageChanged.getWidth(),0,0,bitmapImageChanged.getWidth(),bitmapImageChanged.getHeight());
@@ -84,6 +98,9 @@ public class MainActivity extends AppCompatActivity {
                 buttonActionFlouLateral.setVisibility(View.INVISIBLE);
                 buttonActionEqHistogram.setVisibility(View.INVISIBLE);
                 buttonActionLinearExtension.setVisibility(View.INVISIBLE);
+                buttonImg1.setVisibility(View.INVISIBLE);
+                buttonImg2.setVisibility(View.INVISIBLE);
+                buttonImg3.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -93,8 +110,6 @@ public class MainActivity extends AppCompatActivity {
                 imageSvg.setVisibility(View.VISIBLE);
                 imageChanged.setVisibility(View.VISIBLE);
                 buttonMenu.setVisibility(View.VISIBLE);
-                buttonReset.setVisibility(View.VISIBLE);
-
 
                 int[] tabpix = new int[bitmapImageChanged.getHeight()*bitmapImageChanged.getWidth()];
                 bitmapImageChanged.getPixels(tabpix,0,bitmapImageChanged.getWidth(),0,0,bitmapImageChanged.getWidth(),bitmapImageChanged.getHeight());
@@ -112,6 +127,9 @@ public class MainActivity extends AppCompatActivity {
                 buttonActionFlouLateral.setVisibility(View.INVISIBLE);
                 buttonActionEqHistogram.setVisibility(View.INVISIBLE);
                 buttonActionLinearExtension.setVisibility(View.INVISIBLE);
+                buttonImg1.setVisibility(View.INVISIBLE);
+                buttonImg2.setVisibility(View.INVISIBLE);
+                buttonImg3.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -121,8 +139,6 @@ public class MainActivity extends AppCompatActivity {
                 imageSvg.setVisibility(View.VISIBLE);
                 imageChanged.setVisibility(View.VISIBLE);
                 buttonMenu.setVisibility(View.VISIBLE);
-                buttonReset.setVisibility(View.VISIBLE);
-
 
                 int[] tabpix = new int[bitmapImageChanged.getHeight()*bitmapImageChanged.getWidth()];
                 bitmapImageChanged.getPixels(tabpix,0,bitmapImageChanged.getWidth(),0,0,bitmapImageChanged.getWidth(),bitmapImageChanged.getHeight());
@@ -140,6 +156,9 @@ public class MainActivity extends AppCompatActivity {
                 buttonActionFlouLateral.setVisibility(View.INVISIBLE);
                 buttonActionEqHistogram.setVisibility(View.INVISIBLE);
                 buttonActionLinearExtension.setVisibility(View.INVISIBLE);
+                buttonImg1.setVisibility(View.INVISIBLE);
+                buttonImg2.setVisibility(View.INVISIBLE);
+                buttonImg3.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -149,8 +168,6 @@ public class MainActivity extends AppCompatActivity {
                 imageSvg.setVisibility(View.VISIBLE);
                 imageChanged.setVisibility(View.VISIBLE);
                 buttonMenu.setVisibility(View.VISIBLE);
-                buttonReset.setVisibility(View.VISIBLE);
-
 
                 int[] tabpix = new int[bitmapImageChanged.getHeight()*bitmapImageChanged.getWidth()];
                 bitmapImageChanged.getPixels(tabpix,0,bitmapImageChanged.getWidth(),0,0,bitmapImageChanged.getWidth(),bitmapImageChanged.getHeight());
@@ -168,6 +185,9 @@ public class MainActivity extends AppCompatActivity {
                 buttonActionFlouLateral.setVisibility(View.INVISIBLE);
                 buttonActionEqHistogram.setVisibility(View.INVISIBLE);
                 buttonActionLinearExtension.setVisibility(View.INVISIBLE);
+                buttonImg1.setVisibility(View.INVISIBLE);
+                buttonImg2.setVisibility(View.INVISIBLE);
+                buttonImg3.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -177,8 +197,6 @@ public class MainActivity extends AppCompatActivity {
                 imageSvg.setVisibility(View.VISIBLE);
                 imageChanged.setVisibility(View.VISIBLE);
                 buttonMenu.setVisibility(View.VISIBLE);
-                buttonReset.setVisibility(View.VISIBLE);
-
 
                 int[] tabpix = new int[bitmapImageChanged.getHeight()*bitmapImageChanged.getWidth()];
                 bitmapImageChanged.getPixels(tabpix,0,bitmapImageChanged.getWidth(),0,0,bitmapImageChanged.getWidth(),bitmapImageChanged.getHeight());
@@ -196,6 +214,9 @@ public class MainActivity extends AppCompatActivity {
                 buttonActionFlouLateral.setVisibility(View.INVISIBLE);
                 buttonActionEqHistogram.setVisibility(View.INVISIBLE);
                 buttonActionLinearExtension.setVisibility(View.INVISIBLE);
+                buttonImg1.setVisibility(View.INVISIBLE);
+                buttonImg2.setVisibility(View.INVISIBLE);
+                buttonImg3.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -205,8 +226,6 @@ public class MainActivity extends AppCompatActivity {
                 imageSvg.setVisibility(View.VISIBLE);
                 imageChanged.setVisibility(View.VISIBLE);
                 buttonMenu.setVisibility(View.VISIBLE);
-                buttonReset.setVisibility(View.VISIBLE);
-
 
                 int[] tabpix = new int[bitmapImageChanged.getHeight()*bitmapImageChanged.getWidth()];
                 bitmapImageChanged.getPixels(tabpix,0,bitmapImageChanged.getWidth(),0,0,bitmapImageChanged.getWidth(),bitmapImageChanged.getHeight());
@@ -224,6 +243,9 @@ public class MainActivity extends AppCompatActivity {
                 buttonActionFlouLateral.setVisibility(View.INVISIBLE);
                 buttonActionEqHistogram.setVisibility(View.INVISIBLE);
                 buttonActionLinearExtension.setVisibility(View.INVISIBLE);
+                buttonImg1.setVisibility(View.INVISIBLE);
+                buttonImg2.setVisibility(View.INVISIBLE);
+                buttonImg3.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -233,8 +255,6 @@ public class MainActivity extends AppCompatActivity {
                 imageSvg.setVisibility(View.VISIBLE);
                 imageChanged.setVisibility(View.VISIBLE);
                 buttonMenu.setVisibility(View.VISIBLE);
-                buttonReset.setVisibility(View.VISIBLE);
-
 
                 int[] tabpix = new int[bitmapImageChanged.getHeight()*bitmapImageChanged.getWidth()];
                 bitmapImageChanged.getPixels(tabpix,0,bitmapImageChanged.getWidth(),0,0,bitmapImageChanged.getWidth(),bitmapImageChanged.getHeight());
@@ -252,6 +272,9 @@ public class MainActivity extends AppCompatActivity {
                 buttonActionFlouLateral.setVisibility(View.INVISIBLE);
                 buttonActionEqHistogram.setVisibility(View.INVISIBLE);
                 buttonActionLinearExtension.setVisibility(View.INVISIBLE);
+                buttonImg1.setVisibility(View.INVISIBLE);
+                buttonImg2.setVisibility(View.INVISIBLE);
+                buttonImg3.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -261,8 +284,6 @@ public class MainActivity extends AppCompatActivity {
                 imageSvg.setVisibility(View.VISIBLE);
                 imageChanged.setVisibility(View.VISIBLE);
                 buttonMenu.setVisibility(View.VISIBLE);
-                buttonReset.setVisibility(View.VISIBLE);
-
 
                 int[] tabpix = new int[bitmapImageChanged.getHeight()*bitmapImageChanged.getWidth()];
                 bitmapImageChanged.getPixels(tabpix,0,bitmapImageChanged.getWidth(),0,0,bitmapImageChanged.getWidth(),bitmapImageChanged.getHeight());
@@ -280,6 +301,9 @@ public class MainActivity extends AppCompatActivity {
                 buttonActionFlouLateral.setVisibility(View.INVISIBLE);
                 buttonActionEqHistogram.setVisibility(View.INVISIBLE);
                 buttonActionLinearExtension.setVisibility(View.INVISIBLE);
+                buttonImg1.setVisibility(View.INVISIBLE);
+                buttonImg2.setVisibility(View.INVISIBLE);
+                buttonImg3.setVisibility(View.INVISIBLE);
             }
         }));
 
@@ -289,7 +313,6 @@ public class MainActivity extends AppCompatActivity {
                 imageSvg.setVisibility(View.INVISIBLE);
                 imageChanged.setVisibility(View.INVISIBLE);
                 buttonMenu.setVisibility(View.INVISIBLE);
-                buttonReset.setVisibility(View.INVISIBLE);
 
                 buttonActionGrey.setVisibility(View.VISIBLE);
                 buttonActionPartialDesaturation.setVisibility(View.VISIBLE);
@@ -299,21 +322,26 @@ public class MainActivity extends AppCompatActivity {
                 buttonActionFlouLateral.setVisibility(View.VISIBLE);
                 buttonActionEqHistogram.setVisibility(View.VISIBLE);
                 buttonActionLinearExtension.setVisibility(View.VISIBLE);
+                buttonImg1.setVisibility(View.VISIBLE);
+                buttonImg2.setVisibility(View.VISIBLE);
+                buttonImg3.setVisibility(View.VISIBLE);
             }
         });
 
-        buttonReset.setOnClickListener(new View.OnClickListener() {
+        buttonImg1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 imageSvg.setVisibility(View.INVISIBLE);
                 imageChanged.setVisibility(View.INVISIBLE);
                 buttonMenu.setVisibility(View.INVISIBLE);
-                buttonReset.setVisibility(View.INVISIBLE);
 
-                int[] tabpix = new int[bitmapImageOg.getHeight()*bitmapImageOg.getWidth()];
-                bitmapImageOg.getPixels(tabpix,0,bitmapImageChanged.getWidth(),0,0,bitmapImageChanged.getWidth(),bitmapImageChanged.getHeight());
-                bitmapImageSvg.setPixels(tabpix,0,bitmapImageChanged.getWidth(),0,0,bitmapImageChanged.getWidth(),bitmapImageChanged.getHeight());
-                bitmapImageChanged.setPixels(tabpix,0,bitmapImageOg.getWidth(),0,0,bitmapImageOg.getWidth(),bitmapImageOg.getHeight());
+                int[] tabpix = new int[bitmapImageOg1.getHeight()*bitmapImageOg1.getWidth()];
+                bitmapImageOg1.getPixels(tabpix,0,bitmapImageOg1.getWidth(),0,0,bitmapImageOg1.getWidth(),bitmapImageOg1.getHeight());
+                bitmapImageSvg.setPixels(tabpix,0,bitmapImageOg1.getWidth(),0,0,bitmapImageOg1.getWidth(),bitmapImageOg1.getHeight());
+                bitmapImageChanged.setPixels(tabpix,0,bitmapImageOg1.getWidth(),0,0,bitmapImageOg1.getWidth(),bitmapImageOg1.getHeight());
+
+                imageSvg.setImageBitmap(bitmapImageSvg);
+                imageChanged.setImageBitmap(bitmapImageChanged);
 
                 buttonActionGrey.setVisibility(View.VISIBLE);
                 buttonActionPartialDesaturation.setVisibility(View.VISIBLE);
@@ -323,7 +351,70 @@ public class MainActivity extends AppCompatActivity {
                 buttonActionFlouLateral.setVisibility(View.VISIBLE);
                 buttonActionEqHistogram.setVisibility(View.VISIBLE);
                 buttonActionLinearExtension.setVisibility(View.VISIBLE);
+                buttonImg1.setVisibility(View.VISIBLE);
+                buttonImg2.setVisibility(View.VISIBLE);
+                buttonImg3.setVisibility(View.VISIBLE);
             }
         });
+
+        buttonImg2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imageSvg.setVisibility(View.INVISIBLE);
+                imageChanged.setVisibility(View.INVISIBLE);
+                buttonMenu.setVisibility(View.INVISIBLE);
+
+                int[] tabpix = new int[bitmapImageOg2.getHeight()*bitmapImageOg2.getWidth()];
+                bitmapImageOg2.getPixels(tabpix,0,bitmapImageOg2.getWidth(),0,0,bitmapImageOg2.getWidth(),bitmapImageOg2.getHeight());
+                bitmapImageSvg.setPixels(tabpix,0,bitmapImageOg2.getWidth(),0,0,bitmapImageOg2.getWidth(),bitmapImageOg2.getHeight());
+                bitmapImageChanged.setPixels(tabpix,0,bitmapImageOg2.getWidth(),0,0,bitmapImageOg2.getWidth(),bitmapImageOg2.getHeight());
+
+                imageSvg.setImageBitmap(bitmapImageSvg);
+                imageChanged.setImageBitmap(bitmapImageChanged);
+
+                buttonActionGrey.setVisibility(View.VISIBLE);
+                buttonActionPartialDesaturation.setVisibility(View.VISIBLE);
+                buttonActionColorization.setVisibility(View.VISIBLE);
+                buttonActionConvolution.setVisibility(View.VISIBLE);
+                buttonActionConvolutionGauss.setVisibility(View.VISIBLE);
+                buttonActionFlouLateral.setVisibility(View.VISIBLE);
+                buttonActionEqHistogram.setVisibility(View.VISIBLE);
+                buttonActionLinearExtension.setVisibility(View.VISIBLE);
+                buttonImg1.setVisibility(View.VISIBLE);
+                buttonImg2.setVisibility(View.VISIBLE);
+                buttonImg3.setVisibility(View.VISIBLE);
+            }
+        });
+
+        buttonImg3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imageSvg.setVisibility(View.INVISIBLE);
+                imageChanged.setVisibility(View.INVISIBLE);
+                buttonMenu.setVisibility(View.INVISIBLE);
+
+                int[] tabpix = new int[bitmapImageOg3.getHeight()*bitmapImageOg3.getWidth()];
+                bitmapImageOg3.getPixels(tabpix,0,bitmapImageOg3.getWidth(),0,0,bitmapImageOg3.getWidth(),bitmapImageOg3.getHeight());
+                bitmapImageSvg.setPixels(tabpix,0,bitmapImageOg3.getWidth(),0,0,bitmapImageOg3.getWidth(),bitmapImageOg3.getHeight());
+                bitmapImageChanged.setPixels(tabpix,0,bitmapImageOg3.getWidth(),0,0,bitmapImageOg3.getWidth(),bitmapImageOg3.getHeight());
+
+                imageSvg.setImageBitmap(bitmapImageSvg);
+                imageChanged.setImageBitmap(bitmapImageChanged);
+
+                buttonActionGrey.setVisibility(View.VISIBLE);
+                buttonActionPartialDesaturation.setVisibility(View.VISIBLE);
+                buttonActionColorization.setVisibility(View.VISIBLE);
+                buttonActionConvolution.setVisibility(View.VISIBLE);
+                buttonActionConvolutionGauss.setVisibility(View.VISIBLE);
+                buttonActionFlouLateral.setVisibility(View.VISIBLE);
+                buttonActionEqHistogram.setVisibility(View.VISIBLE);
+                buttonActionLinearExtension.setVisibility(View.VISIBLE);
+                buttonImg1.setVisibility(View.VISIBLE);
+                buttonImg2.setVisibility(View.VISIBLE);
+                buttonImg3.setVisibility(View.VISIBLE);
+            }
+        });
+
+        //fin de la gestion des interactions avec les boutons
     }
 }

@@ -2,7 +2,6 @@ package com.package1;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.util.Log;
 
 import java.util.Random;
 
@@ -12,7 +11,6 @@ public class ColorManipulation {
 
     //Methode permettant le passage d'une image couleur à une image en nuances de gris
     public Bitmap convertImageGreyScale(Bitmap original){
-        Log.e("temp","debut");
         int width = original.getWidth();
         int height = original.getHeight();
         Bitmap res = Bitmap.createBitmap(width,height,original.getConfig());
@@ -35,7 +33,6 @@ public class ColorManipulation {
             }
         }
         res.setPixels(tabPixels,0,width,0,0,width,height);
-        Log.e("temp","fin");
         return res;
     }
 
@@ -43,7 +40,6 @@ public class ColorManipulation {
         par rapport à des seuils (un pour chaque canal RGB)
      */
     public Bitmap convertImageSelectiveDesaturation(Bitmap original,int color, int seuilR, int seuilG, int seuilB){
-        Log.e("temp","debut");
         int width = original.getWidth();
         int height = original.getHeight();
         Bitmap res = Bitmap.createBitmap(width,height,original.getConfig());
@@ -73,7 +69,6 @@ public class ColorManipulation {
             }
         }
         res.setPixels(tabPixels,0,width,0,0,width,height);
-        Log.e("temp","debut");
         return res;
     }
 
@@ -81,7 +76,6 @@ public class ColorManipulation {
 
 
    public Bitmap convertImageColorization(Bitmap original){
-       Log.e("temp","debut");
        int width = original.getWidth();
        int height = original.getHeight();
        Bitmap res = Bitmap.createBitmap(width,height,original.getConfig());
@@ -104,7 +98,6 @@ public class ColorManipulation {
            }
        }
        res.setPixels(tabPixels,0,width,0,0,width,height);
-       Log.e("temp","debut");
        return res;
     }
 

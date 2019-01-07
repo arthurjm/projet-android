@@ -2,7 +2,6 @@ package com.package1;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.util.Log;
 
 
 public class Histogram {
@@ -57,7 +56,8 @@ public class Histogram {
     }
 
     // Version de création d'une LUT pour egaliser un histogramme en commencant par les valeurs les plus faibles
-    private void histogramEqLUTLeft() {
+    //non utilisé, voir rapport
+    /*private void histogramEqLUTLeft() {
         int average = count / 256;
         int tempCount = 0, nextValue = 0;
         for (int i = 0; i < 256; i++) {
@@ -71,9 +71,9 @@ public class Histogram {
                 tempCount = 0;
             }
         }
-    }
+    }*/
     // Version de création d'une LUT pour egaliser un histogramme en commencant par les valeurs les plus grandes
-   /* private void histogramEqLUTRight() {
+    private void histogramEqLUTRight() {
         int average = count / 256;
         int tempCount = 0, nextValue = 255;
         for (int i = 0; i < 256; i++) {
@@ -87,12 +87,11 @@ public class Histogram {
                 tempCount = 0;
             }
         }
-    }*/
+    }
 
     public Bitmap applicationEqHistogram(Bitmap original){
-        Log.e("temp", "debut");
         histogramSetup(original);
-        histogramEqLUTLeft();
+        histogramEqLUTRight();
         int width = original.getWidth();
         int height = original.getHeight();
         Bitmap res = Bitmap.createBitmap(width,height,original.getConfig());
@@ -113,12 +112,10 @@ public class Histogram {
             }
         }
         res.setPixels(tabPixels,0,width,0,0,width,height);
-        Log.e("temp", "fin");
         return res;
     }
 
     public Bitmap applicationLinearExtension(Bitmap original){
-        Log.e("temp", "debut");
         histogramSetup(original);
         linearExtensionLUT();
         int width = original.getWidth();
@@ -141,7 +138,6 @@ public class Histogram {
             }
         }
         res.setPixels(tabPixels,0,width,0,0,width,height);
-        Log.e("temp","fin");
         return res;
     }
 

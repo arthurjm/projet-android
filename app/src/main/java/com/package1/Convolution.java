@@ -2,11 +2,7 @@ package com.package1;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.util.Log;
 
-/**
- * Created by ekhatilefran on 09/11/18.
- */
 
 public class Convolution {
     private int pxHeight; //taille de la convolution
@@ -91,7 +87,6 @@ public class Convolution {
     accessibles en respectant les poids du masque).
      */
     public Bitmap applicationConvolution(Bitmap original){
-        Log.e("temp", "debut");
         int width = original.getWidth();
         int height = original.getHeight();
         Bitmap res = Bitmap.createBitmap(width,height,original.getConfig());
@@ -159,7 +154,6 @@ public class Convolution {
             }
         }
         res.setPixels(tabPixels,0,width,0,0,width,height);
-        Log.e("temp", "fin");
         return res;
     }
 }
