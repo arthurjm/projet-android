@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
         final ImageView imageSvg = (ImageView) findViewById(R.id.imageViewSvg);
         final ImageView imageChanged = (ImageView) findViewById(R.id.imageViewChange);
-        Drawable draw = ContextCompat.getDrawable((this),R.drawable.image2);
+        Drawable draw = ContextCompat.getDrawable((this),R.drawable.image3);
         final Bitmap bitmapImageOg = ((BitmapDrawable) draw).getBitmap();
         final Bitmap bitmapImageChanged = bitmapImageOg.copy(bitmapImageOg.getConfig(),true);
         final Bitmap bitmapImageSvg = bitmapImageOg.copy(bitmapImageOg.getConfig(),true);
@@ -33,11 +33,13 @@ public class MainActivity extends AppCompatActivity {
         final Button buttonActionColorization = (Button) findViewById(R.id.buttonActionColorization);
         final Button buttonActionConvolution = (Button) findViewById(R.id.buttonActionConvo);
         final Button buttonActionConvolutionGauss = (Button) findViewById(R.id.buttonActionGauss);
+        final Button buttonActionFlouLateral = (Button) findViewById(R.id.buttonActionBlur);
         final Button buttonActionEqHistogram = (Button) findViewById(R.id.buttonActionEq);
         final Button buttonActionLinearExtension = (Button) findViewById(R.id.buttonActionExtension);
 
         final ColorManipulation colorManipulation = new ColorManipulation();
         final Histogram histogram = new Histogram();
+        final Convolution rightBlur = new Convolution((new int[][]{{0},{0},{0},{0},{0},{0},{0},{1},{1},{1},{1},{1},{1},{1},{1}}),15,1);
         final Convolution convolution = new Convolution(7);
         final Convolution convolutionGauss = new Convolution();
 
@@ -53,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         buttonActionColorization.setVisibility(View.VISIBLE);
         buttonActionConvolution.setVisibility(View.VISIBLE);
         buttonActionConvolutionGauss.setVisibility(View.VISIBLE);
+        buttonActionFlouLateral.setVisibility(View.VISIBLE);
         buttonActionEqHistogram.setVisibility(View.VISIBLE);
         buttonActionLinearExtension.setVisibility(View.VISIBLE);
 
@@ -78,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
                 buttonActionColorization.setVisibility(View.INVISIBLE);
                 buttonActionConvolution.setVisibility(View.INVISIBLE);
                 buttonActionConvolutionGauss.setVisibility(View.INVISIBLE);
+                buttonActionFlouLateral.setVisibility(View.INVISIBLE);
                 buttonActionEqHistogram.setVisibility(View.INVISIBLE);
                 buttonActionLinearExtension.setVisibility(View.INVISIBLE);
             }
@@ -105,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
                 buttonActionColorization.setVisibility(View.INVISIBLE);
                 buttonActionConvolution.setVisibility(View.INVISIBLE);
                 buttonActionConvolutionGauss.setVisibility(View.INVISIBLE);
+                buttonActionFlouLateral.setVisibility(View.INVISIBLE);
                 buttonActionEqHistogram.setVisibility(View.INVISIBLE);
                 buttonActionLinearExtension.setVisibility(View.INVISIBLE);
             }
@@ -132,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
                 buttonActionColorization.setVisibility(View.INVISIBLE);
                 buttonActionConvolution.setVisibility(View.INVISIBLE);
                 buttonActionConvolutionGauss.setVisibility(View.INVISIBLE);
+                buttonActionFlouLateral.setVisibility(View.INVISIBLE);
                 buttonActionEqHistogram.setVisibility(View.INVISIBLE);
                 buttonActionLinearExtension.setVisibility(View.INVISIBLE);
             }
@@ -159,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
                 buttonActionColorization.setVisibility(View.INVISIBLE);
                 buttonActionConvolution.setVisibility(View.INVISIBLE);
                 buttonActionConvolutionGauss.setVisibility(View.INVISIBLE);
+                buttonActionFlouLateral.setVisibility(View.INVISIBLE);
                 buttonActionEqHistogram.setVisibility(View.INVISIBLE);
                 buttonActionLinearExtension.setVisibility(View.INVISIBLE);
             }
@@ -186,6 +193,35 @@ public class MainActivity extends AppCompatActivity {
                 buttonActionColorization.setVisibility(View.INVISIBLE);
                 buttonActionConvolution.setVisibility(View.INVISIBLE);
                 buttonActionConvolutionGauss.setVisibility(View.INVISIBLE);
+                buttonActionFlouLateral.setVisibility(View.INVISIBLE);
+                buttonActionEqHistogram.setVisibility(View.INVISIBLE);
+                buttonActionLinearExtension.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        buttonActionFlouLateral.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imageSvg.setVisibility(View.VISIBLE);
+                imageChanged.setVisibility(View.VISIBLE);
+                buttonMenu.setVisibility(View.VISIBLE);
+                buttonReset.setVisibility(View.VISIBLE);
+
+
+                int[] tabpix = new int[bitmapImageChanged.getHeight()*bitmapImageChanged.getWidth()];
+                bitmapImageChanged.getPixels(tabpix,0,bitmapImageChanged.getWidth(),0,0,bitmapImageChanged.getWidth(),bitmapImageChanged.getHeight());
+                bitmapImageSvg.setPixels(tabpix,0,bitmapImageChanged.getWidth(),0,0,bitmapImageChanged.getWidth(),bitmapImageChanged.getHeight());
+                rightBlur.applicationConvolution(bitmapImageChanged).getPixels(tabpix,0,bitmapImageChanged.getWidth(),0,0,bitmapImageChanged.getWidth(),bitmapImageChanged.getHeight());
+                bitmapImageChanged.setPixels(tabpix,0,bitmapImageChanged.getWidth(),0,0,bitmapImageChanged.getWidth(),bitmapImageChanged.getHeight());
+                imageSvg.setImageBitmap(bitmapImageSvg);
+                imageChanged.setImageBitmap(bitmapImageChanged);
+
+                buttonActionGrey.setVisibility(View.INVISIBLE);
+                buttonActionPartialDesaturation.setVisibility(View.INVISIBLE);
+                buttonActionColorization.setVisibility(View.INVISIBLE);
+                buttonActionConvolution.setVisibility(View.INVISIBLE);
+                buttonActionConvolutionGauss.setVisibility(View.INVISIBLE);
+                buttonActionFlouLateral.setVisibility(View.INVISIBLE);
                 buttonActionEqHistogram.setVisibility(View.INVISIBLE);
                 buttonActionLinearExtension.setVisibility(View.INVISIBLE);
             }
@@ -213,6 +249,7 @@ public class MainActivity extends AppCompatActivity {
                 buttonActionColorization.setVisibility(View.INVISIBLE);
                 buttonActionConvolution.setVisibility(View.INVISIBLE);
                 buttonActionConvolutionGauss.setVisibility(View.INVISIBLE);
+                buttonActionFlouLateral.setVisibility(View.INVISIBLE);
                 buttonActionEqHistogram.setVisibility(View.INVISIBLE);
                 buttonActionLinearExtension.setVisibility(View.INVISIBLE);
             }
@@ -240,6 +277,7 @@ public class MainActivity extends AppCompatActivity {
                 buttonActionColorization.setVisibility(View.INVISIBLE);
                 buttonActionConvolution.setVisibility(View.INVISIBLE);
                 buttonActionConvolutionGauss.setVisibility(View.INVISIBLE);
+                buttonActionFlouLateral.setVisibility(View.INVISIBLE);
                 buttonActionEqHistogram.setVisibility(View.INVISIBLE);
                 buttonActionLinearExtension.setVisibility(View.INVISIBLE);
             }
@@ -258,6 +296,7 @@ public class MainActivity extends AppCompatActivity {
                 buttonActionColorization.setVisibility(View.VISIBLE);
                 buttonActionConvolution.setVisibility(View.VISIBLE);
                 buttonActionConvolutionGauss.setVisibility(View.VISIBLE);
+                buttonActionFlouLateral.setVisibility(View.VISIBLE);
                 buttonActionEqHistogram.setVisibility(View.VISIBLE);
                 buttonActionLinearExtension.setVisibility(View.VISIBLE);
             }
@@ -281,6 +320,7 @@ public class MainActivity extends AppCompatActivity {
                 buttonActionColorization.setVisibility(View.VISIBLE);
                 buttonActionConvolution.setVisibility(View.VISIBLE);
                 buttonActionConvolutionGauss.setVisibility(View.VISIBLE);
+                buttonActionFlouLateral.setVisibility(View.VISIBLE);
                 buttonActionEqHistogram.setVisibility(View.VISIBLE);
                 buttonActionLinearExtension.setVisibility(View.VISIBLE);
             }

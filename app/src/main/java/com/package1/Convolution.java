@@ -2,16 +2,17 @@ package com.package1;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.util.Log;
 
 /**
  * Created by ekhatilefran on 09/11/18.
  */
 
 public class Convolution {
-    int pxHeight; //taille de la convolution
-    int pxWidth;
-    int[][] mask;
-    int weightTotal =0;
+    private int pxHeight; //taille de la convolution
+    private int pxWidth;
+    private int[][] mask;
+    private int weightTotal =0;
 
 
 
@@ -25,6 +26,9 @@ public class Convolution {
             for (int j=0; j < pxHeight; j++) {
                 weightTotal += tab[i][j];
             }
+        }
+        if (weightTotal==0){
+            weightTotal=1;
         }
     }
 
@@ -40,6 +44,19 @@ public class Convolution {
         mask = new int[newWidth][newWidth];
         for(int i = 0; i< pxWidth; i++){
             for (int j = 0; j< pxWidth; j++){
+                mask[i][j]=1;
+                weightTotal++;
+            }
+        }
+    }
+
+    //constructeur associant un masque de convolution moyenneur de hauteur et largeur diférentes
+    public Convolution(int newWidth, int newHeight){
+        pxWidth=newWidth;
+        pxHeight=newHeight;
+        mask = new int[newWidth][newHeight];
+        for(int i = 0; i< pxWidth; i++){
+            for (int j = 0; j< pxHeight; j++){
                 mask[i][j]=1;
                 weightTotal++;
             }
@@ -74,6 +91,7 @@ public class Convolution {
     accessibles en respectant les poids du masque).
      */
     public Bitmap applicationConvolution(Bitmap original){
+        Log.e("temp", "debut");
         int width = original.getWidth();
         int height = original.getHeight();
         Bitmap res = Bitmap.createBitmap(width,height,original.getConfig());
@@ -114,7 +132,6 @@ public class Convolution {
                     tempR=tempR/weightTotal;
                     tempG=tempG/weightTotal;
                     tempB=tempB/weightTotal;
-                    tabPixels[index]=Color.rgb(tempR,tempG,tempB);
                 }else { //sinon, on applique le traitement d'une bordure
                     localWeight = 0;
                     for (int j=0; j < pxHeight; j++) {
@@ -138,9 +155,11 @@ public class Convolution {
                         tempB=tempB/localWeight;
                     }
                 }
+                tabPixels[index]=Color.rgb(tempR,tempG,tempB);
             }
         }
         res.setPixels(tabPixels,0,width,0,0,width,height);
+        Log.e("temp", "fin");
         return res;
     }
 }
