@@ -11,6 +11,20 @@ public class Histogram {
     private int LUT[] = new int[256];
     private int min, max, count;
 
+    /**
+     * Tableau de pixels represantant les pixels de l'image
+     */
+    private int[] tabPixels;
+    /**
+     * Composantes R, G, B
+     */
+    private int R, G, B;
+
+    public void convert(int index) {
+        R = (tabPixels[index] >> 16) & 0xff;
+        G = (tabPixels[index] >> 8) & 0xff;
+        B = tabPixels[index] & 0xff;
+    }
 
     private void histogramSetup(Bitmap bitmap) {
         for (int i = 0; i < 256; i++) {
@@ -22,16 +36,14 @@ public class Histogram {
         max = -1;
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
-        int R, G, B, index, valueTemp;
-        int[] tabPixels = new int[width * height];
+        int index, valueTemp;
+        tabPixels = new int[width * height];
         float[] hsv = new float[3];
         bitmap.getPixels(tabPixels, 0, width, 0, 0, width, height);
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 index = y * width + x;
-                R = (tabPixels[index] >> 16) & 0xff;
-                G = (tabPixels[index] >> 8) & 0xff;
-                B = tabPixels[index] & 0xff;
+                convert(index);
                 Color.RGBToHSV(R, G, B, hsv);
                 valueTemp = (int) (255 * hsv[2]);
                 histogramValue[valueTemp]++;
@@ -45,7 +57,6 @@ public class Histogram {
             }
         }
     }
-
 
     private void linearExtensionLUT() {
         if (max != min) {
@@ -95,16 +106,14 @@ public class Histogram {
         int width = original.getWidth();
         int height = original.getHeight();
         Bitmap res = Bitmap.createBitmap(width, height, original.getConfig());
-        int R, G, B, index, valueTemp;
-        int[] tabPixels = new int[width * height];
+        int index, valueTemp;
+        tabPixels = new int[width * height];
         float[] hsv = new float[3];
         original.getPixels(tabPixels, 0, width, 0, 0, width, height);
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 index = y * width + x;
-                R = (tabPixels[index] >> 16) & 0xff;
-                G = (tabPixels[index] >> 8) & 0xff;
-                B = tabPixels[index] & 0xff;
+                convert(index);
                 Color.RGBToHSV(R, G, B, hsv);
                 valueTemp = (int) (255 * hsv[2]);
                 hsv[2] = (float) LUT[valueTemp] / 255;
@@ -121,16 +130,14 @@ public class Histogram {
         int width = original.getWidth();
         int height = original.getHeight();
         Bitmap res = Bitmap.createBitmap(width, height, original.getConfig());
-        int R, G, B, index, valueTemp;
-        int[] tabPixels = new int[width * height];
+        int index, valueTemp;
+        tabPixels = new int[width * height];
         float[] hsv = new float[3];
         original.getPixels(tabPixels, 0, width, 0, 0, width, height);
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 index = y * width + x;
-                R = (tabPixels[index] >> 16) & 0xff;
-                G = (tabPixels[index] >> 8) & 0xff;
-                B = tabPixels[index] & 0xff;
+                convert(index);
                 Color.RGBToHSV(R, G, B, hsv);
                 valueTemp = (int) (255 * hsv[2]);
                 hsv[2] = (float) LUT[valueTemp] / 255;

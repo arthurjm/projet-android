@@ -91,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
         imageChanged.setImageBitmap(bitmapImageChanged);
     }
 
-
     public void setTabPix(int[] tabpix) {
         this.tabpix = tabpix;
     }

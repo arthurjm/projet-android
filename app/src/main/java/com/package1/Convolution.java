@@ -10,7 +10,6 @@ public class Convolution {
     private int[][] mask;
     private int weightTotal = 0;
 
-
     //constructeur associant un masque de convolution (tab) de hauteur et largeur différente
     public Convolution(int[][] tab, int newWidth, int newHeight) {
         pxHeight = newHeight;
@@ -34,18 +33,10 @@ public class Convolution {
 
     //constructeur associant un masque de convolution moyenneur de hauteur et largeur identique
     public Convolution(int newWidth) {
-        pxWidth = newWidth;
-        pxHeight = newWidth;
-        mask = new int[newWidth][newWidth];
-        for (int i = 0; i < pxWidth; i++) {
-            for (int j = 0; j < pxWidth; j++) {
-                mask[i][j] = 1;
-                weightTotal++;
-            }
-        }
+        this(newWidth, newWidth);
     }
 
-    //constructeur associant un masque de convolution moyenneur de hauteur et largeur diférentes
+    //constructeur associant un masque de convolution moyenneur de hauteur et largeur différentes
     public Convolution(int newWidth, int newHeight) {
         pxWidth = newWidth;
         pxHeight = newHeight;
