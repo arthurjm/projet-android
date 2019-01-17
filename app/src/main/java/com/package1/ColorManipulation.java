@@ -72,7 +72,6 @@ public class ColorManipulation {
         return res;
     }
 
-
     public Bitmap convertImageColorization(Bitmap original) {
         int width = original.getWidth();
         int height = original.getHeight();

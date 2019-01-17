@@ -30,6 +30,9 @@ public class MainActivity extends AppCompatActivity {
     ImageView imageSvg;
     ImageView imageChanged;
 
+    Bitmap bitmapImageChanged;
+    Bitmap bitmapImageSvg;
+
     public void changeView() {
         buttonActionGrey.setVisibility(View.INVISIBLE);
         buttonActionPartialDesaturation.setVisibility(View.INVISIBLE);
@@ -70,6 +73,11 @@ public class MainActivity extends AppCompatActivity {
         buttonMenu.setVisibility(View.INVISIBLE);
     }
 
+    public void setImage(){
+        imageSvg.setImageBitmap(bitmapImageSvg);
+        imageChanged.setImageBitmap(bitmapImageChanged);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,8 +93,8 @@ public class MainActivity extends AppCompatActivity {
         draw = ContextCompat.getDrawable((this), R.drawable.image3);
         final Bitmap bitmapImageOg3 = ((BitmapDrawable) draw).getBitmap();
 
-        final Bitmap bitmapImageChanged = bitmapImageOg1.copy(bitmapImageOg1.getConfig(), true);
-        final Bitmap bitmapImageSvg = bitmapImageOg1.copy(bitmapImageOg1.getConfig(), true);
+         bitmapImageChanged = bitmapImageOg1.copy(bitmapImageOg1.getConfig(), true);
+         bitmapImageSvg = bitmapImageOg1.copy(bitmapImageOg1.getConfig(), true);
 
         //initialisation des boutons
         buttonMenu = findViewById(R.id.buttonBackMenu);
@@ -114,10 +122,7 @@ public class MainActivity extends AppCompatActivity {
         //initialisation des elements visibles
         imageSvg.setImageBitmap(bitmapImageOg1);
         imageChanged.setImageBitmap(bitmapImageChanged);
-        imageSvg.setVisibility(View.INVISIBLE);
-        imageChanged.setVisibility(View.INVISIBLE);
-        buttonMenu.setVisibility(View.INVISIBLE);
-
+        imageVisibilityInvisible();
         changeViewVisible();
 
         //debut de la gestion des interactions avec les boutons
@@ -131,9 +136,8 @@ public class MainActivity extends AppCompatActivity {
                 bitmapImageSvg.setPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
                 colorManipulation.convertImageGreyScale(bitmapImageChanged).getPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
                 bitmapImageChanged.setPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
-                imageSvg.setImageBitmap(bitmapImageSvg);
-                imageChanged.setImageBitmap(bitmapImageChanged);
 
+                setImage();
                 changeView();
             }
         });
@@ -148,9 +152,8 @@ public class MainActivity extends AppCompatActivity {
                 bitmapImageSvg.setPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
                 histogram.applicationEqHistogram(bitmapImageChanged).getPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
                 bitmapImageChanged.setPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
-                imageSvg.setImageBitmap(bitmapImageSvg);
-                imageChanged.setImageBitmap(bitmapImageChanged);
 
+                setImage();
                 changeView();
             }
         });
@@ -165,9 +168,8 @@ public class MainActivity extends AppCompatActivity {
                 bitmapImageSvg.setPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
                 histogram.applicationLinearExtension(bitmapImageChanged).getPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
                 bitmapImageChanged.setPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
-                imageSvg.setImageBitmap(bitmapImageSvg);
-                imageChanged.setImageBitmap(bitmapImageChanged);
 
+                setImage();
                 changeView();
             }
         });
@@ -182,9 +184,8 @@ public class MainActivity extends AppCompatActivity {
                 bitmapImageSvg.setPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
                 convolution.applicationConvolution(bitmapImageChanged).getPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
                 bitmapImageChanged.setPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
-                imageSvg.setImageBitmap(bitmapImageSvg);
-                imageChanged.setImageBitmap(bitmapImageChanged);
 
+                setImage();
                 changeView();
             }
         });
@@ -198,9 +199,8 @@ public class MainActivity extends AppCompatActivity {
                 bitmapImageSvg.setPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
                 convolutionGauss.applicationConvolution(bitmapImageChanged).getPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
                 bitmapImageChanged.setPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
-                imageSvg.setImageBitmap(bitmapImageSvg);
-                imageChanged.setImageBitmap(bitmapImageChanged);
 
+                setImage();
                 changeView();
             }
         });
@@ -215,9 +215,8 @@ public class MainActivity extends AppCompatActivity {
                 bitmapImageSvg.setPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
                 rightBlur.applicationConvolution(bitmapImageChanged).getPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
                 bitmapImageChanged.setPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
-                imageSvg.setImageBitmap(bitmapImageSvg);
-                imageChanged.setImageBitmap(bitmapImageChanged);
 
+                setImage();
                 changeView();
             }
         });
@@ -232,9 +231,8 @@ public class MainActivity extends AppCompatActivity {
                 bitmapImageSvg.setPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
                 colorManipulation.convertImageColorization(bitmapImageChanged).getPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
                 bitmapImageChanged.setPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
-                imageSvg.setImageBitmap(bitmapImageSvg);
-                imageChanged.setImageBitmap(bitmapImageChanged);
 
+                setImage();
                 changeView();
             }
         });
@@ -249,9 +247,8 @@ public class MainActivity extends AppCompatActivity {
                 bitmapImageSvg.setPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
                 colorManipulation.convertImageSelectiveDesaturation(bitmapImageChanged, Color.RED, 50, 70, 50).getPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
                 bitmapImageChanged.setPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
-                imageSvg.setImageBitmap(bitmapImageSvg);
-                imageChanged.setImageBitmap(bitmapImageChanged);
 
+                setImage();
                 changeView();
             }
         }));
@@ -273,9 +270,7 @@ public class MainActivity extends AppCompatActivity {
                 bitmapImageSvg.setPixels(tabpix, 0, bitmapImageOg1.getWidth(), 0, 0, bitmapImageOg1.getWidth(), bitmapImageOg1.getHeight());
                 bitmapImageChanged.setPixels(tabpix, 0, bitmapImageOg1.getWidth(), 0, 0, bitmapImageOg1.getWidth(), bitmapImageOg1.getHeight());
 
-                imageSvg.setImageBitmap(bitmapImageSvg);
-                imageChanged.setImageBitmap(bitmapImageChanged);
-
+                setImage();
             }
         });
 
@@ -288,9 +283,7 @@ public class MainActivity extends AppCompatActivity {
                 bitmapImageSvg.setPixels(tabpix, 0, bitmapImageOg2.getWidth(), 0, 0, bitmapImageOg2.getWidth(), bitmapImageOg2.getHeight());
                 bitmapImageChanged.setPixels(tabpix, 0, bitmapImageOg2.getWidth(), 0, 0, bitmapImageOg2.getWidth(), bitmapImageOg2.getHeight());
 
-                imageSvg.setImageBitmap(bitmapImageSvg);
-                imageChanged.setImageBitmap(bitmapImageChanged);
-
+                setImage();
             }
         });
 
@@ -303,9 +296,7 @@ public class MainActivity extends AppCompatActivity {
                 bitmapImageSvg.setPixels(tabpix, 0, bitmapImageOg3.getWidth(), 0, 0, bitmapImageOg3.getWidth(), bitmapImageOg3.getHeight());
                 bitmapImageChanged.setPixels(tabpix, 0, bitmapImageOg3.getWidth(), 0, 0, bitmapImageOg3.getWidth(), bitmapImageOg3.getHeight());
 
-                imageSvg.setImageBitmap(bitmapImageSvg);
-                imageChanged.setImageBitmap(bitmapImageChanged);
-
+                setImage();
             }
         });
 
