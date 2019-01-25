@@ -290,7 +290,7 @@ public class MainActivity extends AppCompatActivity {
         histogram = new Histogram();
         rightBlur = new Convolution((new int[][]{{0}, {0}, {0}, {0}, {0}, {0}, {0}, {1}, {1}, {1}, {1}, {1}, {1}, {1}, {1}}), 15, 1);
         convolution = new Convolution(7);
-        convolutionGauss = new Convolution();
+        convolutionGauss = new GaussienMask(7,4.5);
 
         //initialisation des elements visibles
         imageSvg.setImageBitmap(bitmapImageOg1);
