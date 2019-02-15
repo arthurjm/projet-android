@@ -24,6 +24,7 @@ public class Convolution {
         if (weightTotal == 0) {
             weightTotal = 1;
         }
+
     }
 
     //constructeur associant un masque de convolution (tab) de hauteur et largeur égales
@@ -49,53 +50,34 @@ public class Convolution {
         }
     }
 
-    //initialise un masque de convolution pour obtenir un flou gaussien
-    public Convolution() {
-        //tableau de flou Gaussien
-        int[][] tabGauss = new int[5][5];
-        tabGauss[0][0] = 1;
-        tabGauss[0][1] = 2;
-        tabGauss[0][2] = 3;
-        tabGauss[0][3] = 2;
-        tabGauss[0][4] = 1;
-        tabGauss[1][0] = 2;
-        tabGauss[1][1] = 6;
-        tabGauss[1][2] = 8;
-        tabGauss[1][3] = 6;
-        tabGauss[1][4] = 2;
-        tabGauss[2][0] = 3;
-        tabGauss[2][1] = 8;
-        tabGauss[2][2] = 10;
-        tabGauss[2][3] = 8;
-        tabGauss[2][4] = 3;
-        tabGauss[3][0] = 2;
-        tabGauss[3][1] = 6;
-        tabGauss[3][2] = 8;
-        tabGauss[3][3] = 6;
-        tabGauss[3][4] = 2;
-        tabGauss[4][0] = 1;
-        tabGauss[4][1] = 2;
-        tabGauss[4][2] = 3;
-        tabGauss[4][3] = 2;
-        tabGauss[4][4] = 1;
-        pxHeight = 5;
-        pxWidth = 5;
-        mask = new int[pxWidth][pxHeight];
-        mask = tabGauss.clone();
-        for (int i = 0; i < pxWidth; i++) {
-            for (int j = 0; j < pxHeight; j++) {
-                weightTotal += mask[i][j];
-            }
-        }
+
+    public void setPxHeight(int pxHeight) {
+        this.pxHeight = pxHeight;
+    }
+
+    public void setPxWidth(int pxWidth) {
+        this.pxWidth = pxWidth;
+    }
+
+    public void setWeightTotal(int weightTotal) {
+        this.weightTotal = weightTotal;
+    }
+
+    public int[][] getMask() {
+        return mask;
+    }
+
+    public void setMask(int[][] mask) {
+        this.mask = mask;
     }
 
     /*
-    Cette méthode va appliquer le masque de convolution (mask) au fichier bitmap passé en argument
-    pour cela, on retire les informations des trois canaux R,G,B dans des tableaux distincs pour un accès plus simple,
-    puis on applique le masque sur chacun des canaux en appliquant un traitement spécial pour les bordures où
-    l'on manque de pixels pour appliquer l'ensemble du masque (ici le choix a été fait de réaliser la moyenne des pixels
-    accessibles en respectant les poids du masque).
-     */
+            Cette méthode va appliquer le masque de convolution (mask) au fichier bitmap passé en argument
+            pour cela, on retire les informations des trois canaux R,G,B dans des tableaux distincs pour un accès plus simple,
+            puis on applique le masque sur chacun des canaux en appliquant un traitement spécial pour les bordures où
+            l'on manque de pixels pour appliquer l'ensemble du masque (ici le choix a été fait de réaliser la moyenne des pixels
+            accessibles en respectant les poids du masque).
+             */
     public Bitmap applicationConvolution(Bitmap original) {
         int width = original.getWidth();
         int height = original.getHeight();
