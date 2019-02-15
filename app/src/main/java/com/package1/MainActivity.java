@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         //initialisation des effets
 
         colorManipulation = new ColorManipulation();
-        histogram = new Histogram();
+
         rightBlur = new Convolution((new int[][]{{0}, {0}, {0}, {0}, {0}, {0}, {0}, {1}, {1}, {1}, {1}, {1}, {1}, {1}, {1}}), 15, 1);
         convolution = new Convolution(7);
         convolutionGauss = new GaussienMask(7, 4.5);
@@ -136,8 +136,7 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setImageBitmap(colorManipulation.convertImageGreyScale(bmp));
                 break;
             case R.id.toGrayLDD:
-                Histogram hist=new Histogram();
-                imageView.setImageBitmap(hist.applicationLinearExtension(bmp));
+
                 break;
             case R.id.colorLDE:
 
