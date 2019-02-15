@@ -63,6 +63,7 @@ public class ColorManipulation {
         return res;
     }
 
+
     /*Méthode permettant de passer l'image en nuances de gris excepté pour les pixels proches d'une couleur (ici "color")
         par rapport à des seuils (un pour chaque canal RGB)
      */
@@ -96,11 +97,11 @@ public class ColorManipulation {
         return res;
     }
 
-    public Bitmap convertImageColorization(Bitmap original) {
+    public Bitmap convertImageColorization(Bitmap original, int chosenHue) {
         int width = original.getWidth();
         int height = original.getHeight();
         int index;
-        int newHue = random.nextInt(359);
+        int newHue = chosenHue;
         tabPixels = new int[width * height];
         float[] hsv = new float[3];
 

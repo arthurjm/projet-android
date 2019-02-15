@@ -66,6 +66,20 @@ public class Histogram {
         }
     }
 
+    private void isophelieLut(int depth){
+        int tempdepth=1;
+        int tempseuil=0;
+        int nextvalue=0;
+        for(int i=0;i<256;i++){
+            if(i>=tempseuil+(tempdepth*(256/depth))){
+                tempseuil+=tempdepth*(256/depth);
+                tempdepth++;
+                nextvalue+=255/(depth-1);
+            }
+            LUT[i]=nextvalue;
+        }
+    }
+
     // Version de création d'une LUT pour egaliser un histogramme en commencant par les valeurs les plus faibles
     //non utilisé, voir rapport
     /*private void histogramEqLUTLeft() {
@@ -126,7 +140,7 @@ public class Histogram {
 
     public Bitmap applicationLinearExtension(Bitmap original) {
         histogramSetup(original);
-        linearExtensionLUT();
+        isophelieLut(2);
         int width = original.getWidth();
         int height = original.getHeight();
         Bitmap res = Bitmap.createBitmap(width, height, original.getConfig());
