@@ -2,6 +2,7 @@ package com.package1;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.util.Log;
 
 public class HistogramManipulation {
 
@@ -11,18 +12,21 @@ public class HistogramManipulation {
     Histogram histogram;
 
     public HistogramManipulation(Bitmap bitmap, ChanelType chanel){
-        histogram=new Histogram(getTab(bitmap,chanel),chanel);
+        int[] tab = new int[bitmap.getWidth()*bitmap.getHeight()];
+        tab=getTab(bitmap,chanel);
+        histogram=new Histogram(tab,chanel);
+        Log.e("TAG",""+getTab(bitmap,chanel).length);
     }
-
+int R;
+    int G;
+    int B;
     private int[] getTab(Bitmap bitmap, ChanelType ct){
-        int R =0;
-        int G =0;
-        int B =0;
         int[] tab = new int[bitmap.getWidth()*bitmap.getHeight()];
         bitmap.getPixels(tab, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
         float[] hsv =new float[3];
         for(int i=0;i<tab.length;i++){
-            convert(i,tab,R,G,B);
+            convert(i,tab);
+          //  Log.e("TAG","rgb : "+R+"\t"+G+"\t"+B);
             if(ct==ChanelType.V || ct==ChanelType.S || ct==ChanelType.H){
                 Color.RGBToHSV(R,G,B,hsv);
                 if(ct==ChanelType.V || ct==ChanelType.S){
@@ -43,6 +47,7 @@ public class HistogramManipulation {
                     tab[i]=B*(NumberofValues-1)/255;    //divided by 255 because the "hue" can take 256 values
                 }
             }
+            //Log.e("TAG","test : "+tab[i]);
         }
         return tab;
     }
@@ -52,7 +57,7 @@ public class HistogramManipulation {
 
 
 
-    public void convert(int index, int[] tabPixels, int R, int G, int B) {
+    public void convert(int index, int[] tabPixels) {
         R = (tabPixels[index] >> 16) & 0xff;
         G = (tabPixels[index] >> 8) & 0xff;
         B = tabPixels[index] & 0xff;
@@ -133,33 +138,38 @@ public class HistogramManipulation {
 
     public Bitmap applyLut(Bitmap original){
         ChanelType ct = histogram.getChanel();
-        int R =0;
-        int G =0;
-        int B =0;
         int[] tab = new int[original.getWidth()*original.getHeight()];
         original.getPixels(tab, 0, original.getWidth(), 0, 0, original.getWidth(), original.getHeight());
         float[] hsv =new float[3];
         for(int i=0;i<tab.length;i++){
-            convert(i,tab,R,G,B);
+            convert(i,tab);
             if(ct==ChanelType.V || ct==ChanelType.S || ct==ChanelType.H){
                 Color.RGBToHSV(R,G,B,hsv);
                 if(ct==ChanelType.V || ct==ChanelType.S){
                     if (ct==ChanelType.S){
-                        tab[i]=LUT[(int) (hsv[1]*(NumberofValues-1))];//only multiplied because "saturation" goes from 0 to 1
+                       // Log.e("TAG","erreur");
+                        hsv[1]=(float)(LUT[(int) (hsv[1]*(NumberofValues-1))]/(NumberofValues-1));//only multiplied because "saturation" goes from 0 to 1
                     }else{
-                        tab[i]=LUT[(int) (hsv[2]*(NumberofValues-1))];//only multiplied because "value" goes from 0 to 1
+                     //   Log.e("TAG","erreur");
+                        hsv[2]=(float)(LUT[(int) (hsv[2]*(NumberofValues-1))]/(NumberofValues-1));;//only multiplied because "value" goes from 0 to 1
                     }
                 }else{
-                    tab[i]=LUT[(int) (hsv[0]*(NumberofValues-1)/359)];//divided by 359 because the "hue" can take 360 values
+                   // Log.e("TAG","test : "+(int)(hsv[0]*(NumberofValues-1)/359)+"\n"+LUT[(int)(hsv[0]*(NumberofValues-1)/359)]);
+                    hsv[0]=(float)(LUT[(int) (hsv[0]*(NumberofValues-1)/359)]*359/(NumberofValues-1));;//divided by 359 because the "hue" can take 360 values
                 }
+                tab[i]=Color.HSVToColor(hsv);
             }else{
                 if(ct==ChanelType.R){
-                    tab[i]=LUT[R*(NumberofValues-1)/255];    //divided by 255 because the "hue" can take 256 values
+                //    Log.e("TAG","erreur");
+                    R=LUT[R*(NumberofValues-1)/255];    //divided by 255 because the "hue" can take 256 values
                 }else if(ct==ChanelType.G){
-                    tab[i]=LUT[G*(NumberofValues-1)/255];    //divided by 255 because the "hue" can take 256 values
+                   // Log.e("TAG","erreur");
+                    G=LUT[G*(NumberofValues-1)/255];    //divided by 255 because the "hue" can take 256 values
                 }else{
-                    tab[i]=LUT[B*(NumberofValues-1)/255];    //divided by 255 because the "hue" can take 256 values
+                    //Log.e("TAG","erreur");
+                    B=LUT[B*(NumberofValues-1)/255];    //divided by 255 because the "hue" can take 256 values
                 }
+                tab[i]=((R<<16) | (G<<8)| B);
             }
         }
         Bitmap resBitmap = Bitmap.createBitmap(original.getWidth(), original.getHeight(), original.getConfig());

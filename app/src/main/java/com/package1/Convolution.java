@@ -13,7 +13,7 @@ public class Convolution {
     //constructeur associant un masque de convolution (tab) de hauteur et largeur différente
     public Convolution(int[][] tab, int newWidth, int newHeight) {
         pxHeight = newHeight;
-        pxWidth = newWidth;
+        pxWidth  = newWidth;
         mask = new int[pxWidth][pxHeight];
         mask = tab.clone();
         for (int i = 0; i < pxWidth; i++) {

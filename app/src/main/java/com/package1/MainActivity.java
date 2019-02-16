@@ -12,6 +12,7 @@ import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -80,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
             if (v == buttonImg2) {
-                bmp = BitmapFactory.decodeResource(getResources(), R.drawable.image2, o);
+                bmp = BitmapFactory.decodeResource(getResources(), R.drawable.fraise, o);
                 imageView = (ImageView) findViewById(R.id.imageViewSvg);
                 imageView.setImageBitmap(bmp);
 
@@ -145,7 +146,11 @@ public class MainActivity extends AppCompatActivity {
 
                 break;
             case R.id.colorHistEqual:
-
+                HistogramManipulation hist=new HistogramManipulation(bmp,ChanelType.B);
+                hist.isophelieLut(2);
+                Log.e("TAG",hist.histogram.toString());
+                imageView.setImageBitmap(hist.applyLut(bmp));
+                Log.e("TAG", "FINI");
                 break;
             case R.id.color_rest:
                 imageView.setImageBitmap(colorManipulation.convertImageColorization(bmp,seekbar.getProgress()));
