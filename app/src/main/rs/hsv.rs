@@ -1,3 +1,6 @@
+// EN COURS PAS FINI
+// CE QUIL Y A ECRIT DANS LA DOC NE MARCHE PAS
+
 #pragma version (1)
 #pragma rs java_package_name (com.package1.rssample)
 
