@@ -1,5 +1,5 @@
 #pragma version (1)
-#pragma rs java_package_name (com.package1.rssample)
+#pragma rs java_package_name (com.android.rssample)
 
 int hue;
 
@@ -18,49 +18,50 @@ uchar4 RS_KERNEL colorize ( uchar4 in ) {
     s = 0;
   }
   else {
-    s = delta / maxRGB;
+    s = 1 - minRGB / maxRGB;
   }
 
   //v
   v = maxRGB;
 
-  int t2;
+  int h2;
   float f, l, m, n;
-  t2 = hue/60;
+  float tmp_float = hue/60;
+  h2 = fmod(tmp_float, 6);
 
-  f = (hue/60) - t2;
+  f = (hue/60) - h2;
   l = v * (1 - s);
   m = v * (1 - f * s);
   n = v * (1 - (1 - f) * s);
 
-  if (t2 == 0) {
+  if (h2 == 0) {
     out.r = v * 255;
     out.g = n * 255;
     out.b = l * 255;
   }
-  if (t2 == 1) {
+  if (h2 == 1) {
     out.r = m * 255;
     out.g = v * 255;
     out.b = l * 255;
   }
-  if (t2 == 2) {
+  if (h2 == 2) {
     out.r = l * 255;
     out.g = v * 255;
     out.b = n * 255;
   }
-  if (t2 == 3) {
+  if (h2 == 3) {
     out.r = l * 255;
     out.g = m * 255;
     out.b = v * 255;
   }
-  if (t2 == 4) {
+  if (h2 == 4) {
     out.r = n * 255;
     out.g = l * 255;
     out.b = v * 255;
   }
-  if (t2 == 5) {
-    out.r = l * 255;
-    out.g = v * 255;
+  if (h2 == 5) {
+    out.r = v * 255;
+    out.g = l * 255;
     out.b = m * 255;
   }
 
