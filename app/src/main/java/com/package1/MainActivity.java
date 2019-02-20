@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.package1.affichage.PhotoRecycler;
+
 import java.util.ArrayList;
 
 
@@ -38,6 +40,10 @@ public class MainActivity extends AppCompatActivity {
         tb = findViewById(R.id.imageButton);
         buttonList.add(tb);
 
+        // Test recycler
+        tb = findViewById(R.id.thirdButton);
+        buttonList.add(tb);
+
     }
 
     /**
@@ -58,6 +64,12 @@ public class MainActivity extends AppCompatActivity {
                     imagePage(view);
                 }
             });
+            buttonList.get(2).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    testPage(view);
+                }
+            });
         }
     }
 
@@ -71,6 +83,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this, Image.class));
     }
 
+    public void testPage(View view) {
+        startActivity(new Intent(this, PhotoRecycler.class));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

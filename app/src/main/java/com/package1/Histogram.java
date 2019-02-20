@@ -1,13 +1,12 @@
 package com.package1;
 
-import android.util.Log;
 
 /**
  * Class permettant de créer des histogrammes à partir de tableaux de valeurs numériques
  */
 public class Histogram {
 
-    static private int NumberofValues =256;
+    static private int NumberofValues = 256;
 
     private int histogramValue[] = new int[NumberofValues];
     private int min, max, count, average;
@@ -26,11 +25,11 @@ public class Histogram {
         int valueTemp;
         max = -1;
         min = NumberofValues;
-        count=1;//pour eviter toute division par 0
+        count = 1;//pour eviter toute division par 0
         for (int i = 0; i < tab.length; i++) {
             valueTemp = tab[i];
             histogramValue[valueTemp]++;
-          //  Log.e("TAG","boucle \t"+histogramValue[valueTemp]);
+            //  Log.e("TAG","boucle \t"+histogramValue[valueTemp]);
             count++;
             tempTotalValue += valueTemp;
             if (valueTemp < min) {
@@ -72,6 +71,6 @@ public class Histogram {
 
     @Override
     public String toString() {
-        return "histogram of : " + chanel + "\tmin : " + min + "\tmax : " + max + "\taverage : " + average +"\tcount : "+count;
+        return "histogram of : " + chanel + "\tmin : " + min + "\tmax : " + max + "\taverage : " + average + "\tcount : " + count;
     }
 }

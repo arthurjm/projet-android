@@ -1,5 +1,6 @@
 package com.package1;
 
+
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -27,7 +28,6 @@ import com.android.rssample.ScriptC_keepHue;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
-
 public class Test extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     /**
@@ -119,7 +119,7 @@ public class Test extends AppCompatActivity implements AdapterView.OnItemSelecte
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 text.setText("Value : " + actualValue + "/" + seekBar.getMax());
-                keepHueRs(image_copy, actualValue);
+               // keepHueRs(image_copy, actualValue);
                 imgView.setImageBitmap(image_copy);
             }
         });
@@ -146,8 +146,10 @@ public class Test extends AppCompatActivity implements AdapterView.OnItemSelecte
             public void onClick(View view) {
                 //seekBar.setVisibility(View.GONE);
                 //text.setVisibility(View.GONE);
-                undo(image, imgView);
-                image_copy = image.copy(Bitmap.Config.ARGB_8888, true);
+                if(image != null) {
+                    undo(image, imgView);
+                    image_copy = image.copy(Bitmap.Config.ARGB_8888, true);
+                }
             }
         });
     }
