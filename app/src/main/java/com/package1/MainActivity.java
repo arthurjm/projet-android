@@ -112,31 +112,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        buttonActionEqHistogram.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setTabPix(new int[bitmapImageChanged.getHeight() * bitmapImageChanged.getWidth()]);
-                imageVisibility();
 
-                histogram.applicationEqHistogram(bitmapImageChanged).getPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
-                bitmapImageChanged.setPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
-                setImage();
-                changeView();
-            }
-        });
-
-        buttonActionLinearExtension.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setTabPix(new int[bitmapImageChanged.getHeight() * bitmapImageChanged.getWidth()]);
-                imageVisibility();
-
-                histogram.applicationLinearExtension(bitmapImageChanged).getPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
-                bitmapImageChanged.setPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
-                setImage();
-                changeView();
-            }
-        });
 
         buttonActionConvolution.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -287,7 +263,7 @@ public class MainActivity extends AppCompatActivity {
 
         //initialisation des effets
         colorManipulation = new ColorManipulation();
-        histogram = new Histogram();
+
         rightBlur = new Convolution((new int[][]{{0}, {0}, {0}, {0}, {0}, {0}, {0}, {1}, {1}, {1}, {1}, {1}, {1}, {1}, {1}}), 15, 1);
         convolution = new Convolution(7);
         convolutionGauss = new GaussienMask(7,4.5);
