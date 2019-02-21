@@ -23,84 +23,34 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.package1.MainActivity.image_retouche;
+
 public class PhotoRecycler extends AppCompatActivity {
 
     private List<FilterStruct> photoList = new ArrayList<>();
     private RecyclerView photoRecyclerView;
     private RecyclerViewHorizontalListAdapter photoAdapter;
 
-    /**
-     * L'image que l'on souhaite traiter.
-     */
-    private Bitmap image;
+
     /**
      * L'image que l'on souhaite afficher apres application d'une fonction.
      */
-    private Bitmap image_copy;
+    public static Bitmap image_copy;
     /**
      * Load l'image que l'on veut.
      */
-    private ImageView imgView;
-
-    private Button button;
-    private Uri filePath;
-    private String imagepath = null;
-    private int PICK_IMAGE_REQUEST = 1;
+    public static ImageView imgView;
 
     public void initiate() {
         photoRecyclerView = findViewById(R.id.idRecyclerViewHorizontalList);
         // A MODIF
         imgView = findViewById(R.id.imageResult);
-        button = findViewById(R.id.buttonList);
+
+        imgView.setImageBitmap(image_retouche);
+        image_copy = image_retouche.copy(Bitmap.Config.ARGB_8888, true);
 
     }
 
-    public void addListenerOnButton() {
-
-        if (button != null) {
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    intent.setType("image/*");
-                    startActivityForResult(intent, 1);
-
-                }
-            });
-
-        }
-    }
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        super.onActivityResult(requestCode, resultCode, data);
-
-        // Load photo
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-
-            filePath = data.getData();
-            imagepath = getPath(filePath);
-
-            try {
-                image = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-                //image = rotateBitmap(imagepath);
-                imgView.setImageBitmap(image);
-                image_copy = image.copy(Bitmap.Config.ARGB_8888, true);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-    }
-
-    public String getPath(Uri uri) {
-        String[] projection = {MediaStore.Images.Media.DATA};
-        Cursor cursor = managedQuery(uri, projection, null, null, null);
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        return cursor.getString(column_index);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,32 +58,39 @@ public class PhotoRecycler extends AppCompatActivity {
         setContentView(R.layout.photo_recycle_view);
 
         initiate();
-        addListenerOnButton();
 
-        photoAdapter = new RecyclerViewHorizontalListAdapter(photoList, getApplicationContext(), image);
-        // Choisir l'orientation de la barre
-        LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(PhotoRecycler.this, LinearLayoutManager.HORIZONTAL, false);
-        photoRecyclerView.setLayoutManager(horizontalLayoutManager);
-        photoRecyclerView.setAdapter(photoAdapter);
+        if (image_retouche != null) {
+
+
+            photoAdapter = new RecyclerViewHorizontalListAdapter(photoList, getApplicationContext(), image_retouche);
+            // Choisir l'orientation de la barre
+            LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(PhotoRecycler.this, LinearLayoutManager.HORIZONTAL, false);
+            photoRecyclerView.setLayoutManager(horizontalLayoutManager);
+            photoRecyclerView.setAdapter(photoAdapter);
+
+            photoList();
+        }
 
         // Ajout d'une barre entre les items
 
         //photoRecyclerView.addItemDecoration(new DividerItemDecoration(PhotoRecycler.this, LinearLayoutManager.HORIZONTAL));
 
-        photoList();
     }
 
     private void photoList() {
-        FilterStruct red = new FilterStruct("red", R.drawable.mer, image);
-        FilterStruct grey = new FilterStruct("grey", R.drawable.mer, image);
-        FilterStruct colorize = new FilterStruct("colorize", R.drawable.mer, image);
-        FilterStruct nothing = new FilterStruct("nothing", R.drawable.mer, image);
+        FilterStruct red = new FilterStruct("red", R.drawable.mer, image_retouche);
+        FilterStruct grey = new FilterStruct("grey", R.drawable.mer, image_retouche);
+        FilterStruct colorize = new FilterStruct("colorize", R.drawable.mer, image_retouche);
+        FilterStruct nothing = new FilterStruct("nothing", R.drawable.mer, image_retouche);
+        FilterStruct gaussien = new FilterStruct("gaussien", R.drawable.mer, image_retouche);
 
-            photoList.add(red);
-            photoList.add(grey);
-            photoList.add(colorize);
-            photoList.add(nothing);
-            photoAdapter.notifyDataSetChanged();
+
+        photoList.add(red);
+        photoList.add(grey);
+        photoList.add(colorize);
+        photoList.add(nothing);
+        photoList.add(gaussien);
+        photoAdapter.notifyDataSetChanged();
 
 
     }

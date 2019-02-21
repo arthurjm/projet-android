@@ -1,7 +1,11 @@
 package com.package1;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,10 +14,19 @@ import android.widget.Button;
 
 import com.package1.affichage.PhotoRecycler;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity {
+
+    /**
+     * L'image que l'on souhaite traiter.
+     */
+    public static Bitmap image_retouche;
+    private Uri filePath;
+    private String imagepath = null;
+    private int PICK_IMAGE_REQUEST = 1;
     ColorManipulation colorManipulation;
     Histogram histogram;
     Convolution rightBlur;
@@ -44,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
         tb = findViewById(R.id.thirdButton);
         buttonList.add(tb);
 
+        tb = findViewById(R.id.camera_mainActivity);
+        buttonList.add(tb);
+
     }
 
     /**
@@ -70,7 +86,46 @@ public class MainActivity extends AppCompatActivity {
                     testPage(view);
                 }
             });
+            buttonList.get(3).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    intent.setType("image/*");
+                    startActivityForResult(intent, 1);
+
+                }
+            });
         }
+    }
+
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Load photo
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+
+            filePath = data.getData();
+            imagepath = getPath(filePath);
+
+            try {
+                image_retouche = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                //image = rotateBitmap(imagepath);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    public String getPath(Uri uri) {
+        String[] projection = {MediaStore.Images.Media.DATA};
+        Cursor cursor = managedQuery(uri, projection, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
     }
 
     // Deuxieme affichage
