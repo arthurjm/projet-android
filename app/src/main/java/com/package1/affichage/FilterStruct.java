@@ -1,7 +1,6 @@
 package com.package1.affichage;
 
 import android.graphics.Bitmap;
-import android.widget.ImageView;
 
 public class FilterStruct {
 

@@ -61,7 +61,9 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
 
         if (image != null) {
 
-            holder.imageView.setImageBitmap(image);
+            holder.imageView.setImageBitmap(horizontalPhotoList.get(position).getImage());
+         //   holder.imageView.setImageBitmap(image);
+        //    holder.imageView.setImageBitmap(keepRed2(image));
             // holder.imageView.setImageResource(horizontalPhotoList.get(position).getProductImage());
             holder.txtview.setTextColor(Color.WHITE);
             holder.txtview.setText(horizontalPhotoList.get(position).getFilterName());
@@ -81,7 +83,6 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
     }
 
     public void useFonction(final int position) {
-
         switch (position) {
             case 0:
                 keepRed2(image_copy);
@@ -89,14 +90,14 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 break;
             case 1:
                 break;
-            default :
+            default:
                 break;
 
 
         }
     }
 
-    public void keepRed2(Bitmap bmp) {
+    public Bitmap keepRed2(Bitmap bmp) {
         int w = bmp.getWidth();
         int h = bmp.getHeight();
         int[] pixels = new int[w * h];
@@ -117,9 +118,11 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
 
         }
         bmp.setPixels(pixels, 0, w, 0, 0, w, h);
-        imgView.setImageBitmap(bmp);
+        return bmp;
+        //imgView.setImageBitmap(bmp);
 
     }
+
     /**
      * Le nombre d'element present dans la liste
      *

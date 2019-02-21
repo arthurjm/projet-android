@@ -32,8 +32,8 @@
 
     <com.github.chrisbanes.photoview.PhotoView
         android:id="@+id/imageResult"
-        android:layout_width="338dp"
-        android:layout_height="411dp"
+        android:layout_width="314dp"
+        android:layout_height="375dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
@@ -42,9 +42,9 @@
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.128" />
+        app:layout_constraintVertical_bias="0.273" />
 
 </android.support.constraint.ConstraintLayout>
