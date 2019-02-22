@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.android.rssample.ScriptC_colorize;
 import com.android.rssample.ScriptC_grey;
 import com.android.rssample.ScriptC_keepHue;
+import com.android.rssample.ScriptC_luminosity;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -117,7 +118,8 @@ public class Test extends AppCompatActivity implements AdapterView.OnItemSelecte
 
                 text.setText("Value : " + progress + "/" + seekBar.getMax());
                 image_copy = image.copy(Bitmap.Config.ARGB_8888, true);
-                keepHue(image_copy, actualValue, precisionbar);
+                //keepHue(image_copy, actualValue, precisionbar);
+                changeLuminosite(image_copy, actualValue);
                 imgView.setImageBitmap(image_copy);
             }
 
@@ -129,7 +131,8 @@ public class Test extends AppCompatActivity implements AdapterView.OnItemSelecte
             public void onStopTrackingTouch(SeekBar seekBar) {
                 text.setText("Value : " + actualValue + "/" + seekBar.getMax());
                 image_copy = image.copy(Bitmap.Config.ARGB_8888, true);
-                keepHue(image_copy, actualValue, precisionbar);
+                //keepHue(image_copy, actualValue, precisionbar);
+                changeLuminosite(image_copy, actualValue);
                 imgView.setImageBitmap(image_copy);
             }
         });
@@ -246,6 +249,12 @@ public class Test extends AppCompatActivity implements AdapterView.OnItemSelecte
                     seekBar.setMax(36);
                     seekBarArthur.setMax(10);
 
+                    break;
+                case 6 :
+                    seekBar.setVisibility(View.VISIBLE);
+                    seekBarArthur.setVisibility(View.INVISIBLE);
+                    text.setVisibility(View.VISIBLE);
+                    seekBar.setMax(100);
                     break;
             }
         }
@@ -373,5 +382,23 @@ public class Test extends AppCompatActivity implements AdapterView.OnItemSelecte
         Random r = new Random();
         int hue = r.nextInt(360);
         keepHue(bmp, hue, 10);
+    }
+
+    private void changeLuminosite(Bitmap bmp, int luminosite) {
+        RenderScript rs = RenderScript.create(this);
+
+        Allocation input = Allocation.createFromBitmap(rs, bmp);
+        Allocation output = Allocation.createTyped(rs, input.getType());
+
+        ScriptC_luminosity script = new ScriptC_luminosity(rs);
+
+        float v = luminosite / 100;
+        script.set_v(v);
+        script.forEach_luminosity(input, output);
+
+        output.copyTo(bmp);
+
+        input.destroy(); output.destroy();
+        script.destroy(); rs.destroy();
     }
 }
