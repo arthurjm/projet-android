@@ -74,20 +74,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
     private View.OnClickListener listener = new View.OnClickListener() {
         public void onClick(View v) {
             if (v == Album) {
 
 
+
             }
             if (v == buttonImg2) {
-                bmp = BitmapFactory.decodeResource(getResources(), R.drawable.fraise, o);
+                bmp = BitmapFactory.decodeResource(getResources(), R.drawable.mer, o);
                 imageView = (ImageView) findViewById(R.id.imageViewSvg);
                 imageView.setImageBitmap(bmp);
 
             }
             if (v == buttonImg3) {
-                bmp = BitmapFactory.decodeResource(getResources(), R.drawable.image3, o);
+                bmp = BitmapFactory.decodeResource(getResources(), R.drawable.fraise, o);
                 imageView = (ImageView) findViewById(R.id.imageViewSvg);
                 imageView.setImageBitmap(bmp);
             }
@@ -111,10 +113,10 @@ public class MainActivity extends AppCompatActivity {
 
 
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
             tv.setText("Value:" + Integer.toString(progress));
         }
     };
+
 
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -141,9 +143,12 @@ public class MainActivity extends AppCompatActivity {
 
                 break;
             case R.id.colorHistEqual:
-                HistogramManipulation hist = new HistogramManipulation(bmp, ChanelType.B);
+                HistogramManipulation hist = new HistogramManipulation(bmp, ChanelType.V);
                 hist.isophelieLut(2);
                 Log.e("TAG", hist.histogram.toString());
+                for(int k=0; k<256; k++){
+                    Log.e("TAG","value : "+hist.LUT[k]);
+                }
                 imageView.setImageBitmap(hist.applyLut(bmp));
                 Log.e("TAG", "FINI");
                 break;
