@@ -4,23 +4,14 @@ import android.graphics.Bitmap;
 
 public class FilterStruct {
 
-    public int filterImage;
     public String filterName;
     public Bitmap image;
 
-    public FilterStruct(String filterName, int filterImage, Bitmap image) {
-        this.filterImage = filterImage;
+    public FilterStruct(String filterName, Bitmap image) {
         this.filterName = filterName;
         this.image = image;
     }
 
-    public int getProductImage() {
-        return filterImage;
-    }
-
-    public void setFilterImage(int productImage) {
-        this.filterImage = productImage;
-    }
 
     public String getFilterName() {
         return filterName;

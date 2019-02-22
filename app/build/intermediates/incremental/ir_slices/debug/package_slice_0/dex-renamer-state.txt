@@ -1,0 +1,4 @@
+#Fri Feb 22 16:44:52 CET 2019
+base.0=/autofs/unitytravail/travail/mduban/S6/projet-android/app/build/intermediates/transforms/dexMerger/debug/0
+path.0=classes.dex
+renamed.0=classes.dex

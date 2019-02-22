@@ -27,12 +27,6 @@ public class MainActivity extends AppCompatActivity {
     private Uri filePath;
     private String imagepath = null;
     private int PICK_IMAGE_REQUEST = 1;
-    ColorManipulation colorManipulation;
-    Histogram histogram;
-    Convolution rightBlur;
-    Convolution convolution;
-    Convolution convolutionGauss;
-
     /**
      * ArrayList de boutons.
      *

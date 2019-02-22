@@ -1,0 +1,55 @@
+{
+    "logs": [
+        {
+            "outputFile": "/autofs/unitytravail/travail/mduban/S6/projet-android/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-land/values-land.xml",
+            "map": [
+                {
+                    "source": "/tmp/android-mduban/.gradle/caches/transforms-1/files-1.1/mediarouter-v7-27.1.0.aar/ecdff6901dc1b829a9cd8b551e999a5e/res/values-land/values-land.xml",
+                    "from": {
+                        "startLines": "2,3,4",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "55,130,208",
+                        "endColumns": "74,77,74",
+                        "endOffsets": "125,203,278"
+                    },
+                    "to": {
+                        "startLines": "6,7,8",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "328,403,481",
+                        "endColumns": "74,77,74",
+                        "endOffsets": "398,476,551"
+                    }
+                },
+                {
+                    "source": "/tmp/android-mduban/.gradle/caches/transforms-1/files-1.1/design-27.1.0.aar/4f6d03d3b44707bfb793b4b040f6e6fe/res/values-land/values-land.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endLines": "5",
+                        "endColumns": "12",
+                        "endOffsets": "232"
+                    },
+                    "to": {
+                        "startLines": "9",
+                        "startColumns": "4",
+                        "startOffsets": "556",
+                        "endLines": "12",
+                        "endColumns": "12",
+                        "endOffsets": "733"
+                    }
+                },
+                {
+                    "source": "/tmp/android-mduban/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.0.aar/a5d69d57b7733a56e27c3ec33dfcbfc6/res/values-land/values-land.xml",
+                    "from": {
+                        "startLines": "2,3,4,5",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "55,125,189,260",
+                        "endColumns": "69,63,70,67",
+                        "endOffsets": "120,184,255,323"
+                    }
+                }
+            ]
+        }
+    ]
+}

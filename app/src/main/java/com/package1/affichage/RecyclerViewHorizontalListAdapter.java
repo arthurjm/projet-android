@@ -13,26 +13,26 @@ import android.widget.Toast;
 
 import com.package1.R;
 
+import com.package1.ColorManipulation;
+
 import java.util.List;
 
+import static com.package1.MainActivity.image_retouche;
 import static com.package1.affichage.PhotoRecycler.image_copy;
 import static com.package1.affichage.PhotoRecycler.imgView;
 
-/**
- * TODO :
- * je peux enlever le Image puisqu'il est en variable globale
- */
+
 
 public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<RecyclerViewHorizontalListAdapter.PhotoViewHolder> {
 
     private List<FilterStruct> horizontalPhotoList;
     private Context context;
-    private Bitmap image;
 
-    public RecyclerViewHorizontalListAdapter(List<FilterStruct> horizontalPhotoList, Context context, Bitmap bmp) {
+    private ColorManipulation test;
+
+    public RecyclerViewHorizontalListAdapter(List<FilterStruct> horizontalPhotoList, Context context) {
         this.horizontalPhotoList = horizontalPhotoList;
         this.context = context;
-        this.image = bmp;
     }
 
     /**
@@ -46,8 +46,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
     public PhotoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //inflate the layout file
         View photoProductView = LayoutInflater.from(parent.getContext()).inflate(R.layout.hozirontal_list_photo, parent, false);
-        PhotoViewHolder gvh = new PhotoViewHolder(photoProductView);
-        return gvh;
+        return new PhotoViewHolder(photoProductView);
     }
 
     /**
@@ -57,70 +56,50 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
      * @param position
      */
     @Override
-    public void onBindViewHolder(PhotoViewHolder holder, final int position) {
+    public void onBindViewHolder(final PhotoViewHolder holder, final int position) {
 
-        if (image != null) {
+        final Context context = holder.itemView.getContext();
 
-            holder.imageView.setImageBitmap(horizontalPhotoList.get(position).getImage());
-         //   holder.imageView.setImageBitmap(image);
-        //    holder.imageView.setImageBitmap(keepRed2(image));
-            // holder.imageView.setImageResource(horizontalPhotoList.get(position).getProductImage());
-            holder.txtview.setTextColor(Color.WHITE);
-            holder.txtview.setText(horizontalPhotoList.get(position).getFilterName());
+        // Recup la photo avec la fonction associes
+        holder.imageView.setImageBitmap(horizontalPhotoList.get(position).getImage());
+        holder.txtview.setTextColor(Color.WHITE);
+        holder.txtview.setText(horizontalPhotoList.get(position).getFilterName());
 
-            holder.imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        holder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-                    useFonction(position);
-                    // Action lorsque l'on clique sur l'image
-                    String productName = horizontalPhotoList.get(position).getFilterName().toString();
-                    Toast.makeText(context, productName + " is selected", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
+                useFonction(position);
+                //imgView.setImageBitmap(horizontalPhotoList.get(position).getImage());
+                // Action lorsque l'on clique sur l'image
+                String productName = horizontalPhotoList.get(position).getFilterName().toString();
+                Toast.makeText(context, productName + " is selected", Toast.LENGTH_SHORT).show();
+            }
+        });
+
 
     }
 
+
     public void useFonction(final int position) {
+        test = new ColorManipulation();
         switch (position) {
             case 0:
-                keepRed2(image_copy);
-                imgView.setImageBitmap(image_copy);
+                imgView.setImageBitmap( test.convertImageSelectiveDesaturation(image_retouche, Color.RED, 100, 100, 100));
                 break;
             case 1:
+                imgView.setImageBitmap( test.convertImageSelectiveDesaturation(image_retouche, Color.GREEN, 100, 100, 100));
                 break;
+            case 2 :
+                imgView.setImageBitmap( test.convertImageSelectiveDesaturation(image_retouche, Color.BLUE, 150, 150, 150));
+                break;
+            case 3 :
+                imgView.setImageBitmap(test.convertImageGreyScale(image_retouche));
             default:
                 break;
 
 
         }
-    }
-
-    public Bitmap keepRed2(Bitmap bmp) {
-        int w = bmp.getWidth();
-        int h = bmp.getHeight();
-        int[] pixels = new int[w * h];
-        bmp.getPixels(pixels, 0, w, 0, 0, w, h);
-
-        for (int i = 0; i < h * w; i++) {
-
-            // On prends les references couleurs
-            int r = Color.red(pixels[i]);
-            int g = Color.green(pixels[i]);
-            int b = Color.blue(pixels[i]);
-
-            // Rouge
-            if (r < g + b) {
-                int gray = (int) Math.round(0.3 * Color.red(pixels[i]) + 0.59 * Color.green(pixels[i]) + 0.11 * Color.blue(pixels[i]));
-                pixels[i] = Color.rgb(gray, gray, gray);
-            }
-
-        }
-        bmp.setPixels(pixels, 0, w, 0, 0, w, h);
-        return bmp;
-        //imgView.setImageBitmap(bmp);
-
     }
 
     /**

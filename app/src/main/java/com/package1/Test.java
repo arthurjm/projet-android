@@ -34,6 +34,8 @@ public class Test extends AppCompatActivity implements AdapterView.OnItemSelecte
      * Seekbar
      */
     private SeekBar seekBar;
+
+    private SeekBar seekBarArthur;
     /**
      * TextView
      */
@@ -91,6 +93,10 @@ public class Test extends AppCompatActivity implements AdapterView.OnItemSelecte
         seekBar.setVisibility(View.GONE);
         text.setVisibility(View.GONE);
 
+        // ARTHUR
+
+        seekBarArthur = findViewById(R.id.seekBar2);
+
         // Test spinner
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.Test_fonctions, android.R.layout.test_list_item);
 
@@ -98,9 +104,7 @@ public class Test extends AppCompatActivity implements AdapterView.OnItemSelecte
         spinner.setOnItemSelectedListener(this);
     }
 
-    /**
-     * Permet d'initialiser les actions aux boutons.
-     */
+
     public void addListener() {
 
         // Les fonctions sont la automatiquement
@@ -119,7 +123,7 @@ public class Test extends AppCompatActivity implements AdapterView.OnItemSelecte
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 text.setText("Value : " + actualValue + "/" + seekBar.getMax());
-               // keepHueRs(image_copy, actualValue);
+                keepHueRs(image_copy, actualValue);
                 imgView.setImageBitmap(image_copy);
             }
         });
@@ -200,6 +204,17 @@ public class Test extends AppCompatActivity implements AdapterView.OnItemSelecte
                     seekBar.setMax(360);
                     colorizeRS(image_copy);
                     imgView.setImageBitmap(image_copy);
+                    break;
+                    // CAS ARTHUR
+
+                case 5 :
+                    seekBar.setVisibility(View.VISIBLE);
+                    seekBarArthur.setVisibility(View.VISIBLE);
+                    text.setVisibility(View.VISIBLE);
+                    seekBar.setMax(360);
+                    seekBarArthur.setMax(150);
+
+                    break;
             }
         }
         Toast.makeText(this, test, Toast.LENGTH_SHORT).show();

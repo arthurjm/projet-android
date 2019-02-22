@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.github.chrisbanes.photoview.PhotoViewAttacher;
+import com.package1.ColorManipulation;
 import com.package1.R;
 
 import java.io.IOException;
@@ -34,18 +35,19 @@ public class PhotoRecycler extends AppCompatActivity {
     private RecyclerViewHorizontalListAdapter photoAdapter;
 
 
-    /**
-     * L'image que l'on souhaite afficher apres application d'une fonction.
-     */
+    private ColorManipulation test;
+
     public static Bitmap image_copy;
-    /**
-     * Load l'image que l'on veut.
-     */
+
     public static ImageView imgView;
 
     public void initiate() {
         photoRecyclerView = findViewById(R.id.idRecyclerViewHorizontalList);
         imgView = findViewById(R.id.imageResult);
+
+        if(image_retouche.getHeight() >= 3500 && image_retouche.getWidth() >= 3500){
+            image_retouche = Bitmap.createScaledBitmap(image_retouche, (int) (image_copy.getWidth() * 0.001), (int) (image_copy.getHeight() * 0.001), true);
+        }
 
         imgView.setImageBitmap(image_retouche);
         image_copy = image_retouche.copy(Bitmap.Config.ARGB_8888, true);
@@ -62,7 +64,7 @@ public class PhotoRecycler extends AppCompatActivity {
 
         if (image_retouche != null) {
 
-            photoAdapter = new RecyclerViewHorizontalListAdapter(photoList, getApplicationContext(), image_retouche);
+            photoAdapter = new RecyclerViewHorizontalListAdapter(photoList, getApplicationContext());
             // Choisir l'orientation de la barre
             LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(PhotoRecycler.this, LinearLayoutManager.HORIZONTAL, false);
             photoRecyclerView.setLayoutManager(horizontalLayoutManager);
@@ -71,7 +73,6 @@ public class PhotoRecycler extends AppCompatActivity {
             photoList();
         }
 
-
         // Ajout d'une barre entre les items
 
         //photoRecyclerView.addItemDecoration(new DividerItemDecoration(PhotoRecycler.this, LinearLayoutManager.HORIZONTAL));
@@ -79,15 +80,23 @@ public class PhotoRecycler extends AppCompatActivity {
     }
 
     private void photoList() {
-        //FilterStruct red = new FilterStruct("red", R.drawable.mer, keepRed2(image_retouche));
-        FilterStruct red = new FilterStruct("red", R.drawable.mer, image_retouche);
-        FilterStruct grey = new FilterStruct("grey", R.drawable.mer, image_retouche);
-        FilterStruct colorize = new FilterStruct("colorize", R.drawable.mer, image_retouche);
-        FilterStruct nothing = new FilterStruct("nothing", R.drawable.mer, image_retouche);
-        FilterStruct gaussien = new FilterStruct("gaussien", R.drawable.mer, image_retouche);
+
+        // A REVOIR
+        // On redimensionne l'image
+        Bitmap tes = Bitmap.createScaledBitmap(image_copy, (int) (image_copy.getWidth() * 0.2), (int) (image_copy.getHeight() * 0.2 ), true);
+        test = new ColorManipulation();
+        FilterStruct red = new FilterStruct("red", test.convertImageSelectiveDesaturation(tes, Color.RED, 100, 100, 100));
+        FilterStruct green = new FilterStruct("green", test.convertImageSelectiveDesaturation(tes, Color.GREEN, 100, 100, 100));
+        FilterStruct blue = new FilterStruct("blue",  test.convertImageSelectiveDesaturation(tes, Color.BLUE, 150, 150, 150));
+        FilterStruct grey = new FilterStruct("grey", test.convertImageGreyScale(tes));
+        FilterStruct colorize = new FilterStruct("colorize", image_retouche);
+        FilterStruct nothing = new FilterStruct("nothing", image_retouche);
+        FilterStruct gaussien = new FilterStruct("gaussien", image_retouche);
 
 
         photoList.add(red);
+        photoList.add(green);
+        photoList.add(blue);
         photoList.add(grey);
         photoList.add(colorize);
         photoList.add(nothing);
@@ -97,31 +106,6 @@ public class PhotoRecycler extends AppCompatActivity {
 
     }
 
-    public Bitmap keepRed2(Bitmap bmp) {
-        int w = bmp.getWidth();
-        int h = bmp.getHeight();
-        int[] pixels = new int[w * h];
-        bmp.getPixels(pixels, 0, w, 0, 0, w, h);
-
-        for (int i = 0; i < h * w; i++) {
-
-            // On prends les references couleurs
-            int r = Color.red(pixels[i]);
-            int g = Color.green(pixels[i]);
-            int b = Color.blue(pixels[i]);
-
-            // Rouge
-            if (r < g + b) {
-                int gray = (int) Math.round(0.3 * Color.red(pixels[i]) + 0.59 * Color.green(pixels[i]) + 0.11 * Color.blue(pixels[i]));
-                pixels[i] = Color.rgb(gray, gray, gray);
-            }
-
-        }
-        bmp.setPixels(pixels, 0, w, 0, 0, w, h);
-        return bmp;
-        //imgView.setImageBitmap(bmp);
-
-    }
     @Override
     protected void onStart() {
         super.onStart();
