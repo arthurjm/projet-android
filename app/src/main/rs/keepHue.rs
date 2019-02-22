@@ -2,6 +2,7 @@
 #pragma rs java_package_name (com.android.rssample)
 
 int hue;
+int precision;
 
 uchar4 RS_KERNEL keepHue ( uchar4 in ) {
   uchar4 out = in;
@@ -27,7 +28,7 @@ uchar4 RS_KERNEL keepHue ( uchar4 in ) {
     h = fmod( (60 * (in.r - in.g)/delta + 240), 360);
   }
 
-  if (!( h < (hue + 10)%360 && h > (hue - 10)%360 )) {
+  if (!( h < (hue + precision)%360 && h > (hue - precision)%360 )) {
     float grey = (0.30 * in.r + 0.59 * in.g + 0.11 * in.b);
     out.r = grey;
     out.g = grey;

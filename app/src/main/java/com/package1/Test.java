@@ -44,6 +44,7 @@ public class Test extends AppCompatActivity implements AdapterView.OnItemSelecte
      * Valeur actuelle grace à la seekBar
      */
     private int actualValue;
+    private int precisionbar;
     /**
      * Spinner
      */
@@ -113,7 +114,11 @@ public class Test extends AppCompatActivity implements AdapterView.OnItemSelecte
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 actualValue = progress;
+
                 text.setText("Value : " + progress + "/" + seekBar.getMax());
+                image_copy = image.copy(Bitmap.Config.ARGB_8888, true);
+                keepHue(image_copy, actualValue, precisionbar);
+                imgView.setImageBitmap(image_copy);
             }
 
             @Override
@@ -123,7 +128,33 @@ public class Test extends AppCompatActivity implements AdapterView.OnItemSelecte
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 text.setText("Value : " + actualValue + "/" + seekBar.getMax());
-                keepHueRs(image_copy, actualValue);
+                image_copy = image.copy(Bitmap.Config.ARGB_8888, true);
+                keepHue(image_copy, actualValue, precisionbar);
+                imgView.setImageBitmap(image_copy);
+            }
+        });
+
+        seekBarArthur.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                precisionbar = progress;
+
+                text.setText("Value : " + progress + "/" + seekBar.getMax());
+                image_copy = image.copy(Bitmap.Config.ARGB_8888, true);
+                keepHue(image_copy, actualValue, precisionbar);
+                imgView.setImageBitmap(image_copy);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                text.setText("Value : " + actualValue + "/" + seekBar.getMax());
+                image_copy = image.copy(Bitmap.Config.ARGB_8888, true);
+                keepHue(image_copy, actualValue, precisionbar);
                 imgView.setImageBitmap(image_copy);
             }
         });
@@ -134,7 +165,8 @@ public class Test extends AppCompatActivity implements AdapterView.OnItemSelecte
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 intent.setType("image/*");
                 startActivityForResult(intent, 1);
-                imgView.setImageBitmap(image_copy);
+
+                // ZZZZ
 
             }
         });
@@ -211,8 +243,8 @@ public class Test extends AppCompatActivity implements AdapterView.OnItemSelecte
                     seekBar.setVisibility(View.VISIBLE);
                     seekBarArthur.setVisibility(View.VISIBLE);
                     text.setVisibility(View.VISIBLE);
-                    seekBar.setMax(360);
-                    seekBarArthur.setMax(150);
+                    seekBar.setMax(36);
+                    seekBarArthur.setMax(10);
 
                     break;
             }
@@ -285,31 +317,6 @@ public class Test extends AppCompatActivity implements AdapterView.OnItemSelecte
         rs.destroy();
     }
 
-    public void keepRed(Bitmap bmp) {
-        int w = bmp.getWidth();
-        int h = bmp.getHeight();
-        int[] pixels = new int[w * h];
-        bmp.getPixels(pixels, 0, w, 0, 0, w, h);
-
-        for (int i = 0; i < h * w; i++) {
-
-            // On prends les references couleurs
-            int r = Color.red(pixels[i]);
-            int g = Color.green(pixels[i]);
-            int b = Color.blue(pixels[i]);
-
-            // Rouge
-            if (r < g + b) {
-                int gray = (int) Math.round(0.3 * Color.red(pixels[i]) + 0.59 * Color.green(pixels[i]) + 0.11 * Color.blue(pixels[i]));
-                pixels[i] = Color.rgb(gray, gray, gray);
-            }
-
-        }
-        bmp.setPixels(pixels, 0, w, 0, 0, w, h);
-        imgView.setImageBitmap(bmp);
-
-    }
-
     public void undo(Bitmap bmp, ImageView img) {
         img.setImageBitmap(bmp);
     }
@@ -339,7 +346,7 @@ public class Test extends AppCompatActivity implements AdapterView.OnItemSelecte
     }
 
     // Garde seulement une certaine teinte, passée en paramètre, sur une image
-    private void keepHueRs(Bitmap bmp, int hue) {
+    private void keepHue(Bitmap bmp, int hue, int precision) {
         RenderScript rs = RenderScript.create(this);
 
         Allocation input = Allocation.createFromBitmap(rs, bmp);
@@ -347,14 +354,24 @@ public class Test extends AppCompatActivity implements AdapterView.OnItemSelecte
 
         ScriptC_keepHue keepHueScript = new ScriptC_keepHue(rs);
 
-        keepHueScript.set_hue(hue);
+        keepHueScript.set_hue(hue*10);
+        keepHueScript.set_precision(precision*10);
         keepHueScript.forEach_keepHue(input, output);
 
         output.copyTo(bmp);
 
-        input.destroy();
-        output.destroy();
-        keepHueScript.destroy();
-        rs.destroy();
+        input.destroy(); output.destroy();
+        keepHueScript.destroy(); rs.destroy();
+    }
+    private void keepRed(Bitmap bmp) {
+        keepHue(bmp, 0, 10);
+    }
+    private void keepBlue(Bitmap bmp) {
+        keepHue(bmp, 300, 10);
+    }
+    private void keepRandomHue(Bitmap bmp) {
+        Random r = new Random();
+        int hue = r.nextInt(360);
+        keepHue(bmp, hue, 10);
     }
 }
