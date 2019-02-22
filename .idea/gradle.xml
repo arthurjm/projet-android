@@ -7,8 +7,8 @@
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
-            <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/app" />
+            <option value="/autofs/unitytravail/travail/amondon001/S6/projet_techno/projet-android" />
+            <option value="/autofs/unitytravail/travail/amondon001/S6/projet_techno/projet-android/app" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

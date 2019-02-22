@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     Convolution rightBlur;
     Convolution convolution;
     Convolution convolutionGauss;
+    RS rs;
 
     public int[] tabpix;
 
@@ -291,6 +292,7 @@ public class MainActivity extends AppCompatActivity {
         rightBlur = new Convolution((new int[][]{{0}, {0}, {0}, {0}, {0}, {0}, {0}, {1}, {1}, {1}, {1}, {1}, {1}, {1}, {1}}), 15, 1);
         convolution = new Convolution(7);
         convolutionGauss = new GaussienMask(7,4.5);
+        rs = new RS(this);
 
         //initialisation des elements visibles
         imageSvg.setImageBitmap(bitmapImageOg1);
