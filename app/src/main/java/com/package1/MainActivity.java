@@ -55,6 +55,9 @@ public class MainActivity extends AppCompatActivity {
         tb = findViewById(R.id.camera_mainActivity);
         buttonList.add(tb);
 
+        tb = findViewById(R.id.information);
+        buttonList.add(tb);
+
     }
 
     /**
@@ -88,6 +91,12 @@ public class MainActivity extends AppCompatActivity {
                     intent.setType("image/*");
                     startActivityForResult(intent, 1);
 
+                }
+            });
+            buttonList.get(4).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    infoPage(view);
                 }
             });
         }
@@ -135,6 +144,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void testPage(View view) {
         startActivity(new Intent(this, PhotoRecycler.class));
+    }
+
+    public void infoPage(View view) {
+        startActivity(new Intent(this, Info.class));
     }
 
     @Override

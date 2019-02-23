@@ -72,6 +72,8 @@ public class Test extends AppCompatActivity implements AdapterView.OnItemSelecte
     public void initiate() {
         // Test
         buttonList = new ArrayList<>();
+
+
         Button tb;
         tb = findViewById(R.id.buttonLoadPhoto);
         buttonList.add(tb);

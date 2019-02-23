@@ -1,8 +1,10 @@
 package com.package1.affichage;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,9 +23,6 @@ import java.util.List;
 import static com.package1.MainActivity.image_retouche;
 import static com.package1.MainActivity.imgView;
 import static com.package1.affichage.PhotoRecycler.*;
-import static com.package1.MainActivity.image_retouche_copy;
-
-
 
 public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<RecyclerViewHorizontalListAdapter.PhotoViewHolder> {
 
@@ -31,10 +30,13 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
     private Context context;
 
     private ColorManipulation test;
+    private int actualFunction;
 
     public RecyclerViewHorizontalListAdapter(List<FilterStruct> horizontalPhotoList, Context context) {
         this.horizontalPhotoList = horizontalPhotoList;
         this.context = context;
+
+
     }
 
     /**
@@ -87,21 +89,74 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
             case 0:
                 seekBar1.setVisibility(View.VISIBLE);
                 seekBar2.setVisibility(View.VISIBLE);
-                imgView.setImageBitmap( test.convertImageSelectiveDesaturation(image_retouche, Color.RED, 100, 100, 100));
+                imgView.setImageBitmap(test.convertImageSelectiveDesaturation(image_retouche, Color.RED, 100, 100, 100));
+
+                actualFunction = 0;
                 break;
             case 1:
-                imgView.setImageBitmap( test.convertImageSelectiveDesaturation(image_retouche, Color.GREEN, 100, 100, 100));
+                imgView.setImageBitmap(test.convertImageSelectiveDesaturation(image_retouche, Color.GREEN, 100, 100, 100));
                 break;
-            case 2 :
-                imgView.setImageBitmap( test.convertImageSelectiveDesaturation(image_retouche, Color.BLUE, 150, 150, 150));
+            case 2:
+                imgView.setImageBitmap(test.convertImageSelectiveDesaturation(image_retouche, Color.BLUE, 150, 150, 150));
                 break;
-            case 3 :
+            case 3:
                 imgView.setImageBitmap(test.convertImageGreyScale(image_retouche));
             default:
                 break;
 
 
         }
+    }
+
+    public void applyFunction() {
+        switch (actualFunction) {
+            case 0:
+                // Appel de la fonction
+
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void addListener() {
+
+        // Les fonctions sont la automatiquement
+        seekBar1.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
+        seekBar2.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
     }
 
     /**
