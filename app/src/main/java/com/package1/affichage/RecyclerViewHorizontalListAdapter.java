@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,8 +19,9 @@ import com.package1.ColorManipulation;
 import java.util.List;
 
 import static com.package1.MainActivity.image_retouche;
-import static com.package1.affichage.PhotoRecycler.image_copy;
-import static com.package1.affichage.PhotoRecycler.imgView;
+import static com.package1.MainActivity.imgView;
+import static com.package1.affichage.PhotoRecycler.*;
+import static com.package1.MainActivity.image_retouche_copy;
 
 
 
@@ -68,9 +70,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 useFonction(position);
-                //imgView.setImageBitmap(horizontalPhotoList.get(position).getImage());
                 // Action lorsque l'on clique sur l'image
                 String productName = horizontalPhotoList.get(position).getFilterName().toString();
                 Toast.makeText(context, productName + " is selected", Toast.LENGTH_SHORT).show();
@@ -85,6 +85,8 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
         test = new ColorManipulation();
         switch (position) {
             case 0:
+                seekBar1.setVisibility(View.VISIBLE);
+                seekBar2.setVisibility(View.VISIBLE);
                 imgView.setImageBitmap( test.convertImageSelectiveDesaturation(image_retouche, Color.RED, 100, 100, 100));
                 break;
             case 1:

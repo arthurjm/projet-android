@@ -4,15 +4,12 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v8.renderscript.Allocation;
-import android.support.v8.renderscript.RenderScript;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,15 +17,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import com.android.rssample.ScriptC_colorize;
-import com.android.rssample.ScriptC_grey;
-import com.android.rssample.ScriptC_invert;
-import com.android.rssample.ScriptC_keepHue;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Random;
-
 public class Image extends AppCompatActivity {
 
     /**
@@ -50,6 +41,10 @@ public class Image extends AppCompatActivity {
      */
     public ArrayList<Button> buttonList;
 
+
+    private RS renderScript;
+
+
     /**
      * Nombre de bouton sur l'application.
      */
@@ -62,6 +57,7 @@ public class Image extends AppCompatActivity {
         super.onCreate(savedUnstanceState);
         setContentView(R.layout.image);
 
+        renderScript = new RS(getApplicationContext());
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inMutable = true;
 
@@ -204,19 +200,20 @@ public class Image extends AppCompatActivity {
         if (image_copy != null) {
             switch (item.getItemId()) {
                 case R.id.grisAction:
-                    toGreyRS(image_copy);
+                    renderScript.toGrey(image_copy);
                     imgView.setImageBitmap(image_copy);
                     return true;
                 case R.id.colorizeRsAction:
-                    colorizeRS(image_copy);
+                    //renderScript.colorize(image_copy,120);
                     imgView.setImageBitmap(image_copy);
                     return true;
                 case R.id.keepRedAction:
-                    keepRed(image_copy);
+
+                    //keepRed(image_copy);
                     imgView.setImageBitmap(image_copy);
                     return true;
                 case R.id.keepRedAction2:
-                    keepRed2(image_copy);
+                    //keepRed2(image_copy);
                     imgView.setImageBitmap(image_copy);
                     return true;
                 case R.id.undoAction:
@@ -224,7 +221,7 @@ public class Image extends AppCompatActivity {
                     image_copy = image.copy(Bitmap.Config.ARGB_8888, true);
                     return true;
                 case R.id.invertAction:
-                    invertRS(image_copy);
+                   // renderScript.invert(image_copy);
                     imgView.setImageBitmap(image_copy);
                     return true;
             }
@@ -266,136 +263,6 @@ public class Image extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         Log.i("CV", "onDestroy()");
-    }
-
-
-    private void keepRed(Bitmap bmp) {
-        keepHue(bmp, 0);
-    }
-
-    /**
-     * Test fonctions
-     */
-
-    /**
-     * Permet d'inverser les couleurs d'une image en version renderScript.
-     *
-     * @param bmp L'image.
-     */
-    public void invertRS(Bitmap bmp) {
-
-        // 1) Creer un contexte RenderScript
-        RenderScript rs = RenderScript.create(this);
-
-        // 2) Creer des Allocations pour passer les donnees
-        Allocation input = Allocation.createFromBitmap(rs, bmp);
-        Allocation output = Allocation.createTyped(rs, input.getType());
-
-        // 3) Creer le script
-        ScriptC_invert invertScript = new ScriptC_invert(rs);
-
-        // 4) Copier les donnees dans les Allocations
-        // ...
-        // 5) Initialiser les variables globales potentielles
-        // ...
-        // 6) Lancer le noyau
-
-        invertScript.forEach_invert(input, output);
-
-        // 7) Recuperer les donnees des Allocation (s)
-        output.copyTo(bmp);
-
-        // 8) Detruire le context , les Allocation (s) et le script
-        input.destroy();
-        output.destroy();
-        invertScript.destroy();
-        rs.destroy();
-    }
-
-    public void keepRed2(Bitmap bmp) {
-        int w = bmp.getWidth();
-        int h = bmp.getHeight();
-        int[] pixels = new int[w * h];
-        bmp.getPixels(pixels, 0, w, 0, 0, w, h);
-
-        for (int i = 0; i < h * w; i++) {
-
-            // On prends les references couleurs
-            int r = Color.red(pixels[i]);
-            int g = Color.green(pixels[i]);
-            int b = Color.blue(pixels[i]);
-
-            // Rouge
-            if (r < g + b) {
-                int gray = (int) Math.round(0.3 * Color.red(pixels[i]) + 0.59 * Color.green(pixels[i]) + 0.11 * Color.blue(pixels[i]));
-                pixels[i] = Color.rgb(gray, gray, gray);
-            }
-
-        }
-        bmp.setPixels(pixels, 0, w, 0, 0, w, h);
-        imgView.setImageBitmap(bmp);
-
-    }
-
-    private void colorizeRS(Bitmap bmp) {
-        RenderScript rs = RenderScript.create(this);
-
-        Allocation input = Allocation.createFromBitmap(rs, bmp);
-        Allocation output = Allocation.createTyped(rs, input.getType());
-
-        ScriptC_colorize colorizeScript = new ScriptC_colorize(rs);
-
-        Random r = new Random();
-        int hue = r.nextInt(360);
-        colorizeScript.set_hue(hue);
-
-        colorizeScript.forEach_colorize(input, output);
-
-        output.copyTo(bmp);
-
-        input.destroy();
-        output.destroy();
-        colorizeScript.destroy();
-        rs.destroy();
-    }
-
-    // Garde seulement une certaine teinte, passée en paramètre, sur une image
-    private void keepHue(Bitmap bmp, int hue) {
-        RenderScript rs = RenderScript.create(this);
-
-        Allocation input = Allocation.createFromBitmap(rs, bmp);
-        Allocation output = Allocation.createTyped(rs, input.getType());
-
-        ScriptC_keepHue keepHueScript = new ScriptC_keepHue(rs);
-
-        keepHueScript.set_hue(hue);
-        keepHueScript.forEach_keepHue(input, output);
-
-        output.copyTo(bmp);
-
-        input.destroy();
-        output.destroy();
-        keepHueScript.destroy();
-        rs.destroy();
-    }
-
-    public void toGreyRS(Bitmap bmp) {
-
-        RenderScript rs = RenderScript.create(this);
-
-        Allocation input = Allocation.createFromBitmap(rs, bmp);
-        Allocation output = Allocation.createTyped(rs, input.getType());
-
-        ScriptC_grey greyScript = new ScriptC_grey(rs);
-
-        greyScript.forEach_toGrey(input, output);
-
-        output.copyTo(bmp);
-
-        input.destroy();
-        output.destroy();
-        greyScript.destroy();
-        rs.destroy();
     }
 
     public void undo(Bitmap bmp, ImageView img) {

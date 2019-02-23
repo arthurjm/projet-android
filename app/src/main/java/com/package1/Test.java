@@ -4,13 +4,10 @@ package com.package1;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v8.renderscript.Allocation;
-import android.support.v8.renderscript.RenderScript;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -21,14 +18,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.rssample.ScriptC_colorize;
-import com.android.rssample.ScriptC_grey;
-import com.android.rssample.ScriptC_keepHue;
-import com.android.rssample.ScriptC_luminosity;
-
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Random;
+
 public class Test extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     /**
@@ -67,6 +59,8 @@ public class Test extends AppCompatActivity implements AdapterView.OnItemSelecte
      *
      * @see Button
      */
+    private RS renderScript;
+
     public ArrayList<Button> buttonList;
     private Uri filePath;
     private String imagepath = null;
@@ -119,7 +113,7 @@ public class Test extends AppCompatActivity implements AdapterView.OnItemSelecte
                 text.setText("Value : " + progress + "/" + seekBar.getMax());
                 image_copy = image.copy(Bitmap.Config.ARGB_8888, true);
                 //keepHue(image_copy, actualValue, precisionbar);
-                changeLuminosite(image_copy, actualValue);
+                // changeLuminosite(image_copy, actualValue);
                 imgView.setImageBitmap(image_copy);
             }
 
@@ -131,8 +125,8 @@ public class Test extends AppCompatActivity implements AdapterView.OnItemSelecte
             public void onStopTrackingTouch(SeekBar seekBar) {
                 text.setText("Value : " + actualValue + "/" + seekBar.getMax());
                 image_copy = image.copy(Bitmap.Config.ARGB_8888, true);
-                //keepHue(image_copy, actualValue, precisionbar);
-                changeLuminosite(image_copy, actualValue);
+               // keepHue(image_copy, actualValue, precisionbar);
+                // changeLuminosite(image_copy, actualValue);
                 imgView.setImageBitmap(image_copy);
             }
         });
@@ -145,7 +139,7 @@ public class Test extends AppCompatActivity implements AdapterView.OnItemSelecte
 
                 text.setText("Value : " + progress + "/" + seekBar.getMax());
                 image_copy = image.copy(Bitmap.Config.ARGB_8888, true);
-                keepHue(image_copy, actualValue, precisionbar);
+                //keepHue(image_copy, actualValue, precisionbar);
                 imgView.setImageBitmap(image_copy);
             }
 
@@ -157,7 +151,7 @@ public class Test extends AppCompatActivity implements AdapterView.OnItemSelecte
             public void onStopTrackingTouch(SeekBar seekBar) {
                 text.setText("Value : " + actualValue + "/" + seekBar.getMax());
                 image_copy = image.copy(Bitmap.Config.ARGB_8888, true);
-                keepHue(image_copy, actualValue, precisionbar);
+                //keepHue(image_copy, actualValue, precisionbar);
                 imgView.setImageBitmap(image_copy);
             }
         });
@@ -185,7 +179,7 @@ public class Test extends AppCompatActivity implements AdapterView.OnItemSelecte
             public void onClick(View view) {
                 //seekBar.setVisibility(View.GONE);
                 //text.setVisibility(View.GONE);
-                if(image != null) {
+                if (image != null) {
                     undo(image, imgView);
                     image_copy = image.copy(Bitmap.Config.ARGB_8888, true);
                 }
@@ -197,6 +191,7 @@ public class Test extends AppCompatActivity implements AdapterView.OnItemSelecte
         super.onCreate(savedUnstanceState);
         setContentView(R.layout.test);
 
+
         imgView = findViewById(R.id.imageTest2);
 
         initiate();
@@ -207,26 +202,28 @@ public class Test extends AppCompatActivity implements AdapterView.OnItemSelecte
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String sSelected = parent.getItemAtPosition(position).toString();
         String test = "test";
+        renderScript = new RS(getApplicationContext());
 
         if (image_copy != null) {
             switch (position) {
-                case 0 :
+                case 0:
                     seekBar.setVisibility(View.GONE);
                     text.setVisibility(View.GONE);
                     break;
                 case 1:
                     seekBar.setVisibility(View.GONE);
                     text.setVisibility(View.GONE);
-                    toGreyRS(image_copy);
+                    renderScript.toGrey(image_copy);
                     imgView.setImageBitmap(image_copy);
                     break;
                 case 2:
                     seekBar.setVisibility(View.GONE);
                     text.setVisibility(View.GONE);
-                    keepRed(image_copy);
+
+                    //keepRed(image_copy);
                     imgView.setImageBitmap(image_copy);
                     break;
-                case 3 :
+                case 3:
                     seekBar.setVisibility(View.VISIBLE);
                     text.setVisibility(View.VISIBLE);
                     seekBar.setMax(255);
@@ -237,12 +234,12 @@ public class Test extends AppCompatActivity implements AdapterView.OnItemSelecte
                     seekBar.setVisibility(View.VISIBLE);
                     text.setVisibility(View.VISIBLE);
                     seekBar.setMax(360);
-                    colorizeRS(image_copy);
+                    //renderScript.colorize(image_copy, 150);
                     imgView.setImageBitmap(image_copy);
                     break;
-                    // CAS ARTHUR
+                // CAS ARTHUR
 
-                case 5 :
+                case 5:
                     seekBar.setVisibility(View.VISIBLE);
                     seekBarArthur.setVisibility(View.VISIBLE);
                     text.setVisibility(View.VISIBLE);
@@ -250,7 +247,7 @@ public class Test extends AppCompatActivity implements AdapterView.OnItemSelecte
                     seekBarArthur.setMax(10);
 
                     break;
-                case 6 :
+                case 6:
                     seekBar.setVisibility(View.VISIBLE);
                     seekBarArthur.setVisibility(View.INVISIBLE);
                     text.setVisibility(View.VISIBLE);
@@ -305,100 +302,10 @@ public class Test extends AppCompatActivity implements AdapterView.OnItemSelecte
         return cursor.getString(column_index);
     }
 
-    // ZZZ
-
-    public void toGreyRS(Bitmap bmp) {
-
-        RenderScript rs = RenderScript.create(this);
-
-        Allocation input = Allocation.createFromBitmap(rs, bmp);
-        Allocation output = Allocation.createTyped(rs, input.getType());
-
-        ScriptC_grey greyScript = new ScriptC_grey(rs);
-
-        greyScript.forEach_toGrey(input, output);
-
-        output.copyTo(bmp);
-
-        input.destroy();
-        output.destroy();
-        greyScript.destroy();
-        rs.destroy();
-    }
 
     public void undo(Bitmap bmp, ImageView img) {
         img.setImageBitmap(bmp);
     }
 
-    // Garde seulement une certaine teinte, passée en paramètre, sur une image
 
-    private void colorizeRS(Bitmap bmp) {
-        RenderScript rs = RenderScript.create(this);
-
-        Allocation input = Allocation.createFromBitmap(rs, bmp);
-        Allocation output = Allocation.createTyped(rs, input.getType());
-
-        ScriptC_colorize colorizeScript = new ScriptC_colorize(rs);
-
-        Random r = new Random();
-        int hue = r.nextInt(360);
-        colorizeScript.set_hue(hue);
-
-        colorizeScript.forEach_colorize(input, output);
-
-        output.copyTo(bmp);
-
-        input.destroy();
-        output.destroy();
-        colorizeScript.destroy();
-        rs.destroy();
-    }
-
-    // Garde seulement une certaine teinte, passée en paramètre, sur une image
-    private void keepHue(Bitmap bmp, int hue, int precision) {
-        RenderScript rs = RenderScript.create(this);
-
-        Allocation input = Allocation.createFromBitmap(rs, bmp);
-        Allocation output = Allocation.createTyped(rs, input.getType());
-
-        ScriptC_keepHue keepHueScript = new ScriptC_keepHue(rs);
-
-        keepHueScript.set_hue(hue*10);
-        keepHueScript.set_precision(precision*10);
-        keepHueScript.forEach_keepHue(input, output);
-
-        output.copyTo(bmp);
-
-        input.destroy(); output.destroy();
-        keepHueScript.destroy(); rs.destroy();
-    }
-    private void keepRed(Bitmap bmp) {
-        keepHue(bmp, 0, 10);
-    }
-    private void keepBlue(Bitmap bmp) {
-        keepHue(bmp, 300, 10);
-    }
-    private void keepRandomHue(Bitmap bmp) {
-        Random r = new Random();
-        int hue = r.nextInt(360);
-        keepHue(bmp, hue, 10);
-    }
-
-    private void changeLuminosite(Bitmap bmp, int luminosite) {
-        RenderScript rs = RenderScript.create(this);
-
-        Allocation input = Allocation.createFromBitmap(rs, bmp);
-        Allocation output = Allocation.createTyped(rs, input.getType());
-
-        ScriptC_luminosity script = new ScriptC_luminosity(rs);
-
-        float v = luminosite / 100;
-        script.set_v(v);
-        script.forEach_luminosity(input, output);
-
-        output.copyTo(bmp);
-
-        input.destroy(); output.destroy();
-        script.destroy(); rs.destroy();
-    }
 }

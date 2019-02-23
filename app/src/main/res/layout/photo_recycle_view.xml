@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
+    android:background="@color/darkGray"
     tools:context="com.package1.affichage.PhotoRecycler">
 
     <LinearLayout
@@ -21,8 +21,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.954">
+        app:layout_constraintTop_toBottomOf="@+id/imageResult"
+        app:layout_constraintVertical_bias="0.94">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/idRecyclerViewHorizontalList"
@@ -32,19 +32,63 @@
 
     <com.github.chrisbanes.photoview.PhotoView
         android:id="@+id/imageResult"
-        android:layout_width="314dp"
-        android:layout_height="375dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_width="400dp"
+        android:layout_height="444dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <SeekBar
+        android:id="@+id/seekBarFull"
+        android:layout_width="397dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.493"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.273" />
+        app:layout_constraintTop_toBottomOf="@+id/imageResult"
+        app:layout_constraintVertical_bias="0.781" />
+
+    <SeekBar
+        android:id="@+id/seekBarDemi"
+        android:layout_width="397dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/seekBarFull"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/save"
+        android:alpha="0.80"
+        android:layout_width="56dp"
+        android:layout_height="38dp"
+        android:layout_marginTop="428dp"
+        android:layout_marginEnd="4dp"
+        android:fontFamily="sans-serif-black"
+        android:text="Save"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textStyle="italic"
+        android:typeface="monospace"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imageResult" />
+
+    <Button
+        android:id="@+id/undo"
+        android:alpha="0.80"
+        android:layout_width="56dp"
+        android:layout_height="38dp"
+        android:layout_marginTop="428dp"
+        android:fontFamily="sans-serif-black"
+        android:text="Undo"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textStyle="italic"
+        android:typeface="monospace"
+        app:layout_constraintEnd_toStartOf="@+id/save"
+        app:layout_constraintTop_toTopOf="@+id/imageResult" />
 
 </android.support.constraint.ConstraintLayout>

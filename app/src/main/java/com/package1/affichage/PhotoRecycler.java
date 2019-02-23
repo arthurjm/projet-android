@@ -1,32 +1,27 @@
 package com.package1.affichage;
 
 
-import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 
-import com.github.chrisbanes.photoview.PhotoViewAttacher;
 import com.package1.ColorManipulation;
 import com.package1.R;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.package1.MainActivity.image_retouche;
+import static com.package1.MainActivity.imgView;
+import static com.package1.MainActivity.image_retouche_copy;
 
 public class PhotoRecycler extends AppCompatActivity {
 
@@ -34,26 +29,57 @@ public class PhotoRecycler extends AppCompatActivity {
     private RecyclerView photoRecyclerView;
     private RecyclerViewHorizontalListAdapter photoAdapter;
 
+    public static SeekBar seekBar1;
+    public static SeekBar seekBar2;
+
+    private Button undoBut;
+    private Button saveBut;
 
     private ColorManipulation test;
 
-    public static Bitmap image_copy;
-
-    public static ImageView imgView;
-
     public void initiate() {
-        photoRecyclerView = findViewById(R.id.idRecyclerViewHorizontalList);
-        imgView = findViewById(R.id.imageResult);
 
-        if(image_retouche.getHeight() >= 3500 && image_retouche.getWidth() >= 3500){
-            image_retouche = Bitmap.createScaledBitmap(image_retouche, (int) (image_copy.getWidth() * 0.001), (int) (image_copy.getHeight() * 0.001), true);
+        // Button
+        undoBut = findViewById(R.id.undo);
+        saveBut = findViewById(R.id.save);
+
+        // RecyclerVIew
+        photoRecyclerView = findViewById(R.id.idRecyclerViewHorizontalList);
+
+        // Image
+        imgView = findViewById(R.id.imageResult);
+        image_retouche_copy = image_retouche.copy(Bitmap.Config.ARGB_8888, true);
+
+        if (image_retouche_copy.getHeight() >= 3500 && image_retouche_copy.getWidth() >= 3500) {
+            image_retouche_copy = Bitmap.createScaledBitmap(image_retouche_copy, (int) (image_retouche_copy.getWidth() * 0.8), (int) (image_retouche_copy.getHeight() * 0.8), true);
         }
 
-        imgView.setImageBitmap(image_retouche);
-        image_copy = image_retouche.copy(Bitmap.Config.ARGB_8888, true);
+        imgView.setImageBitmap(image_retouche_copy);
+
+        //Seekbar
+        seekBar1 = findViewById(R.id.seekBarFull);
+        seekBar2 = findViewById(R.id.seekBarDemi);
+
+        seekBar1.setVisibility(View.GONE);
+        seekBar2.setVisibility(View.GONE);
 
     }
 
+    /**
+     * Permet d'initialiser les actions aux boutons.
+     */
+    public void addListener() {
+
+            undoBut.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    undo(image_retouche);
+                   // image_copy = image_retouche.copy(Bitmap.Config.ARGB_8888, true);
+                }
+            });
+
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +87,7 @@ public class PhotoRecycler extends AppCompatActivity {
         setContentView(R.layout.photo_recycle_view);
 
         initiate();
+        addListener();
 
         if (image_retouche != null) {
 
@@ -83,11 +110,12 @@ public class PhotoRecycler extends AppCompatActivity {
 
         // A REVOIR
         // On redimensionne l'image
-        Bitmap tes = Bitmap.createScaledBitmap(image_copy, (int) (image_copy.getWidth() * 0.2), (int) (image_copy.getHeight() * 0.2 ), true);
+        Bitmap tes = Bitmap.createScaledBitmap(image_retouche_copy, (int) (image_retouche_copy.getWidth() * 0.2), (int) (image_retouche_copy.getHeight() * 0.2), true);
         test = new ColorManipulation();
+
         FilterStruct red = new FilterStruct("red", test.convertImageSelectiveDesaturation(tes, Color.RED, 100, 100, 100));
         FilterStruct green = new FilterStruct("green", test.convertImageSelectiveDesaturation(tes, Color.GREEN, 100, 100, 100));
-        FilterStruct blue = new FilterStruct("blue",  test.convertImageSelectiveDesaturation(tes, Color.BLUE, 150, 150, 150));
+        FilterStruct blue = new FilterStruct("blue", test.convertImageSelectiveDesaturation(tes, Color.BLUE, 150, 150, 150));
         FilterStruct grey = new FilterStruct("grey", test.convertImageGreyScale(tes));
         FilterStruct colorize = new FilterStruct("colorize", image_retouche);
         FilterStruct nothing = new FilterStruct("nothing", image_retouche);
@@ -105,6 +133,11 @@ public class PhotoRecycler extends AppCompatActivity {
 
 
     }
+
+    public void undo(Bitmap bmp) {
+        imgView.setImageBitmap(bmp);
+    }
+
 
     @Override
     protected void onStart() {

@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.package1.affichage.PhotoRecycler;
 
@@ -20,10 +21,10 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    /**
-     * L'image que l'on souhaite traiter.
-     */
     public static Bitmap image_retouche;
+    public static Bitmap image_retouche_copy;
+    public static ImageView imgView;
+
     private Uri filePath;
     private String imagepath = null;
     private int PICK_IMAGE_REQUEST = 1;
