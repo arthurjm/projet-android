@@ -18,6 +18,7 @@ import com.package1.R;
 
 import com.package1.ColorManipulation;
 
+import java.nio.channels.SelectionKey;
 import java.util.List;
 
 import static com.package1.MainActivity.image_retouche;
@@ -32,10 +33,13 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
     private ColorManipulation test;
     private int actualFunction;
 
+    private int progressBar1;
+    private int progresseBar2;
+
+
     public RecyclerViewHorizontalListAdapter(List<FilterStruct> horizontalPhotoList, Context context) {
         this.horizontalPhotoList = horizontalPhotoList;
         this.context = context;
-
 
     }
 
@@ -51,6 +55,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
         //inflate the layout file
         View photoProductView = LayoutInflater.from(parent.getContext()).inflate(R.layout.hozirontal_list_photo, parent, false);
         return new PhotoViewHolder(photoProductView);
+
     }
 
     /**
@@ -82,25 +87,42 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
 
     }
 
+    public void setGone(SeekBar sb) {
+        sb.setVisibility(View.GONE);
+    }
+
+    public void setGone(SeekBar sb, SeekBar sb1) {
+        setGone(sb);
+        setGone(sb1);
+    }
+
+    public void setVisible(SeekBar sb) {
+        sb.setVisibility(View.VISIBLE);
+    }
+
 
     public void useFonction(final int position) {
         test = new ColorManipulation();
+        addListener();
         switch (position) {
             case 0:
-                seekBar1.setVisibility(View.VISIBLE);
-                seekBar2.setVisibility(View.VISIBLE);
+                setGone(seekBar1, seekBar2);
                 imgView.setImageBitmap(test.convertImageSelectiveDesaturation(image_retouche, Color.RED, 100, 100, 100));
-
-                actualFunction = 0;
                 break;
             case 1:
+                setGone(seekBar1, seekBar2);
                 imgView.setImageBitmap(test.convertImageSelectiveDesaturation(image_retouche, Color.GREEN, 100, 100, 100));
                 break;
             case 2:
+                setGone(seekBar1, seekBar2);
                 imgView.setImageBitmap(test.convertImageSelectiveDesaturation(image_retouche, Color.BLUE, 150, 150, 150));
                 break;
             case 3:
                 imgView.setImageBitmap(test.convertImageGreyScale(image_retouche));
+            case 4:
+                setVisible(seekBar1);
+                seekBar1.setMax(360);
+                actualFunction = 0;
             default:
                 break;
 
@@ -109,10 +131,10 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
     }
 
     public void applyFunction() {
+
         switch (actualFunction) {
             case 0:
-                // Appel de la fonction
-
+                imgView.setImageBitmap(test.convertImageColorization(image_retouche, progressBar1));
                 break;
             case 1:
                 break;
@@ -130,6 +152,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                progressBar1 = progress;
             }
 
             @Override
@@ -138,6 +161,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+                applyFunction();
             }
         });
 
@@ -145,6 +169,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                progresseBar2 = progress;
             }
 
             @Override
@@ -153,6 +178,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+                applyFunction();
 
             }
         });
