@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.colorHistEqual:
                 HistogramManipulation hist = new HistogramManipulation(bmp, ChanelType.H);
-                hist.shiftLutCycleLUT(seekbar.getProgress());
+                hist.shiftCycleLUT(seekbar.getProgress());
                 Log.e("TAG", hist.histogram.toString());
                 for(int k=0; k<256; k++){
                     Log.e("TAG","value : "+hist.LUT[k]);

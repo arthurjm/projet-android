@@ -71,6 +71,9 @@ public class HistogramManipulation {
         return tab;
     }
 
+    public Histogram getHistogram(){
+        return histogram;
+    }
 
     public void convert(int index, int[] tabPixels) {
         R = (tabPixels[index] >> 16) & 0xff;
@@ -113,7 +116,7 @@ public class HistogramManipulation {
      * @param shiftValue
      *      value by which the shift is made
      */
-    public void shiftLutCycleLUT(int shiftValue){
+    public void shiftCycleLUT(int shiftValue){
         for(int i = 0;i<NumberofValues;i++){
             LUT[i]=(i+shiftValue)%NumberofValues;
         }
@@ -121,40 +124,25 @@ public class HistogramManipulation {
 
     /**
      * Function used to make a shift up for all values in the histogram,
-     * the shift can not be greater than (NumberofValues/2),
-     * if the shift make a value bigger than the maximum (NuberofValues), it get the maximum value instead.
-     * @param shiftValue
-     *      value by which the shift is made
-     */
-    public void shiftLutUpLUT(int shiftValue){
-        if (shiftValue>NumberofValues/2){
-            shiftValue=NumberofValues/2;
-        }
-        for(int i = 0;i<NumberofValues;i++){
-            if(i+shiftValue>NumberofValues-1){
-                LUT[i]=NumberofValues-1;
-            }else{
-                LUT[i]=i+shiftValue;
-            }
-        }
-    }
-
-    /**
-     * Function used to make a shift down for all values in the histogram,
-     * the shift can not be greater than (NumberofValues/2),
+     * the shift can not be greater than (NumberofValues/2), or lower than(NumberofValues/2)
+     * if the shift make a value bigger than the maximum (NuberofValues), it get the maximum value instead,
      * if the shift make a value lower than the minimum (0), it get the minimum value instead.
      * @param shiftValue
      *      value by which the shift is made
      */
-    public void shiftLutDownLUT(int shiftValue){
+    public void shiftLUT(int shiftValue){
         if (shiftValue>NumberofValues/2){
             shiftValue=NumberofValues/2;
+        }else if(shiftValue<(-NumberofValues)/2){
+            shiftValue=(-NumberofValues)/2;
         }
         for(int i = 0;i<NumberofValues;i++){
-            if(i-shiftValue<0){
+            if(i+shiftValue>NumberofValues-1){
+                LUT[i]=NumberofValues-1;
+            }else if(i+shiftValue<0){
                 LUT[i]=0;
             }else{
-                LUT[i]=i-shiftValue;
+                LUT[i]=i+shiftValue;
             }
         }
     }
