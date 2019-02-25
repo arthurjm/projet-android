@@ -12,14 +12,17 @@
     <TextView
         android:id="@+id/idProductName"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="46dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
-        android:textSize="15dp" />
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textSize="15dp"
+        android:textStyle="italic" />
 
 
 </LinearLayout>

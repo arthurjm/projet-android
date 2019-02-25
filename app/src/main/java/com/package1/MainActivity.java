@@ -43,10 +43,6 @@ public class MainActivity extends AppCompatActivity {
 
         buttonList = new ArrayList<>();
         Button tb;
-        tb = findViewById(R.id.optionButton);
-        buttonList.add(tb);
-        tb = findViewById(R.id.imageButton);
-        buttonList.add(tb);
 
         // Test recycler
         tb = findViewById(R.id.thirdButton);
@@ -69,22 +65,10 @@ public class MainActivity extends AppCompatActivity {
             buttonList.get(0).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    image2Page(view);
+                    filterPage(view);
                 }
             });
             buttonList.get(1).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    imagePage(view);
-                }
-            });
-            buttonList.get(2).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    testPage(view);
-                }
-            });
-            buttonList.get(3).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -93,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             });
-            buttonList.get(4).setOnClickListener(new View.OnClickListener() {
+            buttonList.get(2).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     infoPage(view);
@@ -117,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
                 imageEditing = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 //image = rotateBitmap(imagepath);
 
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -132,17 +117,8 @@ public class MainActivity extends AppCompatActivity {
         return cursor.getString(column_index);
     }
 
-    // Deuxieme affichage
-    public void image2Page(View view) {
-        startActivity(new Intent(this, Test.class));
-    }
 
-    // Premier affichage
-    public void imagePage(View view) {
-        startActivity(new Intent(this, Image.class));
-    }
-
-    public void testPage(View view) {
+    public void filterPage(View view) {
         startActivity(new Intent(this, PhotoRecycler.class));
     }
 

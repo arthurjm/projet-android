@@ -11,11 +11,15 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.package1.ChanelType;
+import com.package1.HistogramManipulation;
 import com.package1.R;
 import com.package1.ColorManipulation;
+
 import java.util.List;
 
 import static com.package1.MainActivity.imageEditing;
+import static com.package1.MainActivity.imageEditingCopy;
 import static com.package1.MainActivity.imgView;
 import static com.package1.affichage.PhotoRecycler.*;
 
@@ -24,7 +28,8 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
     private List<FilterStruct> horizontalPhotoList;
     private Context context;
 
-    private ColorManipulation test;
+    private ColorManipulation color;
+    private HistogramManipulation hist;
     private int actualFunction;
 
     private int progressBar1;
@@ -93,6 +98,11 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
         sb.setVisibility(View.VISIBLE);
     }
 
+    public void setBorn(SeekBar sb, int min, int max) {
+        sb.setMin(min);
+        sb.setMax(max);
+    }
+
     public void setRGBBackground(SeekBar sb) {
         sb.setBackgroundResource(R.drawable.seekbar_progess);
     }
@@ -102,32 +112,87 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
     }
 
     public void useFonction(final int position) {
-        test = new ColorManipulation();
+        color = new ColorManipulation();
         addListener();
         switch (position) {
+            // togrey
             case 0:
-                setGone(seekBar1, seekBar2);
-                imgView.setImageBitmap(test.convertImageSelectiveDesaturation(imageEditing, Color.RED, 100, 100, 100));
+                setGone(seekBar1);
+                imgView.setImageBitmap(color.convertImageGreyScale(imageEditing));
                 break;
+            // Colorize
             case 1:
-                setGone(seekBar1, seekBar2);
-                imgView.setImageBitmap(test.convertImageSelectiveDesaturation(imageEditing, Color.GREEN, 100, 100, 100));
-                break;
-            case 2:
-                setGone(seekBar1, seekBar2);
-                imgView.setImageBitmap(test.convertImageSelectiveDesaturation(imageEditing, Color.BLUE, 150, 150, 150));
-                break;
-            case 3:
-                imgView.setImageBitmap(test.convertImageGreyScale(imageEditing));
-            case 4:
+                imgView.setImageBitmap(imageEditing);
                 setVisible(seekBar1);
+                setBorn(seekBar1, 0, 359);
                 setRGBBackground(seekBar1);
-                seekBar1.setMax(360);
+                seekBar1.setProgress(0);
                 actualFunction = 0;
+                break;
+            // Keepcolor
+            case 2:
+                imgView.setImageBitmap(imageEditing);
+                setVisible(seekBar1);
+                setBorn(seekBar1, 0, 359);
+                setRGBBackground(seekBar1);
+                seekBar1.setProgress(0);
+                actualFunction = 1;
+                break;
+            // Contrast
+            case 3:
+                imgView.setImageBitmap(imageEditing);
+                setVisible(seekBar1);
+                setBorn(seekBar1, 0, 127);
+                setNormalBackground(seekBar1);
+                seekBar1.setProgress(0);
+                actualFunction = 2;
+                break;
+            // ShiftLight
+            case 4:
+                imgView.setImageBitmap(imageEditing);
+                setVisible(seekBar1);
+                setBorn(seekBar1, -100, 100);
+                setNormalBackground(seekBar1);
+                seekBar1.setProgress(0);
+                actualFunction = 3;
+                break;
+            // Shift Saturation
+            case 5:
+                imgView.setImageBitmap(imageEditing);
+                setVisible(seekBar1);
+                setBorn(seekBar1, -100, 100);
+                setNormalBackground(seekBar1);
+                seekBar1.setProgress(0);
+                actualFunction = 4;
+                break;
+            // Shift Color
+            case 6:
+                imgView.setImageBitmap(imageEditing);
+                setVisible(seekBar1);
+                setBorn(seekBar1, 0, 359);
+                setRGBBackground(seekBar1);
+                seekBar1.setProgress(0);
+                actualFunction = 5;
+                break;
+            // isoHelie
+            case 7:
+                imgView.setImageBitmap(imageEditing);
+                setVisible(seekBar1);
+                setBorn(seekBar1, 2, 20);
+                setNormalBackground(seekBar1);
+                seekBar1.setProgress(2);
+                actualFunction = 6;
+                break;
+            // Equa light
+            case 8:
+                setGone(seekBar1);
+                hist = new HistogramManipulation(imageEditing, ChanelType.V);
+                hist.equalizationLUT();
+                imgView.setImageBitmap(hist.applyLUT(imageEditingCopy));
+                // ftc
+                break;
             default:
                 break;
-
-
         }
     }
 
@@ -135,11 +200,36 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
 
         switch (actualFunction) {
             case 0:
-                imgView.setImageBitmap(test.convertImageColorization(imageEditing, progressBar1));
+                imgView.setImageBitmap(color.convertImageColorization(imageEditingCopy, progressBar1));
                 break;
             case 1:
+
                 break;
+            // CONTRAST
             case 2:
+                hist = new HistogramManipulation(imageEditingCopy, ChanelType.V);
+                hist.linearExtensionLUT(progressBar1, 0);
+                imgView.setImageBitmap(hist.applyLUT(imageEditingCopy));
+                break;
+            case 3:
+                hist = new HistogramManipulation(imageEditingCopy, ChanelType.V);
+                hist.shiftLUT(progressBar1);
+                imgView.setImageBitmap(hist.applyLUT(imageEditingCopy));
+                break;
+            case 4:
+                hist = new HistogramManipulation(imageEditingCopy, ChanelType.S);
+                hist.shiftLUT(progressBar1);
+                imgView.setImageBitmap(hist.applyLUT(imageEditingCopy));
+                break;
+            case 5:
+                hist = new HistogramManipulation(imageEditingCopy, ChanelType.H);
+                hist.shiftCycleLUT(progressBar1);
+                imgView.setImageBitmap(hist.applyLUT(imageEditingCopy));
+                break;
+            case 6:
+                hist = new HistogramManipulation(imageEditingCopy, ChanelType.H);
+                hist.isohelieLUT(progressBar1);
+                imgView.setImageBitmap(hist.applyLUT(imageEditingCopy));
                 break;
             default:
                 break;
@@ -166,23 +256,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
             }
         });
 
-        seekBar2.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                progresseBar2 = progress;
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                applyFunction();
-
-            }
-        });
 
     }
 

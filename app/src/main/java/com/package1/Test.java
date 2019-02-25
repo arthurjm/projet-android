@@ -70,18 +70,15 @@ public class Test extends AppCompatActivity implements AdapterView.OnItemSelecte
      * Permet d'initialiser les trucs
      */
     public void initiate() {
-        // Test
         buttonList = new ArrayList<>();
-
-
         Button tb;
+
         tb = findViewById(R.id.buttonLoadPhoto);
         buttonList.add(tb);
         tb = findViewById(R.id.buttonTakePhoto);
         buttonList.add(tb);
         tb = findViewById(R.id.buttonUndo);
         buttonList.add(tb);
-        // Fin test
 
         seekBar = findViewById(R.id.seekBar);
         text = findViewById(R.id.textView);
