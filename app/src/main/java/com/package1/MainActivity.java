@@ -48,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
         tb = findViewById(R.id.thirdButton);
         buttonList.add(tb);
 
+        tb = findViewById(R.id.gallery_mainActivity);
+        buttonList.add(tb);
+
         tb = findViewById(R.id.camera_mainActivity);
         buttonList.add(tb);
 
@@ -80,6 +83,13 @@ public class MainActivity extends AppCompatActivity {
             buttonList.get(2).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(intent, 0);
+                }
+            });
+            buttonList.get(3).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
                     infoPage(view);
                 }
             });
@@ -106,6 +116,10 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+        else {
+            imageEditing = (Bitmap) data.getExtras().get("data");
+        }
+
 
     }
 
