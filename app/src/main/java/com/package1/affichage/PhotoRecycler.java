@@ -105,7 +105,7 @@ public class PhotoRecycler extends AppCompatActivity {
     private void photoList() {
 
         // On redimensionne l'image
-        Bitmap redimensionImageEditing = Bitmap.createScaledBitmap(imageEditingCopy, (int) (imageEditing.getWidth() * 0.2), (int) (imageEditing.getHeight() * 0.2), true);
+        Bitmap redimensionImageEditing = Bitmap.createScaledBitmap(imageEditingCopy, (int) (imageEditing.getWidth() * 0.1), (int) (imageEditing.getHeight() * 0.1), true);
 
         FilterStruct fs ;
 
