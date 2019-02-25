@@ -98,8 +98,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
         sb.setVisibility(View.VISIBLE);
     }
 
-    public void setBorn(SeekBar sb, int min, int max) {
-        sb.setMin(min);
+    public void setBorn(SeekBar sb, int max) {
         sb.setMax(max);
     }
 
@@ -124,7 +123,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
             case 1:
                 imgView.setImageBitmap(imageEditing);
                 setVisible(seekBar1);
-                setBorn(seekBar1, 0, 359);
+                setBorn(seekBar1, 359);
                 setRGBBackground(seekBar1);
                 seekBar1.setProgress(0);
                 actualFunction = 0;
@@ -133,7 +132,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
             case 2:
                 imgView.setImageBitmap(imageEditing);
                 setVisible(seekBar1);
-                setBorn(seekBar1, 0, 359);
+                setBorn(seekBar1, 359);
                 setRGBBackground(seekBar1);
                 seekBar1.setProgress(0);
                 actualFunction = 1;
@@ -142,7 +141,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
             case 3:
                 imgView.setImageBitmap(imageEditing);
                 setVisible(seekBar1);
-                setBorn(seekBar1, 0, 127);
+                setBorn(seekBar1, 127);
                 setNormalBackground(seekBar1);
                 seekBar1.setProgress(0);
                 actualFunction = 2;
@@ -151,7 +150,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
             case 4:
                 imgView.setImageBitmap(imageEditing);
                 setVisible(seekBar1);
-                setBorn(seekBar1, -100, 100);
+                setBorn(seekBar1, 200);
                 setNormalBackground(seekBar1);
                 seekBar1.setProgress(0);
                 actualFunction = 3;
@@ -160,7 +159,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
             case 5:
                 imgView.setImageBitmap(imageEditing);
                 setVisible(seekBar1);
-                setBorn(seekBar1, -100, 100);
+                setBorn(seekBar1, 200);
                 setNormalBackground(seekBar1);
                 seekBar1.setProgress(0);
                 actualFunction = 4;
@@ -169,7 +168,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
             case 6:
                 imgView.setImageBitmap(imageEditing);
                 setVisible(seekBar1);
-                setBorn(seekBar1, 0, 359);
+                setBorn(seekBar1, 359);
                 setRGBBackground(seekBar1);
                 seekBar1.setProgress(0);
                 actualFunction = 5;
@@ -178,7 +177,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
             case 7:
                 imgView.setImageBitmap(imageEditing);
                 setVisible(seekBar1);
-                setBorn(seekBar1, 2, 20);
+                setBorn(seekBar1, 22);
                 setNormalBackground(seekBar1);
                 seekBar1.setProgress(2);
                 actualFunction = 6;
@@ -203,22 +202,21 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 imgView.setImageBitmap(color.convertImageColorization(imageEditingCopy, progressBar1));
                 break;
             case 1:
-
                 break;
             // CONTRAST
             case 2:
                 hist = new HistogramManipulation(imageEditingCopy, ChanelType.V);
-                hist.linearExtensionLUT(progressBar1, 0);
+                hist.linearExtensionLUT(128 + progressBar1, 127 - progressBar1);
                 imgView.setImageBitmap(hist.applyLUT(imageEditingCopy));
                 break;
             case 3:
                 hist = new HistogramManipulation(imageEditingCopy, ChanelType.V);
-                hist.shiftLUT(progressBar1);
+                hist.shiftLUT(progressBar1 - 100);
                 imgView.setImageBitmap(hist.applyLUT(imageEditingCopy));
                 break;
             case 4:
                 hist = new HistogramManipulation(imageEditingCopy, ChanelType.S);
-                hist.shiftLUT(progressBar1);
+                hist.shiftLUT(progressBar1 - 100);
                 imgView.setImageBitmap(hist.applyLUT(imageEditingCopy));
                 break;
             case 5:
@@ -228,7 +226,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 break;
             case 6:
                 hist = new HistogramManipulation(imageEditingCopy, ChanelType.H);
-                hist.isohelieLUT(progressBar1);
+                hist.isohelieLUT(progressBar1 - 2);
                 imgView.setImageBitmap(hist.applyLUT(imageEditingCopy));
                 break;
             default:
@@ -255,7 +253,6 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 applyFunction();
             }
         });
-
 
 
     }
