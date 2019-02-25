@@ -1,15 +1,7 @@
 package com.package1;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.provider.MediaStore;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -143,20 +135,22 @@ public class MainActivity extends AppCompatActivity {
 
                 break;
             case R.id.colorHistEqual:
-                HistogramManipulation hist = new HistogramManipulation(bmp, ChanelType.V);
-                hist.isophelieLut(2);
+                HistogramManipulation hist = new HistogramManipulation(bmp, ChanelType.H);
+                hist.shiftLutCycleLUT(seekbar.getProgress());
                 Log.e("TAG", hist.histogram.toString());
                 for(int k=0; k<256; k++){
                     Log.e("TAG","value : "+hist.LUT[k]);
                 }
-                imageView.setImageBitmap(hist.applyLut(bmp));
+                imageView.setImageBitmap(hist.applyLUT(bmp));
                 Log.e("TAG", "FINI");
                 break;
             case R.id.color_rest:
                 imageView.setImageBitmap(colorManipulation.convertImageColorization(bmp, seekbar.getProgress()));
                 break;
             case R.id.colorize:
-
+                HistogramManipulation hist1 = new HistogramManipulation(bmp, ChanelType.H);
+                hist1.equalizationLUT();
+                imageView.setImageBitmap(hist1.applyLUT(bmp));
                 break;
             default:
                 return super.onOptionsItemSelected(item);

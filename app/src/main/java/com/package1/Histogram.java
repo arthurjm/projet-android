@@ -7,6 +7,9 @@ import android.util.Log;
  */
 public class Histogram {
 
+    /**
+     *  The Number of values that can be taken by the values of the histogram, must be the same value as in the "HistogramManipulation" class
+     */
     static private int NumberofValues = 256;
 
     private int histogramValue[] = new int[NumberofValues];
@@ -14,7 +17,11 @@ public class Histogram {
     private ChanelType chanel;
 
 
-    //ATENTION : il n'y a pas de vérifictaions de la taille du tableau pour l'instant
+    /**
+     *
+     * @param tab
+     * @param newChanel
+     */
     public Histogram(int[] tab, ChanelType newChanel) {
         chanel = newChanel;
         setHistogram(tab);
@@ -26,11 +33,10 @@ public class Histogram {
         int valueTemp;
         max = -1;
         min = NumberofValues;
-        count = 1;//pour eviter toute division par 0
+        count = 1;//to avoid dividing by 0
         for (int i = 0; i < tab.length; i++) {
             valueTemp = tab[i];
             histogramValue[valueTemp]++;
-            //  Log.e("TAG","boucle \t"+histogramValue[valueTemp]);
             count++;
             tempTotalValue += valueTemp;
             if (valueTemp < min) {
@@ -43,11 +49,20 @@ public class Histogram {
         average = tempTotalValue / count;
     }
 
+    /**
+     * Getter of "min"
+     * @return
+     *      the value of "min"
+     */
     public int getMin() {
         return min;
     }
 
-
+    /**
+     * Getter of "max"
+     * @return
+     *      the value of "max"
+     */
     public int getMax() {
         return max;
 
@@ -57,17 +72,31 @@ public class Histogram {
         return count;
     }
 
-
+    /**
+     * Getter of "chanel"
+     * @return
+     *      the value of "chanel"
+     */
     public ChanelType getChanel() {
         return chanel;
     }
 
+    /**
+     * Getter of "average"
+     * @return
+     *      the value of "average"
+     */
     public int getAverage() {
         return average;
     }
 
-    public int getHistogramValue(int indice) {
-        return histogramValue[indice];
+    /**
+     * Getter of the value of the histogram at the chosen index
+     * @return
+     *      the value of the histogram at the chosen index
+     */
+    public int getHistogramValue(int index) {
+        return histogramValue[index];
     }
 
     @Override
