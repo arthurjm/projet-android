@@ -10,18 +10,18 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.SeekBar;
 
 import com.package1.ColorManipulation;
+import com.package1.HistogramManipulation;
 import com.package1.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.package1.MainActivity.image_retouche;
+import static com.package1.MainActivity.imageEditing;
 import static com.package1.MainActivity.imgView;
-import static com.package1.MainActivity.image_retouche_copy;
+import static com.package1.MainActivity.imageEditingCopy;
 
 public class PhotoRecycler extends AppCompatActivity {
 
@@ -35,51 +35,9 @@ public class PhotoRecycler extends AppCompatActivity {
     private Button undoBut;
     private Button saveBut;
 
-    private ColorManipulation test;
+    private ColorManipulation colorManipulation;
+    private HistogramManipulation histogramManipulation;
 
-    public void initiate() {
-
-        // Button
-        undoBut = findViewById(R.id.undo);
-        saveBut = findViewById(R.id.save);
-
-        // RecyclerVIew
-        photoRecyclerView = findViewById(R.id.idRecyclerViewHorizontalList);
-
-        // Image
-        imgView = findViewById(R.id.imageResult);
-        image_retouche_copy = image_retouche.copy(Bitmap.Config.ARGB_8888, true);
-
-        if (image_retouche_copy.getHeight() >= 3500 && image_retouche_copy.getWidth() >= 3500) {
-            image_retouche_copy = Bitmap.createScaledBitmap(image_retouche_copy, (int) (image_retouche_copy.getWidth() * 0.8), (int) (image_retouche_copy.getHeight() * 0.8), true);
-        }
-
-        imgView.setImageBitmap(image_retouche_copy);
-
-        //Seekbar
-        seekBar1 = findViewById(R.id.seekBarFull);
-        seekBar2 = findViewById(R.id.seekBarDemi);
-
-        seekBar1.setVisibility(View.GONE);
-        seekBar2.setVisibility(View.GONE);
-
-    }
-
-    /**
-     * Permet d'initialiser les actions aux boutons.
-     */
-    public void addListener() {
-
-            undoBut.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    undo(image_retouche);
-                   // image_copy = image_retouche.copy(Bitmap.Config.ARGB_8888, true);
-                }
-            });
-
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +47,7 @@ public class PhotoRecycler extends AppCompatActivity {
         initiate();
         addListener();
 
-        if (image_retouche != null) {
+        if (imageEditing != null) {
 
             photoAdapter = new RecyclerViewHorizontalListAdapter(photoList, getApplicationContext());
             // Choisir l'orientation de la barre
@@ -106,26 +64,70 @@ public class PhotoRecycler extends AppCompatActivity {
 
     }
 
+    public void initiate() {
+
+        // Filter
+        colorManipulation = new ColorManipulation();
+
+        // Button
+        undoBut = findViewById(R.id.undo);
+        saveBut = findViewById(R.id.save);
+
+        // RecyclerVIew
+        photoRecyclerView = findViewById(R.id.idRecyclerViewHorizontalList);
+
+        // Image
+        imgView = findViewById(R.id.imageResult);
+        imageEditingCopy = imageEditingCopy.copy(Bitmap.Config.ARGB_8888, true);
+
+        if (imageEditingCopy.getHeight() >= 3500 && imageEditingCopy.getWidth() >= 3500) {
+            imageEditingCopy = Bitmap.createScaledBitmap(imageEditingCopy, (int) (imageEditingCopy.getWidth() * 0.8), (int) (imageEditingCopy.getHeight() * 0.8), true);
+        }
+
+        imgView.setImageBitmap(imageEditingCopy);
+
+        //Seekbar
+        seekBar1 = findViewById(R.id.seekBarFull);
+        seekBar2 = findViewById(R.id.seekBarDemi);
+
+        seekBar1.setVisibility(View.GONE);
+        seekBar2.setVisibility(View.GONE);
+
+    }
+
+    public void addListener() {
+
+        undoBut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                undo(imageEditing);
+            }
+        });
+
+    }
+
     private void photoList() {
 
-        // A REVOIR
         // On redimensionne l'image
-        Bitmap tes = Bitmap.createScaledBitmap(image_retouche_copy, (int) (image_retouche_copy.getWidth() * 0.2), (int) (image_retouche_copy.getHeight() * 0.2), true);
-        test = new ColorManipulation();
+        Bitmap redimensionImageEditing = Bitmap.createScaledBitmap(imageEditingCopy, (int) (imageEditingCopy.getWidth() * 0.2), (int) (imageEditingCopy.getHeight() * 0.2), true);
 
-        FilterStruct red = new FilterStruct("red", test.convertImageSelectiveDesaturation(tes, Color.RED, 100, 100, 100));
-        FilterStruct green = new FilterStruct("green", test.convertImageSelectiveDesaturation(tes, Color.GREEN, 100, 100, 100));
-        FilterStruct blue = new FilterStruct("blue", test.convertImageSelectiveDesaturation(tes, Color.BLUE, 150, 150, 150));
-        FilterStruct grey = new FilterStruct("grey", test.convertImageGreyScale(tes));
-        FilterStruct colorize = new FilterStruct("colorize", image_retouche);
-        FilterStruct nothing = new FilterStruct("nothing", image_retouche);
-        FilterStruct gaussien = new FilterStruct("gaussien", image_retouche);
+        FilterStruct fs ;
+
+        fs = new FilterStruct("grey", colorManipulation.convertImageGreyScale(redimensionImageEditing));
+        photoList.add(fs);
+        fs = new FilterStruct("colorize", colorManipulation.convertImageColorization(redimensionImageEditing, 50));
+        photoList.add(fs);
+        // A REVOIR AVEC LE RS
+        fs = new FilterStruct("keepColor", imageEditing);
+        photoList.add(fs);
+      //  fs = new FilterStruct("contrast", histogramManipulation.linearExtensionLUT(255,0));
 
 
-        photoList.add(red);
-        photoList.add(green);
-        photoList.add(blue);
-        photoList.add(grey);
+        FilterStruct colorize = new FilterStruct("colorize", imageEditing);
+        FilterStruct nothing = new FilterStruct("nothing", imageEditing);
+        FilterStruct gaussien = new FilterStruct("gaussien", imageEditing);
+
+
         photoList.add(colorize);
         photoList.add(nothing);
         photoList.add(gaussien);

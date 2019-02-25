@@ -21,8 +21,8 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static Bitmap image_retouche;
-    public static Bitmap image_retouche_copy;
+    public static Bitmap imageEditing;
+    public static Bitmap imageEditingCopy;
     public static ImageView imgView;
 
     private Uri filePath;
@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
             imagepath = getPath(filePath);
 
             try {
-                image_retouche = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                imageEditing = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 //image = rotateBitmap(imagepath);
 
             } catch (IOException e) {

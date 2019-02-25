@@ -4,28 +4,46 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.util.Log;
 
+/**
+ * This class will be used to build histogram of chosen chanel on a bitmap, and allow to change it with LUT.
+ */
 public class HistogramManipulation {
 
+    /**
+     * The Number of values that can be taken by the values of the histogram, must be the same value as in the "Histogram" class
+     */
     static private int NumberofValues = 256;
 
     int[] LUT = new int[NumberofValues];
     Histogram histogram;
     int R, G, B;
 
+    /**
+     * Constructor taking a bitmap and making the histogram associated with the selected chanel
+     *
+     * @param bitmap Bitmap from which we will get the histogram
+     * @param chanel The selected chanel
+     */
     public HistogramManipulation(Bitmap bitmap, ChanelType chanel) {
         int[] tab = new int[bitmap.getWidth() * bitmap.getHeight()];
         tab = getTab(bitmap, chanel);
         histogram = new Histogram(tab, chanel);
-        Log.e("TAG", "" + getTab(bitmap, chanel).length);
     }
 
+    /**
+     * Function used in order to get an array that contains the values on which we want an histogram on.
+     * This function allows to get the values on the right format depending on the origin (which chanel they are from).
+     *
+     * @param bitmap The bitmap form which the values are extracted.
+     * @param ct     The chanel (from "ChanelType") on which we wish to get the histogram.
+     * @return The array with the values of the chanel selected, taken from the bitmap at the right format needed to get an histogram on.
+     */
     private int[] getTab(Bitmap bitmap, ChanelType ct) {
         int[] tab = new int[bitmap.getWidth() * bitmap.getHeight()];
         bitmap.getPixels(tab, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
         float[] hsv = new float[3];
         for (int i = 0; i < tab.length; i++) {
             convert(i, tab);
-            //  Log.e("TAG","rgb : "+R+"\t"+G+"\t"+B);
             if (ct == ChanelType.V || ct == ChanelType.S || ct == ChanelType.H) {
                 Color.RGBToHSV(R, G, B, hsv);
                 if (ct == ChanelType.V || ct == ChanelType.S) {
@@ -46,11 +64,9 @@ public class HistogramManipulation {
                     tab[i] = B * (NumberofValues - 1) / 255;    //divided by 255 because the "hue" can take 256 values
                 }
             }
-            //Log.e("TAG","test : "+tab[i]);
         }
         return tab;
     }
-
 
     public void convert(int index, int[] tabPixels) {
         R = (tabPixels[index] >> 16) & 0xff;
@@ -58,67 +74,130 @@ public class HistogramManipulation {
         B = tabPixels[index] & 0xff;
     }
 
-
-    //a changer
-    public void linear3segmentExtensionLUT(int startingValue, int segment1value, int segment2value, int endvalue, int segment1Indice, int segment2Indice) {
-        if (segment1value != segment2value && segment1value != startingValue && segment2value != endvalue) {
-            for (int i = 0; i < segment1Indice; i++) {
-                LUT[i] = startingValue + ((segment1value - startingValue) * (i - startingValue)) / (segment1value - startingValue);
-            }
-            for (int i = segment1Indice; i < segment2Indice; i++) {
-                LUT[i] = segment1value + ((segment2value - segment1value) * (i - segment1value)) / (segment2value - segment1value);
-            }
-            for (int i = segment2Indice; i < 256; i++) {
-                LUT[i] = ((endvalue - segment2value) * (i - segment2value)) / (endvalue - segment2value);
-            }
+    /**
+     * Make a linear extension of the values of the histogram with specific values for the minimum and maximum.
+     * Can be used to increase or decrease contrast for example.
+     *
+     * @param minValue the new minimum value
+     * @param maxValue the new maximum value
+     */
+    public void linearExtensionLUT(int minValue, int maxValue) {
+        if (maxValue >= NumberofValues) {
+            maxValue = NumberofValues - 1;
         }
-    }
-
-    public void linearExtensionLUT() {
-        if (histogram.getMax() != histogram.getMin()) {
-            for (int i = 0; i < NumberofValues; i++) {
-                LUT[i] = (NumberofValues * (i - histogram.getMin())) / (histogram.getMax() - histogram.getMin());
-            }
+        if (maxValue == minValue) {
+            minValue--;
+        } else if (maxValue < minValue) {
+            int temp = maxValue;
+            maxValue = minValue;
+            minValue = temp;
         }
-    }
-
-    public void isophelieLut(int depth) {
-        int tempDepth = 1;
-        int tempSeuil = 0;
-        int nextValue = 0;
         for (int i = 0; i < NumberofValues; i++) {
-            if (i >= tempSeuil + (tempDepth * (NumberofValues / depth))) {
-                tempSeuil += tempDepth * (NumberofValues / depth);
+            LUT[i] = minValue + ((maxValue - minValue) * (i - histogram.getMin())) / (histogram.getMax() - histogram.getMin());
+            if (LUT[i] > 255) {
+                LUT[i] = 255;
+            } else if (LUT[i] < 0) {
+                LUT[i] = 0;
+            }
+        }
+    }
+
+    /**
+     * Function used to make a shift with a cyclic chanel ("hue" from HSV for example).
+     *
+     * @param shiftValue value by which the shift is made
+     */
+    public void shiftLutCycleLUT(int shiftValue) {
+        for (int i = 0; i < NumberofValues; i++) {
+            LUT[i] = (i + shiftValue) % NumberofValues;
+        }
+    }
+
+    /**
+     * Function used to make a shift up for all values in the histogram,
+     * the shift can not be greater than (NumberofValues/2),
+     * if the shift make a value bigger than the maximum (NuberofValues), it get the maximum value instead.
+     *
+     * @param shiftValue value by which the shift is made
+     */
+    public void shiftLutUpLUT(int shiftValue) {
+        if (shiftValue > NumberofValues / 2) {
+            shiftValue = NumberofValues / 2;
+        }
+        for (int i = 0; i < NumberofValues; i++) {
+            if (i + shiftValue > NumberofValues - 1) {
+                LUT[i] = NumberofValues - 1;
+            } else {
+                LUT[i] = i + shiftValue;
+            }
+        }
+    }
+
+    /**
+     * Function used to make a shift down for all values in the histogram,
+     * the shift can not be greater than (NumberofValues/2),
+     * if the shift make a value lower than the minimum (0), it get the minimum value instead.
+     *
+     * @param shiftValue value by which the shift is made
+     */
+    public void shiftLutDownLUT(int shiftValue) {
+        if (shiftValue > NumberofValues / 2) {
+            shiftValue = NumberofValues / 2;
+        }
+        for (int i = 0; i < NumberofValues; i++) {
+            if (i - shiftValue < 0) {
+                LUT[i] = 0;
+            } else {
+                LUT[i] = i - shiftValue;
+            }
+        }
+    }
+
+    /**
+     * This function will reduce the number of values that can be taken by the values stored in the histogram.
+     * May also be called "Posterisation".
+     *
+     * @param depth the number of values that the stored values in the histogram will take
+     */
+    public void isohelieLUT(int depth) {
+        int tempDepth = 1;
+        int nextValue = 0;
+        int nbofValues = 1;
+        for (int i = 0; i < NumberofValues; i++) {
+            if ((i >= (tempDepth * ((NumberofValues - 1) / depth))) && nbofValues < depth) {//we need to be sure that we still have that we need to process (so that nbofValues<depth
                 tempDepth++;
-                nextValue += (NumberofValues - 1) / (depth - 1);
+                nextValue += ((NumberofValues - 1) / (depth - 1));
+                nbofValues++;
             }
             LUT[i] = nextValue;
         }
     }
 
-    // Version de création d'une LUT pour egaliser un histogramme en commencant par les valeurs les plus faibles
-    //non utilisé, voir rapport
-    /*private void histogramEqLUTLeft() {
-        int average = count / 256;
+    /**
+     * Function used to "equalize" the histogram.
+     */
+    public void equalizationLUT() {
+        int average = histogram.getAverage();
         int tempCount = 0, nextValue = 0;
-        for (int i = 0; i < 256; i++) {
+        for (int i = 0; i < NumberofValues; i++) {
             LUT[i] = nextValue;
-            tempCount += histogramValue[i];
-            if ((tempCount/average) > 1) {
-                nextValue += (tempCount/average);
-                if(nextValue>255){
-                    nextValue=255;
+            tempCount += histogram.getHistogramValue(i);
+            ;
+            if ((tempCount / average) > 1) {
+                nextValue += (tempCount / average);
+                if (nextValue > NumberofValues - 1) {
+                    nextValue = NumberofValues - 1;
                 }
                 tempCount = 0;
             }
         }
-    }*/
-    // Version de création d'une LUT pour egaliser un histogramme en commencant par les valeurs les plus grandes
-    private void LUThistogramEq() {
+    }
+
+    public void LUThistogramEq() {
         int average = histogram.getAverage();
         int tempCount = 0, nextValue = NumberofValues - 1;
         for (int i = 0; i < NumberofValues; i++) {
-            LUT[255 - i] = nextValue;
+            LUT[NumberofValues - 1 - i] = nextValue;
             tempCount += histogram.getHistogramValue(NumberofValues - 1 - i);
             if ((tempCount / average) > 1) {
                 nextValue -= (tempCount / average);
@@ -130,7 +209,13 @@ public class HistogramManipulation {
         }
     }
 
-    public Bitmap applyLut(Bitmap original) {
+    /**
+     * Function that apply the LUT stored to the bitmap in parameter
+     *
+     * @param original The bitmap on which the LUT is applied
+     * @return The new Bitmap corresponding at "original" with the changed of the LUT applied
+     */
+    public Bitmap applyLUT(Bitmap original) {
         ChanelType ct = histogram.getChanel();
         int[] tab = new int[original.getWidth() * original.getHeight()];
         original.getPixels(tab, 0, original.getWidth(), 0, 0, original.getWidth(), original.getHeight());
@@ -141,85 +226,27 @@ public class HistogramManipulation {
                 Color.RGBToHSV(R, G, B, hsv);
                 if (ct == ChanelType.V || ct == ChanelType.S) {
                     if (ct == ChanelType.S) {
-                        // Log.e("TAG","erreur");
-                        hsv[1] = (float) (LUT[(int) (hsv[1] * (NumberofValues - 1))] / (NumberofValues - 1));//only multiplied because "saturation" goes from 0 to 1
+                        hsv[1] = (float) LUT[(int) (hsv[1] * (NumberofValues - 1))] / (float) (NumberofValues - 1);//only multiplied because "saturation" goes from 0 to 1
                     } else {
-                        //   Log.e("TAG","erreur");
-                        hsv[2] = (float) (LUT[(int) (hsv[2] * (NumberofValues - 1))] / (NumberofValues - 1));
-                        ;//only multiplied because "value" goes from 0 to 1
+                        hsv[2] = (float) LUT[(int) (hsv[2] * (NumberofValues - 1))] / (float) (NumberofValues - 1);//only multiplied because "value" goes from 0 to 1
                     }
                 } else {
-                    // Log.e("TAG","test : "+(int)(hsv[0]*(NumberofValues-1)/359)+"\n"+LUT[(int)(hsv[0]*(NumberofValues-1)/359)]);
-                    hsv[0] = (float) (LUT[(int) (hsv[0] * (NumberofValues - 1) / 359)] * 359 / (NumberofValues - 1));
-                    ;//divided by 359 because the "hue" can take 360 values
+                    hsv[0] = (float) LUT[(int) (hsv[0] * (NumberofValues - 1) / 359)] * 359 / (NumberofValues - 1);//divided by 359 because the "hue" can take 360 values
                 }
                 tab[i] = Color.HSVToColor(hsv);
             } else {
                 if (ct == ChanelType.R) {
-                    //    Log.e("TAG","erreur");
                     R = LUT[R * (NumberofValues - 1) / 255];    //divided by 255 because the "hue" can take 256 values
                 } else if (ct == ChanelType.G) {
-                    // Log.e("TAG","erreur");
                     G = LUT[G * (NumberofValues - 1) / 255];    //divided by 255 because the "hue" can take 256 values
                 } else {
-                    //Log.e("TAG","erreur");
                     B = LUT[B * (NumberofValues - 1) / 255];    //divided by 255 because the "hue" can take 256 values
                 }
-                tab[i] = ((R << 16) | (G << 8) | B);
+                tab[i] = ((255 << 24) | (R << 16) | (G << 8) | B); //the pixel is stocked in ARGB format. The A is 255 for the pixel to be visible.
             }
         }
         Bitmap resBitmap = Bitmap.createBitmap(original.getWidth(), original.getHeight(), original.getConfig());
         resBitmap.setPixels(tab, 0, original.getWidth(), 0, 0, original.getWidth(), original.getHeight());
         return resBitmap;
     }
-
-    /*
-    public Bitmap applicationEqHistogram(Bitmap original) {
-        histogramSetup(original);
-        histogramEqLUTRight();
-        int width = original.getWidth();
-        int height = original.getHeight();
-        Bitmap res = Bitmap.createBitmap(width, height, original.getConfig());
-        int index, valueTemp;
-        tabPixels = new int[width * height];
-        float[] hsv = new float[3];
-        original.getPixels(tabPixels, 0, width, 0, 0, width, height);
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                index = y * width + x;
-                convert(index);
-                Color.RGBToHSV(R, G, B, hsv);
-                valueTemp = (int) (255 * hsv[2]);
-                hsv[2] = (float) LUT[valueTemp] / 255;
-                tabPixels[index] = Color.HSVToColor(hsv);
-            }
-        }
-        res.setPixels(tabPixels, 0, width, 0, 0, width, height);
-        return res;
-    }
-
-    public Bitmap applicationLinearExtension(Bitmap original, float newHistogramSpan) {
-        histogramSetup(original);
-        linearExtensionLUT();
-        int width = original.getWidth();
-        int height = original.getHeight();
-        Bitmap res = Bitmap.createBitmap(width, height, original.getConfig());
-        int index, valueTemp;
-        tabPixels = new int[width * height];
-        float[] hsv = new float[3];
-        original.getPixels(tabPixels, 0, width, 0, 0, width, height);
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                index = y * width + x;
-                convert(index);
-                Color.RGBToHSV(R, G, B, hsv);
-                valueTemp = (int) (255 * hsv[2]);
-                hsv[2] = (float) LUT[valueTemp] / 255;
-                tabPixels[index] = Color.HSVToColor(hsv);
-            }
-        }
-        res.setPixels(tabPixels, 0, width, 0, 0, width, height);
-        return res;
-    }
-*/
 }

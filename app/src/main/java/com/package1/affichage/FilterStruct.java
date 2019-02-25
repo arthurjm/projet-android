@@ -12,7 +12,6 @@ public class FilterStruct {
         this.image = image;
     }
 
-
     public String getFilterName() {
         return filterName;
     }

@@ -50,7 +50,6 @@ public class Convolution {
         }
     }
 
-
     public void setPxHeight(int pxHeight) {
         this.pxHeight = pxHeight;
     }

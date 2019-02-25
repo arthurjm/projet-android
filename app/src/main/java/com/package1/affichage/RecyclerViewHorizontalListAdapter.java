@@ -1,10 +1,7 @@
 package com.package1.affichage;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,13 +12,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.package1.R;
-
 import com.package1.ColorManipulation;
-
-import java.nio.channels.SelectionKey;
 import java.util.List;
 
-import static com.package1.MainActivity.image_retouche;
+import static com.package1.MainActivity.imageEditing;
 import static com.package1.MainActivity.imgView;
 import static com.package1.affichage.PhotoRecycler.*;
 
@@ -84,7 +78,6 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
             }
         });
 
-
     }
 
     public void setGone(SeekBar sb) {
@@ -100,6 +93,13 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
         sb.setVisibility(View.VISIBLE);
     }
 
+    public void setRGBBackground(SeekBar sb) {
+        sb.setBackgroundResource(R.drawable.seekbar_progess);
+    }
+
+    public void setNormalBackground(SeekBar sb) {
+        sb.setBackgroundResource(0);
+    }
 
     public void useFonction(final int position) {
         test = new ColorManipulation();
@@ -107,20 +107,21 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
         switch (position) {
             case 0:
                 setGone(seekBar1, seekBar2);
-                imgView.setImageBitmap(test.convertImageSelectiveDesaturation(image_retouche, Color.RED, 100, 100, 100));
+                imgView.setImageBitmap(test.convertImageSelectiveDesaturation(imageEditing, Color.RED, 100, 100, 100));
                 break;
             case 1:
                 setGone(seekBar1, seekBar2);
-                imgView.setImageBitmap(test.convertImageSelectiveDesaturation(image_retouche, Color.GREEN, 100, 100, 100));
+                imgView.setImageBitmap(test.convertImageSelectiveDesaturation(imageEditing, Color.GREEN, 100, 100, 100));
                 break;
             case 2:
                 setGone(seekBar1, seekBar2);
-                imgView.setImageBitmap(test.convertImageSelectiveDesaturation(image_retouche, Color.BLUE, 150, 150, 150));
+                imgView.setImageBitmap(test.convertImageSelectiveDesaturation(imageEditing, Color.BLUE, 150, 150, 150));
                 break;
             case 3:
-                imgView.setImageBitmap(test.convertImageGreyScale(image_retouche));
+                imgView.setImageBitmap(test.convertImageGreyScale(imageEditing));
             case 4:
                 setVisible(seekBar1);
+                setRGBBackground(seekBar1);
                 seekBar1.setMax(360);
                 actualFunction = 0;
             default:
@@ -134,7 +135,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
 
         switch (actualFunction) {
             case 0:
-                imgView.setImageBitmap(test.convertImageColorization(image_retouche, progressBar1));
+                imgView.setImageBitmap(test.convertImageColorization(imageEditing, progressBar1));
                 break;
             case 1:
                 break;
