@@ -10,23 +10,22 @@ public class ColorManipulation {
     static Random random = new Random();//sert pour la colorisation
 
     private int[] tabPixels;
-    private int A,R,G,B;
+    private int A, R, G, B;
 
-    public void convert(int index, boolean isA){
-        if(isA){
+    public void convert(int index, boolean isA) {
+        if (isA) {
             A = (tabPixels[index] >> 24) & 0xff;
             R = (tabPixels[index] >> 16) & 0xff;
             G = (tabPixels[index] >> 8) & 0xff;
             B = tabPixels[index] & 0xff;
-        }
-        else{
+        } else {
             R = (tabPixels[index] >> 16) & 0xff;
             G = (tabPixels[index] >> 8) & 0xff;
             B = tabPixels[index] & 0xff;
         }
     }
 
-    public void passageNuanceGrey(){
+    public void passageNuanceGrey() {
         R = ((R * 30) + (G * 59) + B * 11) / 100;
         G = R;
         B = R;
@@ -36,6 +35,7 @@ public class ColorManipulation {
 
     /**
      * toGrey
+     *
      * @param original
      * @return
      */
@@ -53,7 +53,7 @@ public class ColorManipulation {
             for (int x = 0; x < width; x++) {
                 index = y * width + x;
                 //ici on sépare les informations de la couleur du pixel en les répartissant corectement
-                convert(index,true);
+                convert(index, true);
                 //on applique le passage en nuances de gris selon les proportions données dans le cours
                 passageNuanceGrey();
                 tabPixels[index] = (A << 24) | (R << 16) | (G << 8) | B;
@@ -82,7 +82,7 @@ public class ColorManipulation {
             for (int x = 0; x < width; x++) {
                 index = y * width + x;
                 //ici on sépare les informations de la couleur du pixel en les repartissant correctement
-                convert(index,true);
+                convert(index, true);
                 //si le pixel n'est pas d'une couleur proche de color , le pixels passe en gris
                 if (!(R > (colorR - seuilR) && R < (colorR + seuilR) &&
                         G > (colorG - seuilG) && G < (colorG + seuilG) &&
@@ -96,11 +96,11 @@ public class ColorManipulation {
         return res;
     }
 
-    public Bitmap convertImageColorization(Bitmap original) {
+    public Bitmap convertImageColorization(Bitmap original, int chosenHue) {
         int width = original.getWidth();
         int height = original.getHeight();
         int index;
-        int newHue = random.nextInt(359);
+        int newHue = chosenHue;
         tabPixels = new int[width * height];
         float[] hsv = new float[3];
 
@@ -111,7 +111,7 @@ public class ColorManipulation {
             for (int x = 0; x < width; x++) {
                 index = y * width + x;
                 //ici on sépare les informations de la couleur du pixel en les répartissant corectement
-                convert(index,false);
+                convert(index, false);
                 //on passe en HSV puis on modifie le "hue" (la teinte)
                 Color.RGBToHSV(R, G, B, hsv);
                 hsv[0] = newHue;

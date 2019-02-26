@@ -1,0 +1,43 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="mathieu.projet_tech.MainActivity">
+
+    <menu android:orderInCategory="103" />
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="104"
+        android:title="@string/action_settings"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/grisAction"
+        android:orderInCategory="105"
+        android:title="Gris"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/colorizeRsAction"
+        android:orderInCategory="106"
+        android:title="ColorizeRS"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/keepRedAction"
+        android:orderInCategory="107"
+        android:title="keepRedArthur"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/undoAction"
+        android:checkable="false"
+        android:orderInCategory="108"
+        android:title="undo"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/keepRedAction2"
+        android:orderInCategory="109"
+        android:title="keepRedMat"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/invertAction"
+        android:orderInCategory="110"
+        android:title="invert"
+        app:showAsAction="never" />
+</menu>

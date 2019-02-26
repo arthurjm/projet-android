@@ -1,305 +1,201 @@
 package com.package1;
 
+import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.package1.affichage.PhotoRecycler;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
+
 public class MainActivity extends AppCompatActivity {
 
-    Button buttonImg1;
-    Button buttonImg2;
-    Button buttonImg3;
-    Button buttonMenu;
+    public static Bitmap imageEditing;
+    public static Bitmap imageEditingCopy;
+    public static ImageView imgView;
 
-    Button buttonActionGrey;
-    Button buttonActionColorization;
-    Button buttonActionPartialDesaturation;
-    Button buttonActionConvolution;
-    Button buttonActionConvolutionGauss;
-    Button buttonActionFlouLateral;
-    Button buttonActionEqHistogram;
-    Button buttonActionLinearExtension;
+    private Uri filePath;
+    private String imagepath = null;
+    private int PICK_IMAGE_REQUEST = 1;
+    /**
+     * ArrayList de boutons.
+     *
+     * @see Button
+     */
+    public ArrayList<Button> buttonList;
 
-    ImageView imageSvg;
-    ImageView imageChanged;
 
-    Bitmap bitmapImageChanged;
-    Bitmap bitmapImageSvg;
-    Bitmap bitmapImageOg1;
-    Bitmap bitmapImageOg2;
-    Bitmap bitmapImageOg3;
+    /**
+     * Permet d'initialiser les boutons.
+     */
+    public void initiateButton() {
 
-    ColorManipulation colorManipulation;
-    Histogram histogram;
-    Convolution rightBlur;
-    Convolution convolution;
-    Convolution convolutionGauss;
-    RS rs;
+        buttonList = new ArrayList<>();
+        Button tb;
 
-    public int[] tabpix;
+        // Test recycler
+        tb = findViewById(R.id.thirdButton);
+        buttonList.add(tb);
 
-    public void changeView() {
-        buttonActionGrey.setVisibility(View.INVISIBLE);
-        buttonActionPartialDesaturation.setVisibility(View.INVISIBLE);
-        buttonActionColorization.setVisibility(View.INVISIBLE);
-        buttonActionConvolution.setVisibility(View.INVISIBLE);
-        buttonActionConvolutionGauss.setVisibility(View.INVISIBLE);
-        buttonActionFlouLateral.setVisibility(View.INVISIBLE);
-        buttonActionEqHistogram.setVisibility(View.INVISIBLE);
-        buttonActionLinearExtension.setVisibility(View.INVISIBLE);
-        buttonImg1.setVisibility(View.INVISIBLE);
-        buttonImg2.setVisibility(View.INVISIBLE);
-        buttonImg3.setVisibility(View.INVISIBLE);
-    }
+        tb = findViewById(R.id.gallery_mainActivity);
+        buttonList.add(tb);
 
-    public void changeViewVisible() {
-        buttonActionGrey.setVisibility(View.VISIBLE);
-        buttonActionPartialDesaturation.setVisibility(View.VISIBLE);
-        buttonActionColorization.setVisibility(View.VISIBLE);
-        buttonActionConvolution.setVisibility(View.VISIBLE);
-        buttonActionConvolutionGauss.setVisibility(View.VISIBLE);
-        buttonActionFlouLateral.setVisibility(View.VISIBLE);
-        buttonActionEqHistogram.setVisibility(View.VISIBLE);
-        buttonActionLinearExtension.setVisibility(View.VISIBLE);
-        buttonImg1.setVisibility(View.VISIBLE);
-        buttonImg2.setVisibility(View.VISIBLE);
-        buttonImg3.setVisibility(View.VISIBLE);
-    }
+        tb = findViewById(R.id.camera_mainActivity);
+        buttonList.add(tb);
 
-    public void imageVisibility() {
-        imageSvg.setVisibility(View.VISIBLE);
-        imageChanged.setVisibility(View.VISIBLE);
-        buttonMenu.setVisibility(View.VISIBLE);
-        bitmapImageChanged.getPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
-        bitmapImageSvg.setPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
-    }
+        tb = findViewById(R.id.information);
+        buttonList.add(tb);
 
-    public void imageVisibilityInvisible() {
-        imageSvg.setVisibility(View.INVISIBLE);
-        imageChanged.setVisibility(View.INVISIBLE);
-        buttonMenu.setVisibility(View.INVISIBLE);
-    }
-
-    public void setImage() {
-        imageSvg.setImageBitmap(bitmapImageSvg);
-        imageChanged.setImageBitmap(bitmapImageChanged);
-    }
-
-    public void setTabPix(int[] tabpix) {
-        this.tabpix = tabpix;
     }
 
     /**
-     * Permet d'ajouter des actions aux boutons.
+     * Permet d'ajouter des actions à des boutons.
      */
     public void addListenerOnButton() {
-        buttonActionGrey.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setTabPix(new int[bitmapImageChanged.getHeight() * bitmapImageChanged.getWidth()]);
-                imageVisibility();
 
-                colorManipulation.convertImageGreyScale(bitmapImageChanged).getPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
-                bitmapImageChanged.setPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
-                setImage();
-                changeView();
+        if (buttonList != null) {
+            buttonList.get(0).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    filterPage(view);
+                }
+            });
+            buttonList.get(1).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    intent.setType("image/*");
+                    startActivityForResult(intent, 1);
+
+                }
+            });
+            buttonList.get(2).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(intent, 0);
+                }
+            });
+            buttonList.get(3).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    infoPage(view);
+                }
+            });
+        }
+    }
+
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Load photo
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+
+            filePath = data.getData();
+            imagepath = getPath(filePath);
+
+            try {
+                imageEditing = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                //image = rotateBitmap(imagepath);
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        });
+        }
+        else {
+            imageEditing = (Bitmap) data.getExtras().get("data");
+        }
 
-        buttonActionEqHistogram.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setTabPix(new int[bitmapImageChanged.getHeight() * bitmapImageChanged.getWidth()]);
-                imageVisibility();
 
-                histogram.applicationEqHistogram(bitmapImageChanged).getPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
-                bitmapImageChanged.setPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
-                setImage();
-                changeView();
-            }
-        });
+    }
 
-        buttonActionLinearExtension.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setTabPix(new int[bitmapImageChanged.getHeight() * bitmapImageChanged.getWidth()]);
-                imageVisibility();
+    public String getPath(Uri uri) {
+        String[] projection = {MediaStore.Images.Media.DATA};
+        Cursor cursor = managedQuery(uri, projection, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
+    }
 
-                histogram.applicationLinearExtension(bitmapImageChanged).getPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
-                bitmapImageChanged.setPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
-                setImage();
-                changeView();
-            }
-        });
 
-        buttonActionConvolution.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setTabPix(new int[bitmapImageChanged.getHeight() * bitmapImageChanged.getWidth()]);
-                imageVisibility();
+    public void filterPage(View view) {
+        startActivity(new Intent(this, PhotoRecycler.class));
+    }
 
-                convolution.applicationConvolution(bitmapImageChanged).getPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
-                bitmapImageChanged.setPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
-                setImage();
-                changeView();
-            }
-        });
-
-        buttonActionConvolutionGauss.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setTabPix(new int[bitmapImageChanged.getHeight() * bitmapImageChanged.getWidth()]);
-                imageVisibility();
-
-                convolutionGauss.applicationConvolution(bitmapImageChanged).getPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
-                bitmapImageChanged.setPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
-                setImage();
-                changeView();
-            }
-        });
-
-        buttonActionFlouLateral.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setTabPix(new int[bitmapImageChanged.getHeight() * bitmapImageChanged.getWidth()]);
-                imageVisibility();
-
-                rightBlur.applicationConvolution(bitmapImageChanged).getPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
-                bitmapImageChanged.setPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
-                setImage();
-                changeView();
-            }
-        });
-
-        buttonActionColorization.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setTabPix(new int[bitmapImageChanged.getHeight() * bitmapImageChanged.getWidth()]);
-                imageVisibility();
-
-                colorManipulation.convertImageColorization(bitmapImageChanged).getPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
-                bitmapImageChanged.setPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
-                setImage();
-                changeView();
-            }
-        });
-
-        buttonActionPartialDesaturation.setOnClickListener((new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setTabPix(new int[bitmapImageChanged.getHeight() * bitmapImageChanged.getWidth()]);
-                imageVisibility();
-
-                colorManipulation.convertImageSelectiveDesaturation(bitmapImageChanged, Color.RED, 50, 70, 50).getPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
-                bitmapImageChanged.setPixels(tabpix, 0, bitmapImageChanged.getWidth(), 0, 0, bitmapImageChanged.getWidth(), bitmapImageChanged.getHeight());
-                setImage();
-                changeView();
-            }
-        }));
-
-        buttonMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imageVisibilityInvisible();
-                changeViewVisible();
-            }
-        });
-
-        buttonImg1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                setTabPix(new int[bitmapImageOg1.getHeight() * bitmapImageOg1.getWidth()]);
-                bitmapImageOg1.getPixels(tabpix, 0, bitmapImageOg1.getWidth(), 0, 0, bitmapImageOg1.getWidth(), bitmapImageOg1.getHeight());
-                bitmapImageSvg.setPixels(tabpix, 0, bitmapImageOg1.getWidth(), 0, 0, bitmapImageOg1.getWidth(), bitmapImageOg1.getHeight());
-                bitmapImageChanged.setPixels(tabpix, 0, bitmapImageOg1.getWidth(), 0, 0, bitmapImageOg1.getWidth(), bitmapImageOg1.getHeight());
-
-                setImage();
-            }
-        });
-
-        buttonImg2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                setTabPix(new int[bitmapImageOg2.getHeight() * bitmapImageOg2.getWidth()]);
-                bitmapImageOg2.getPixels(tabpix, 0, bitmapImageOg2.getWidth(), 0, 0, bitmapImageOg2.getWidth(), bitmapImageOg2.getHeight());
-                bitmapImageSvg.setPixels(tabpix, 0, bitmapImageOg2.getWidth(), 0, 0, bitmapImageOg2.getWidth(), bitmapImageOg2.getHeight());
-                bitmapImageChanged.setPixels(tabpix, 0, bitmapImageOg2.getWidth(), 0, 0, bitmapImageOg2.getWidth(), bitmapImageOg2.getHeight());
-
-                setImage();
-            }
-        });
-
-        buttonImg3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                setTabPix(new int[bitmapImageOg3.getHeight() * bitmapImageOg3.getWidth()]);
-                bitmapImageOg3.getPixels(tabpix, 0, bitmapImageOg3.getWidth(), 0, 0, bitmapImageOg3.getWidth(), bitmapImageOg3.getHeight());
-                bitmapImageSvg.setPixels(tabpix, 0, bitmapImageOg3.getWidth(), 0, 0, bitmapImageOg3.getWidth(), bitmapImageOg3.getHeight());
-                bitmapImageChanged.setPixels(tabpix, 0, bitmapImageOg3.getWidth(), 0, 0, bitmapImageOg3.getWidth(), bitmapImageOg3.getHeight());
-
-                setImage();
-            }
-        });
+    public void infoPage(View view) {
+        startActivity(new Intent(this, Info.class));
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_menu);
+        setContentView(R.layout.activity_main);
+        Log.i("CV", "onCreate()");
 
-        //initialisation des images et bitmaps
-        imageSvg = findViewById(R.id.imageViewSvg);
-        imageChanged = findViewById(R.id.imageViewChange);
-        Drawable draw = ContextCompat.getDrawable((this), R.drawable.image1);
-        bitmapImageOg1 = ((BitmapDrawable) draw).getBitmap();
-        draw = ContextCompat.getDrawable((this), R.drawable.image2);
-        bitmapImageOg2 = ((BitmapDrawable) draw).getBitmap();
-        draw = ContextCompat.getDrawable((this), R.drawable.image3);
-        bitmapImageOg3 = ((BitmapDrawable) draw).getBitmap();
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inMutable = true;
 
-        bitmapImageChanged = bitmapImageOg1.copy(bitmapImageOg1.getConfig(), true);
-        bitmapImageSvg = bitmapImageOg1.copy(bitmapImageOg1.getConfig(), true);
+        // ANIMATION golri
+        /*Animation zoomAnimation = AnimationUtils.loadAnimation(this, R.anim.zoom);
+        imgView.startAnimation(zoomAnimation);*/
 
-        //initialisation des boutons
-        buttonMenu = findViewById(R.id.buttonBackMenu);
-
-        buttonImg1 = findViewById(R.id.buttonImage1);
-        buttonImg2 = findViewById(R.id.buttonImage2);
-        buttonImg3 = findViewById(R.id.buttonImage3);
-
-        buttonActionGrey = findViewById(R.id.buttonActionGrey);
-        buttonActionPartialDesaturation = findViewById(R.id.buttonActionDesaturation);
-        buttonActionColorization = findViewById(R.id.buttonActionColorization);
-        buttonActionConvolution = findViewById(R.id.buttonActionConvo);
-        buttonActionConvolutionGauss = findViewById(R.id.buttonActionGauss);
-        buttonActionFlouLateral = findViewById(R.id.buttonActionBlur);
-        buttonActionEqHistogram = findViewById(R.id.buttonActionEq);
-        buttonActionLinearExtension = findViewById(R.id.buttonActionExtension);
-
-        //initialisation des effets
-        colorManipulation = new ColorManipulation();
-        histogram = new Histogram();
-        rightBlur = new Convolution((new int[][]{{0}, {0}, {0}, {0}, {0}, {0}, {0}, {1}, {1}, {1}, {1}, {1}, {1}, {1}, {1}}), 15, 1);
-        convolution = new Convolution(7);
-        convolutionGauss = new GaussienMask(7,4.5);
-        rs = new RS(this);
-
-        //initialisation des elements visibles
-        imageSvg.setImageBitmap(bitmapImageOg1);
-        imageChanged.setImageBitmap(bitmapImageChanged);
-        imageVisibilityInvisible();
-        changeViewVisible();
-
+        // Permet d'initier tout les boutons
+        initiateButton();
         addListenerOnButton();
+
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.i("CV", "onStart()");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i("CV", "onResume()");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i("CV", "onPause()");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i("CV", "onStop()");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.i("CV", "onRestart()");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i("CV", "onDestroy()");
+    }
+
+
 }
+
+
