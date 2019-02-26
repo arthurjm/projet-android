@@ -9,8 +9,12 @@ import android.renderscript.ScriptIntrinsicBlur;
 import android.renderscript.ScriptIntrinsicColorMatrix;
 import android.renderscript.ScriptIntrinsicConvolve3x3;
 import android.renderscript.ScriptIntrinsicConvolve5x5;
+import android.renderscript.Type;
+import android.util.Log;
 
 import com.android.rssample.ScriptC_colorize;
+import com.android.rssample.ScriptC_convolution;
+import com.package1.Mask.Mask;
 
 /**
  * Created by amondon001 on 22/02/19.
@@ -26,25 +30,30 @@ public class RS {
         rs = RenderScript.create(ctx);
     }
 
+    private void setInputOutput(Bitmap bmp) {
+        input = Allocation.createFromBitmap(rs, bmp);
+        output = Allocation.createTyped(rs, input.getType());
+    }
+
     /**
+     * Intrinsic
      * Gaussian blur
      * @param bmp
      * @param radius
      */
     public Bitmap gaussianBlur(Bitmap bmp, float radius) {
-        Allocation input = Allocation.createFromBitmap(rs, bmp);
-        Allocation output = Allocation.createTyped(rs, input.getType());
+        setInputOutput(bmp);
+        Bitmap res = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), bmp.getConfig());
 
-        ScriptIntrinsicBlur theIntrinsic = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
+        ScriptIntrinsicBlur script = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
 
-        theIntrinsic.setInput(input);
-        theIntrinsic.setRadius(radius);
-        theIntrinsic.forEach(output);
-        output.copyTo(bmp);
+        script.setInput(input);
+        script.setRadius(radius);
+        script.forEach(output);
+        script.destroy();
 
-        input.destroy(); output.destroy();
-        theIntrinsic.destroy(); rs.destroy();
-        return bmp;
+        output.copyTo(res);
+        return res;
     }
 
     public Bitmap gaussianBlur(Bitmap bmp) {
@@ -58,77 +67,111 @@ public class RS {
      * @return
      */
     public Bitmap colorize(Bitmap bmp, int hue) {
-        Allocation input = Allocation.createFromBitmap(rs, bmp);
-        Allocation output = Allocation.createTyped(rs, input.getType());
+        setInputOutput(bmp);
+        Bitmap res = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), bmp.getConfig());
 
-        ScriptC_colorize colorizeScript = new ScriptC_colorize(rs);
+        ScriptC_colorize script = new ScriptC_colorize(rs);
 
-        colorizeScript.set_hue(hue);
+        script.set_hue(hue);
+        script.forEach_colorize(input, output);
+        script.destroy();
 
-        colorizeScript.forEach_colorize(input, output);
-
-        output.copyTo(bmp);
-
-        input.destroy(); output.destroy();
-        colorizeScript.destroy(); rs.destroy();
-
-        return bmp;
+        output.copyTo(res);
+        return res;
     }
 
 
     /**
+     * Intrinsic
      * Passe une image couleur en gris
      * @param bmp
      * @return
      */
     public Bitmap toGrey(Bitmap bmp) {
-        Allocation input = Allocation.createFromBitmap(rs, bmp);
-        Allocation output = Allocation.createTyped(rs, input.getType());
+        setInputOutput(bmp);
+        Bitmap res = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), bmp.getConfig());
 
-        ScriptIntrinsicColorMatrix theIntrinsic = ScriptIntrinsicColorMatrix.create(rs);
+        ScriptIntrinsicColorMatrix script = ScriptIntrinsicColorMatrix.create(rs);
 
-        theIntrinsic.setGreyscale();
-        theIntrinsic.forEach(input, output);
+        script.setGreyscale();
+        script.forEach(input, output);
+        script.destroy();
 
-        output.copyTo(bmp);
-
-        input.destroy(); output.destroy();
-        theIntrinsic.destroy(); rs.destroy();
-        return bmp;
+        output.copyTo(res);
+        return res;
     }
 
+    /**
+     * Intrinsic
+     * @param bmp
+     * @param v
+     * @return
+     */
     public Bitmap convolution3x3(Bitmap bmp, float[] v) {
-        Allocation input = Allocation.createFromBitmap(rs, bmp);
-        Allocation output = Allocation.createTyped(rs, input.getType());
+        setInputOutput(bmp);
+        Bitmap res = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), bmp.getConfig());
 
-        ScriptIntrinsicConvolve3x3 theIntrinsic = ScriptIntrinsicConvolve3x3.create(rs, Element.U8_4(rs));
+        ScriptIntrinsicConvolve3x3 script = ScriptIntrinsicConvolve3x3.create(rs, Element.U8_4(rs));
 
-        theIntrinsic.setCoefficients(v);
-        theIntrinsic.setInput(input);
-        theIntrinsic.forEach(output);
+        script.setCoefficients(v);
+        script.setInput(input);
+        script.forEach(output);
+        script.destroy();
 
-        output.copyTo(bmp);
-
-        input.destroy(); output.destroy();
-        theIntrinsic.destroy(); rs.destroy();
-        return bmp;
+        output.copyTo(res);
+        return res;
     }
 
+    /**
+     * Intrinsic
+     * @param bmp
+     * @param v
+     * @return
+     */
     public Bitmap convolution5x5(Bitmap bmp, float[] v) {
-        Allocation input = Allocation.createFromBitmap(rs, bmp);
-        Allocation output = Allocation.createTyped(rs, input.getType());
+        setInputOutput(bmp);
+        Bitmap res = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), bmp.getConfig());
 
-        ScriptIntrinsicConvolve5x5 theIntrinsic = ScriptIntrinsicConvolve5x5.create(rs, Element.U8_4(rs));
+        ScriptIntrinsicConvolve5x5 script = ScriptIntrinsicConvolve5x5.create(rs, Element.U8_4(rs));
 
-        theIntrinsic.setCoefficients(v);
-        theIntrinsic.setInput(input);
-        theIntrinsic.forEach(output);
+        script.setCoefficients(v);
+        script.setInput(input);
+        script.forEach(output);
 
-        output.copyTo(bmp);
+        script.destroy();
 
-        input.destroy(); output.destroy();
-        theIntrinsic.destroy(); rs.destroy();
-        return bmp;
+        output.copyTo(res);
+        return res;
+    }
+
+    public Bitmap convolution(Bitmap bmp, Mask mask) {
+        setInputOutput(bmp);
+        Bitmap res = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), bmp.getConfig());
+
+        ScriptC_convolution script = new ScriptC_convolution(rs);
+
+        Type.Builder maskType = new Type.Builder(rs, Element.I32(rs));
+        maskType.setX(mask.getWidth());
+        maskType.setY(mask.getHeight());
+        Allocation maskAllocation = Allocation.createTyped(rs, maskType.create());
+        maskAllocation.copyFrom(mask.getMask());
+
+        script.set_input(input);
+        script.set_width(bmp.getWidth());
+        script.set_height(bmp.getHeight());
+
+        script.set_mask(maskAllocation);
+        script.set_maskWidth(mask.getWidth());
+        script.set_maskHeight(mask.getHeight());
+        script.set_weight(mask.getWeight());
+
+        script.forEach_test(input, output);
+
+
+        script.destroy();
+
+        output.copyTo(res);
+        return res;
     }
 
     /**

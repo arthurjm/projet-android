@@ -15,6 +15,8 @@ import android.widget.Toast;
 import com.package1.ChanelType;
 import com.package1.ColorManipulation;
 import com.package1.HistogramManipulation;
+import com.package1.Mask.BlurMask;
+import com.package1.Mask.Mask;
 import com.package1.R;
 import com.package1.RS;
 
@@ -201,10 +203,10 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 hist.equalizationLUT();
                 imgView.setImageBitmap(hist.applyLUT(imageEditingCopy));
                 break;
-            // ARTHUR
+            // Blur
             case 9 :
                 setVisible(seekBar1);
-                setBorn(seekBar1, 25);
+                setBorn(seekBar1, 15);
                 actualFunction = 7;
             default:
                 break;
@@ -252,6 +254,9 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
                 break;
             case 7 :
+                BlurMask mask = new BlurMask(progressBar1);
+                imgView.setImageBitmap(renderscript.convolution(imageEditingCopy, mask));
+                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
                 break;
             default:
                 break;
