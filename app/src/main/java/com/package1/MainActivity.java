@@ -29,9 +29,11 @@ import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
     private ImageView imageView = null;
+
     private Button Album;
     private Button save;
     private Button camera;
+    private Button reset;
 
     private Bitmap image;
     private BitmapFactory.Options o;
@@ -58,10 +60,12 @@ public class MainActivity extends AppCompatActivity {
         Album = (Button) findViewById(R.id.Album);
         save = (Button) findViewById(R.id.save);
         camera = (Button) findViewById(R.id.camera);
+        reset =(Button)findViewById(R.id.reset);
 
         Album.setOnClickListener(listener);
         save.setOnClickListener(listener);
         camera.setOnClickListener(listener);
+        reset.setOnClickListener(listener);
 
         seekbar = (SeekBar) findViewById(R.id.seekBar);
         tv = (TextView) findViewById(R.id.text);
@@ -94,7 +98,9 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(intent, 0);
             }
-
+            if(v==reset){
+                imageView.setImageBitmap(image);
+            }
         }
     };
 
@@ -110,9 +116,7 @@ public class MainActivity extends AppCompatActivity {
         //System.out.println(file);
         try {
             FileOutputStream out = new FileOutputStream(file);
-            System.out.println(out);
             image_copy.compress(Bitmap.CompressFormat.JPEG, 100, out);
-            System.out.println(image);
             out.flush();
             Log.i("isSucess", "?");
             out.close();
@@ -207,7 +211,8 @@ public class MainActivity extends AppCompatActivity {
         super.onOptionsItemSelected(item);
         switch (item.getItemId()){
             case R.id.toGray:
-                imageView.setImageBitmap(colorManipulation.convertImageGreyScale(image));
+                image_copy=colorManipulation.convertImageGreyScale(image);
+                imageView.setImageBitmap(image_copy);
                 break;
             case R.id.toGrayLDD:
 
@@ -226,10 +231,11 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("TAG", "FINI");
                 break;
             case R.id.color_rest:
-                imageView.setImageBitmap(colorManipulation.convertImageColorization(image,seekbar.getProgress()));
+
                 break;
             case R.id.colorize:
-
+                image_copy=colorManipulation.convertImageColorization(image,seekbar.getProgress());
+                imageView.setImageBitmap(image_copy);
                 break;
             default:
                 return super.onOptionsItemSelected(item);
