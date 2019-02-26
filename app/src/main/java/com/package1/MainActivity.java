@@ -69,7 +69,9 @@ public class MainActivity extends AppCompatActivity {
             buttonList.get(0).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    filterPage(view);
+                    if(image != null){
+                        filterPage(view);
+                    }
                 }
             });
             buttonList.get(1).setOnClickListener(new View.OnClickListener() {

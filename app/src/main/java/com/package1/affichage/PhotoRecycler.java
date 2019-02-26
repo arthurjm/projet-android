@@ -52,16 +52,15 @@ public class PhotoRecycler extends AppCompatActivity {
         setContentView(R.layout.photo_recycle_view);
 
         initiate();
-        if (imageEditing != null) {
 
-            photoAdapter = new RecyclerViewHorizontalListAdapter(photoList, getApplicationContext());
-            // Choisir l'orientation de la barre
-            LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(PhotoRecycler.this, LinearLayoutManager.HORIZONTAL, false);
-            photoRecyclerView.setLayoutManager(horizontalLayoutManager);
-            photoRecyclerView.setAdapter(photoAdapter);
+        photoAdapter = new RecyclerViewHorizontalListAdapter(photoList, getApplicationContext());
+        // Choisir l'orientation de la barre
+        LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(PhotoRecycler.this, LinearLayoutManager.HORIZONTAL, false);
+        photoRecyclerView.setLayoutManager(horizontalLayoutManager);
+        photoRecyclerView.setAdapter(photoAdapter);
 
-            photoList();
-        }
+        photoList();
+
 
         // Ajout d'une barre entre les items
         //photoRecyclerView.addItemDecoration(new DividerItemDecoration(PhotoRecycler.this, LinearLayoutManager.HORIZONTAL));
@@ -114,6 +113,7 @@ public class PhotoRecycler extends AppCompatActivity {
         // On redimensionne l'image
         Bitmap rediImageEditing = Bitmap.createScaledBitmap(image, (int) (image.getWidth() * 0.1), (int) (image.getHeight() * 0.1), true);
         Bitmap rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+
 
         FilterStruct fs;
 
