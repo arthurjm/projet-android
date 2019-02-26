@@ -117,22 +117,17 @@ public class MainActivity extends AppCompatActivity {
     };
 
 
-
-
-
-
-
-    public boolean onCreateOptionsMenu(Menu menu){
+    public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.options_menu,menu);
+        inflater.inflate(R.menu.options_menu, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
+    public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.toGray:
                 imageView.setImageBitmap(colorManipulation.convertImageGreyScale(bmp));
                 break;
@@ -146,14 +141,14 @@ public class MainActivity extends AppCompatActivity {
 
                 break;
             case R.id.colorHistEqual:
-                HistogramManipulation hist=new HistogramManipulation(bmp,ChanelType.B);
+                HistogramManipulation hist = new HistogramManipulation(bmp, ChanelType.B);
                 hist.isophelieLut(2);
-                Log.e("TAG",hist.histogram.toString());
+                Log.e("TAG", hist.histogram.toString());
                 imageView.setImageBitmap(hist.applyLut(bmp));
                 Log.e("TAG", "FINI");
                 break;
             case R.id.color_rest:
-                imageView.setImageBitmap(colorManipulation.convertImageColorization(bmp,seekbar.getProgress()));
+                imageView.setImageBitmap(colorManipulation.convertImageColorization(bmp, seekbar.getProgress()));
                 break;
             case R.id.colorize:
 
