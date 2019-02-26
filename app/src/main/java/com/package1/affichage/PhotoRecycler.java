@@ -96,7 +96,7 @@ public class PhotoRecycler extends AppCompatActivity {
         imageEditing = Bitmap.createScaledBitmap(image, (int) (image.getWidth() * 0.5), (int) (image.getHeight() * 0.5), true);
         imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
 
-        imgView.setImageBitmap(rediImageEditing);
+        imgView.setImageBitmap(imageEditing);
 
         //Seekbar
         seekBar1 = findViewById(R.id.seekBarFull);
