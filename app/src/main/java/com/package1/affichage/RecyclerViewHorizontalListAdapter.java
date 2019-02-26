@@ -1,6 +1,7 @@
 package com.package1.affichage;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import com.package1.ChanelType;
 import com.package1.ColorManipulation;
 import com.package1.HistogramManipulation;
 import com.package1.R;
+import com.package1.RS;
 
 import java.util.List;
 
@@ -30,16 +32,14 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
 
     private ColorManipulation color;
     private HistogramManipulation hist;
+    private RS renderscript;
     private int actualFunction;
 
     private int progressBar1;
-    private int progresseBar2;
-
 
     public RecyclerViewHorizontalListAdapter(List<FilterStruct> horizontalPhotoList, Context context) {
         this.horizontalPhotoList = horizontalPhotoList;
         this.context = context;
-
     }
 
     /**
@@ -112,12 +112,14 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
 
     public void useFonction(final int position) {
         color = new ColorManipulation();
+        renderscript = new RS(context);
         addListener();
         switch (position) {
             // togrey
             case 0:
                 setGone(seekBar1);
-                imgView.setImageBitmap(color.convertImageGreyScale(imageEditing));
+                imgView.setImageBitmap(renderscript.toGrey(imageEditingCopy));
+                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
                 break;
             // Colorize
             case 1:
@@ -185,10 +187,10 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
             // Equa light
             case 8:
                 setGone(seekBar1);
-                hist = new HistogramManipulation(imageEditing, ChanelType.V);
+                hist = new HistogramManipulation(imageEditingCopy, ChanelType.V);
                 hist.equalizationLUT();
                 imgView.setImageBitmap(hist.applyLUT(imageEditingCopy));
-                // ftc
+                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
                 break;
             default:
                 break;
@@ -199,7 +201,8 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
 
         switch (actualFunction) {
             case 0:
-                imgView.setImageBitmap(color.convertImageColorization(imageEditingCopy, progressBar1));
+                imgView.setImageBitmap(renderscript.colorize(imageEditingCopy, progressBar1));
+                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
                 break;
             case 1:
                 break;
@@ -208,26 +211,31 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 hist = new HistogramManipulation(imageEditingCopy, ChanelType.V);
                 hist.linearExtensionLUT(128 + progressBar1, 127 - progressBar1);
                 imgView.setImageBitmap(hist.applyLUT(imageEditingCopy));
+                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
                 break;
             case 3:
                 hist = new HistogramManipulation(imageEditingCopy, ChanelType.V);
                 hist.shiftLUT(progressBar1 - 100);
                 imgView.setImageBitmap(hist.applyLUT(imageEditingCopy));
+                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
                 break;
             case 4:
                 hist = new HistogramManipulation(imageEditingCopy, ChanelType.S);
                 hist.shiftLUT(progressBar1 - 100);
                 imgView.setImageBitmap(hist.applyLUT(imageEditingCopy));
+                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
                 break;
             case 5:
                 hist = new HistogramManipulation(imageEditingCopy, ChanelType.H);
                 hist.shiftCycleLUT(progressBar1);
                 imgView.setImageBitmap(hist.applyLUT(imageEditingCopy));
+                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
                 break;
             case 6:
                 hist = new HistogramManipulation(imageEditingCopy, ChanelType.H);
                 hist.isohelieLUT(progressBar1 - 2);
                 imgView.setImageBitmap(hist.applyLUT(imageEditingCopy));
+                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
                 break;
             default:
                 break;

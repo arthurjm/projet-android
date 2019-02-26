@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static Bitmap image;
     public static Bitmap imageEditing;
     public static Bitmap imageEditingCopy;
     public static ImageView imgView;
@@ -108,18 +109,16 @@ public class MainActivity extends AppCompatActivity {
             imagepath = getPath(filePath);
 
             try {
-                imageEditing = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                image = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 //image = rotateBitmap(imagepath);
-
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
         else {
-            imageEditing = (Bitmap) data.getExtras().get("data");
+            image = (Bitmap) data.getExtras().get("data");
         }
-
 
     }
 
@@ -130,7 +129,6 @@ public class MainActivity extends AppCompatActivity {
         cursor.moveToFirst();
         return cursor.getString(column_index);
     }
-
 
     public void filterPage(View view) {
         startActivity(new Intent(this, PhotoRecycler.class));
@@ -149,11 +147,6 @@ public class MainActivity extends AppCompatActivity {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inMutable = true;
 
-        // ANIMATION golri
-        /*Animation zoomAnimation = AnimationUtils.loadAnimation(this, R.anim.zoom);
-        imgView.startAnimation(zoomAnimation);*/
-
-        // Permet d'initier tout les boutons
         initiateButton();
         addListenerOnButton();
 

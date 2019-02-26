@@ -1,6 +1,7 @@
 package com.package1.affichage;
 
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -15,10 +16,12 @@ import com.package1.ChanelType;
 import com.package1.ColorManipulation;
 import com.package1.HistogramManipulation;
 import com.package1.R;
+import com.package1.RS;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.package1.MainActivity.image;
 import static com.package1.MainActivity.imageEditing;
 import static com.package1.MainActivity.imageEditingCopy;
 import static com.package1.MainActivity.imgView;
@@ -34,9 +37,14 @@ public class PhotoRecycler extends AppCompatActivity {
     private Button undoBut;
     private Button saveBut;
 
+    private RS renderscript;
     private ColorManipulation colorManipulation;
     private HistogramManipulation histogramManipulation;
 
+    public static Context context;
+
+    public static Bitmap rediImageEditing;
+    public static Bitmap rediCopy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,15 +66,17 @@ public class PhotoRecycler extends AppCompatActivity {
         }
 
         // Ajout d'une barre entre les items
-
         //photoRecyclerView.addItemDecoration(new DividerItemDecoration(PhotoRecycler.this, LinearLayoutManager.HORIZONTAL));
 
     }
 
     public void initiate() {
 
+        context = getApplicationContext();
+
         // Filter
         colorManipulation = new ColorManipulation();
+        renderscript = new RS(context);
 
         // Button
         undoBut = findViewById(R.id.undo);
@@ -77,18 +87,19 @@ public class PhotoRecycler extends AppCompatActivity {
 
         // Image
         imgView = findViewById(R.id.imageResult);
-        imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
+
 
        /* if (imageEditingCopy.getHeight() >= 3500 && imageEditingCopy.getWidth() >= 3500) {
             imageEditingCopy = Bitmap.createScaledBitmap(imageEditingCopy, (int) (imageEditingCopy.getWidth() * 0.8), (int) (imageEditingCopy.getHeight() * 0.8), true);
         }*/
-        imageEditingCopy = Bitmap.createScaledBitmap(imageEditing, (int) (imageEditing.getWidth() * 0.4), (int) (imageEditing.getHeight() * 0.4), true);
 
-        imgView.setImageBitmap(imageEditingCopy);
+        imageEditing = Bitmap.createScaledBitmap(image, (int) (image.getWidth() * 0.5), (int) (image.getHeight() * 0.5), true);
+        imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
+
+        imgView.setImageBitmap(rediImageEditing);
 
         //Seekbar
         seekBar1 = findViewById(R.id.seekBarFull);
-
         seekBar1.setVisibility(View.GONE);
 
     }
@@ -97,6 +108,7 @@ public class PhotoRecycler extends AppCompatActivity {
         undoBut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
                 undo(imageEditing);
             }
         });
@@ -105,46 +117,64 @@ public class PhotoRecycler extends AppCompatActivity {
     private void photoList() {
 
         // On redimensionne l'image
-        Bitmap redimensionImageEditing = Bitmap.createScaledBitmap(imageEditingCopy, (int) (imageEditing.getWidth() * 0.1), (int) (imageEditing.getHeight() * 0.1), true);
+        Bitmap rediImageEditing = Bitmap.createScaledBitmap(image, (int) (image.getWidth() * 0.1), (int) (image.getHeight() * 0.1), true);
+        Bitmap rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
 
-        FilterStruct fs ;
+        FilterStruct fs;
 
-        fs = new FilterStruct("grey", colorManipulation.convertImageGreyScale(redimensionImageEditing));
+        // togrey
+        fs = new FilterStruct("grey", renderscript.toGrey(rediCopy));
         photoList.add(fs);
-        fs = new FilterStruct("colorize", colorManipulation.convertImageColorization(redimensionImageEditing, 50));
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+
+        // Colorize
+        fs = new FilterStruct("colorize", renderscript.colorize(rediCopy, 180));
         photoList.add(fs);
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+
         // A REVOIR AVEC LE RS
-        fs = new FilterStruct("keepColor", redimensionImageEditing);
+        fs = new FilterStruct("keepColor", rediCopy);
         photoList.add(fs);
+
         // Constrast setting
-        histogramManipulation = new HistogramManipulation(redimensionImageEditing, ChanelType.V);
+        histogramManipulation = new HistogramManipulation(rediCopy, ChanelType.V);
         histogramManipulation.linearExtensionLUT(198, 50);
-        fs = new FilterStruct("contrast", histogramManipulation.applyLUT(redimensionImageEditing));
+        fs = new FilterStruct("contrast", histogramManipulation.applyLUT(rediCopy));
         photoList.add(fs);
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+
         // ShiftLight
-        histogramManipulation = new HistogramManipulation(redimensionImageEditing, ChanelType.V);
+        histogramManipulation = new HistogramManipulation(rediCopy, ChanelType.V);
         histogramManipulation.shiftLUT(45);
-        fs = new FilterStruct("shiftLight", histogramManipulation.applyLUT(redimensionImageEditing));
+        fs = new FilterStruct("shiftLight", histogramManipulation.applyLUT(rediCopy));
         photoList.add(fs);
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+
         // ShiftSaturation
-        histogramManipulation = new HistogramManipulation(redimensionImageEditing, ChanelType.S);
+        histogramManipulation = new HistogramManipulation(rediCopy, ChanelType.S);
         histogramManipulation.shiftLUT(45);
-        fs = new FilterStruct("shiftSaturation", histogramManipulation.applyLUT(redimensionImageEditing));
+        fs = new FilterStruct("shiftSaturation", histogramManipulation.applyLUT(rediCopy));
         photoList.add(fs);
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+
         // ShiftColor
-        histogramManipulation = new HistogramManipulation(redimensionImageEditing, ChanelType.H);
+        histogramManipulation = new HistogramManipulation(rediCopy, ChanelType.H);
         histogramManipulation.shiftCycleLUT(250);
-        fs = new FilterStruct("shiftColor", histogramManipulation.applyLUT(redimensionImageEditing));
+        fs = new FilterStruct("shiftColor", histogramManipulation.applyLUT(rediCopy));
         photoList.add(fs);
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+
         // Isohelie
-        histogramManipulation = new HistogramManipulation(redimensionImageEditing, ChanelType.H);
+        histogramManipulation = new HistogramManipulation(rediCopy, ChanelType.H);
         histogramManipulation.isohelieLUT(8);
-        fs = new FilterStruct("isohelie", histogramManipulation.applyLUT(redimensionImageEditing));
+        fs = new FilterStruct("isohelie", histogramManipulation.applyLUT(rediCopy));
         photoList.add(fs);
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+
         // EqualizationLight
-        histogramManipulation = new HistogramManipulation(redimensionImageEditing, ChanelType.V);
+        histogramManipulation = new HistogramManipulation(rediCopy, ChanelType.V);
         histogramManipulation.equalizationLUT();
-        fs = new FilterStruct("equa light", histogramManipulation.applyLUT(redimensionImageEditing));
+        fs = new FilterStruct("equa light", histogramManipulation.applyLUT(rediCopy));
         photoList.add(fs);
 
         photoAdapter.notifyDataSetChanged();
@@ -154,7 +184,6 @@ public class PhotoRecycler extends AppCompatActivity {
     public void undo(Bitmap bmp) {
         imgView.setImageBitmap(bmp);
     }
-
 
     @Override
     protected void onStart() {
