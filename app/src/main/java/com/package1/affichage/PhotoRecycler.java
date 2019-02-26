@@ -52,8 +52,6 @@ public class PhotoRecycler extends AppCompatActivity {
         setContentView(R.layout.photo_recycle_view);
 
         initiate();
-        addListener();
-
         if (imageEditing != null) {
 
             photoAdapter = new RecyclerViewHorizontalListAdapter(photoList, getApplicationContext());
@@ -88,11 +86,6 @@ public class PhotoRecycler extends AppCompatActivity {
         // Image
         imgView = findViewById(R.id.imageResult);
 
-
-       /* if (imageEditingCopy.getHeight() >= 3500 && imageEditingCopy.getWidth() >= 3500) {
-            imageEditingCopy = Bitmap.createScaledBitmap(imageEditingCopy, (int) (imageEditingCopy.getWidth() * 0.8), (int) (imageEditingCopy.getHeight() * 0.8), true);
-        }*/
-
         imageEditing = Bitmap.createScaledBitmap(image, (int) (image.getWidth() * 0.5), (int) (image.getHeight() * 0.5), true);
         imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
 
@@ -101,6 +94,8 @@ public class PhotoRecycler extends AppCompatActivity {
         //Seekbar
         seekBar1 = findViewById(R.id.seekBarFull);
         seekBar1.setVisibility(View.GONE);
+
+        addListener();
 
     }
 

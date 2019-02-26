@@ -30,12 +30,15 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
     private List<FilterStruct> horizontalPhotoList;
     private Context context;
 
-    private ColorManipulation color;
     private HistogramManipulation hist;
     private RS renderscript;
     private int actualFunction;
 
     private int progressBar1;
+
+    /**
+     * TODOO : FAIRE UN ENUM POUR LE SWITCH DE LA SEEKBAR
+     */
 
     public RecyclerViewHorizontalListAdapter(List<FilterStruct> horizontalPhotoList, Context context) {
         this.horizontalPhotoList = horizontalPhotoList;
@@ -85,45 +88,45 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
 
     }
 
-    public void setGone(SeekBar sb) {
+    private void setGone(SeekBar sb) {
         sb.setVisibility(View.GONE);
     }
 
-    public void setGone(SeekBar sb, SeekBar sb1) {
+    private void setGone(SeekBar sb, SeekBar sb1) {
         setGone(sb);
         setGone(sb1);
     }
 
-    public void setVisible(SeekBar sb) {
+    private void setVisible(SeekBar sb) {
         sb.setVisibility(View.VISIBLE);
     }
 
-    public void setBorn(SeekBar sb, int max) {
+    private void setBorn(SeekBar sb, int max) {
         sb.setMax(max);
     }
 
-    public void setRGBBackground(SeekBar sb) {
+    private void setRGBBackground(SeekBar sb) {
         sb.setBackgroundResource(R.drawable.seekbar_progess);
     }
 
-    public void setNormalBackground(SeekBar sb) {
+    private void setNormalBackground(SeekBar sb) {
         sb.setBackgroundResource(0);
     }
 
-    public void useFonction(final int position) {
-        color = new ColorManipulation();
+    private void useFonction(final int position) {
         renderscript = new RS(context);
         addListener();
         switch (position) {
             // togrey
             case 0:
+                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
                 setGone(seekBar1);
                 imgView.setImageBitmap(renderscript.toGrey(imageEditingCopy));
-                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
                 break;
             // Colorize
             case 1:
-                imgView.setImageBitmap(imageEditing);
+                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
+                imgView.setImageBitmap(imageEditingCopy);
                 setVisible(seekBar1);
                 setBorn(seekBar1, 359);
                 setRGBBackground(seekBar1);
@@ -132,7 +135,8 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 break;
             // Keepcolor
             case 2:
-                imgView.setImageBitmap(imageEditing);
+                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
+                imgView.setImageBitmap(imageEditingCopy);
                 setVisible(seekBar1);
                 setBorn(seekBar1, 359);
                 setRGBBackground(seekBar1);
@@ -141,7 +145,8 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 break;
             // Contrast
             case 3:
-                imgView.setImageBitmap(imageEditing);
+                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
+                imgView.setImageBitmap(imageEditingCopy);
                 setVisible(seekBar1);
                 setBorn(seekBar1, 127);
                 setNormalBackground(seekBar1);
@@ -150,7 +155,8 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 break;
             // ShiftLight
             case 4:
-                imgView.setImageBitmap(imageEditing);
+                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
+                imgView.setImageBitmap(imageEditingCopy);
                 setVisible(seekBar1);
                 setBorn(seekBar1, 200);
                 setNormalBackground(seekBar1);
@@ -159,7 +165,8 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 break;
             // Shift Saturation
             case 5:
-                imgView.setImageBitmap(imageEditing);
+                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
+                imgView.setImageBitmap(imageEditingCopy);
                 setVisible(seekBar1);
                 setBorn(seekBar1, 200);
                 setNormalBackground(seekBar1);
@@ -168,7 +175,8 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 break;
             // Shift Color
             case 6:
-                imgView.setImageBitmap(imageEditing);
+                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
+                imgView.setImageBitmap(imageEditingCopy);
                 setVisible(seekBar1);
                 setBorn(seekBar1, 359);
                 setRGBBackground(seekBar1);
@@ -177,7 +185,8 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 break;
             // isoHelie
             case 7:
-                imgView.setImageBitmap(imageEditing);
+                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
+                imgView.setImageBitmap(imageEditingCopy);
                 setVisible(seekBar1);
                 setBorn(seekBar1, 22);
                 setNormalBackground(seekBar1);
@@ -186,18 +195,18 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 break;
             // Equa light
             case 8:
+                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
                 setGone(seekBar1);
                 hist = new HistogramManipulation(imageEditingCopy, ChanelType.V);
                 hist.equalizationLUT();
                 imgView.setImageBitmap(hist.applyLUT(imageEditingCopy));
-                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
                 break;
             default:
                 break;
         }
     }
 
-    public void applyFunction() {
+    private void applyFunction() {
 
         switch (actualFunction) {
             case 0:
@@ -242,7 +251,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
         }
     }
 
-    public void addListener() {
+    private void addListener() {
 
         // Les fonctions sont la automatiquement
         seekBar1.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {

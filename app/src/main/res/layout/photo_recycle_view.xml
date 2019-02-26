@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/darkGray"
+    android:background="@color/black"
     tools:context="com.package1.affichage.PhotoRecycler">
 
     <LinearLayout
@@ -12,17 +12,15 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="60dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageResult"
-        app:layout_constraintVertical_bias="0.94">
+        app:layout_constraintVertical_bias="1.0">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/idRecyclerViewHorizontalList"
@@ -48,15 +46,16 @@
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageResult" />
+        app:layout_constraintTop_toBottomOf="@+id/undo"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/save"
-        android:alpha="0.80"
         android:layout_width="56dp"
         android:layout_height="38dp"
-        android:layout_marginTop="428dp"
-        android:layout_marginEnd="4dp"
+        android:layout_marginTop="424dp"
+        android:layout_marginEnd="8dp"
+        android:alpha="0.80"
         android:fontFamily="sans-serif-black"
         android:text="Save"
         android:textAlignment="center"
@@ -64,14 +63,14 @@
         android:textStyle="italic"
         android:typeface="monospace"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageResult" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/undo"
-        android:alpha="0.80"
         android:layout_width="56dp"
         android:layout_height="38dp"
-        android:layout_marginTop="428dp"
+        android:layout_marginTop="424dp"
+        android:alpha="0.80"
         android:fontFamily="sans-serif-black"
         android:text="Undo"
         android:textAlignment="center"
