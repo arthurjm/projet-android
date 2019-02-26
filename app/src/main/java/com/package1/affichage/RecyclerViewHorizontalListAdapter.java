@@ -201,6 +201,11 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 hist.equalizationLUT();
                 imgView.setImageBitmap(hist.applyLUT(imageEditingCopy));
                 break;
+            // ARTHUR
+            case 9 :
+                setVisible(seekBar1);
+                setBorn(seekBar1, 25);
+                actualFunction = 7;
             default:
                 break;
         }
@@ -245,6 +250,8 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 hist.isohelieLUT(progressBar1 - 2);
                 imgView.setImageBitmap(hist.applyLUT(imageEditingCopy));
                 imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
+                break;
+            case 7 :
                 break;
             default:
                 break;

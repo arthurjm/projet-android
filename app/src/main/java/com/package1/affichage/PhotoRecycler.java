@@ -172,6 +172,10 @@ public class PhotoRecycler extends AppCompatActivity {
         fs = new FilterStruct("equa light", histogramManipulation.applyLUT(rediCopy));
         photoList.add(fs);
 
+        // ARTHUR
+        fs = new FilterStruct("arthur", rediCopy);
+        photoList.add(fs);
+
         photoAdapter.notifyDataSetChanged();
 
     }
