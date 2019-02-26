@@ -2,7 +2,6 @@ package com.package1;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.util.Log;
 
 /**
  * This class will be used to build histogram of chosen chanel on a bitmap, and allow to change it with LUT.

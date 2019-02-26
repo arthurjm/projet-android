@@ -26,8 +26,8 @@ uchar4 RS_KERNEL colorize ( uchar4 in ) {
 
   int h2;
   float f, l, m, n;
-  float tmp_float = hue/60;
-  h2 = fmod(tmp_float, 6);
+  float test = hue/60;
+  h2 = fmod(test, 6);
 
   f = (hue/60) - h2;
   l = v * (1 - s);

@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.package1.MainActivity.imageEditing;
-import static com.package1.MainActivity.imgView;
 import static com.package1.MainActivity.imageEditingCopy;
+import static com.package1.MainActivity.imgView;
 
 public class PhotoRecycler extends AppCompatActivity {
 

@@ -12,16 +12,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.package1.ChanelType;
+import com.package1.ColorManipulation;
 import com.package1.HistogramManipulation;
 import com.package1.R;
-import com.package1.ColorManipulation;
 
 import java.util.List;
 
 import static com.package1.MainActivity.imageEditing;
 import static com.package1.MainActivity.imageEditingCopy;
 import static com.package1.MainActivity.imgView;
-import static com.package1.affichage.PhotoRecycler.*;
+import static com.package1.affichage.PhotoRecycler.seekBar1;
 
 public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<RecyclerViewHorizontalListAdapter.PhotoViewHolder> {
 

@@ -12,8 +12,6 @@ import android.renderscript.ScriptIntrinsicConvolve5x5;
 
 import com.android.rssample.ScriptC_colorize;
 
-import java.util.Random;
-
 /**
  * Created by amondon001 on 22/02/19.
  */
@@ -31,7 +29,7 @@ public class RS {
      * @param bmp
      * @param radius
      */
-    private Bitmap gaussianBlur(Bitmap bmp, float radius) {
+    public Bitmap gaussianBlur(Bitmap bmp, float radius) {
         RenderScript rs = RenderScript.create(ctx);
 
         Allocation input = Allocation.createFromBitmap(rs, bmp);
@@ -49,7 +47,7 @@ public class RS {
         return bmp;
     }
 
-    private Bitmap gaussianBlur(Bitmap bmp) {
+    public Bitmap gaussianBlur(Bitmap bmp) {
         return gaussianBlur(bmp, 25);
     }
 
@@ -59,7 +57,7 @@ public class RS {
      * @param hue
      * @return
      */
-    private Bitmap colorize(Bitmap bmp, int hue) {
+    public Bitmap colorize(Bitmap bmp, int hue) {
         RenderScript rs = RenderScript.create(ctx);
 
         Allocation input = Allocation.createFromBitmap(rs, bmp);
@@ -79,12 +77,13 @@ public class RS {
         return bmp;
     }
 
+
     /**
      * Passe une image couleur en gris
      * @param bmp
      * @return
      */
-    private Bitmap toGrey(Bitmap bmp) {
+    public Bitmap toGrey(Bitmap bmp) {
         RenderScript rs = RenderScript.create(ctx);
 
         Allocation input = Allocation.createFromBitmap(rs, bmp);
@@ -102,7 +101,7 @@ public class RS {
         return bmp;
     }
 
-    private Bitmap convolution3x3(Bitmap bmp, float[] v) {
+    public Bitmap convolution3x3(Bitmap bmp, float[] v) {
         RenderScript rs = RenderScript.create(ctx);
 
         Allocation input = Allocation.createFromBitmap(rs, bmp);
@@ -121,7 +120,7 @@ public class RS {
         return bmp;
     }
 
-    private Bitmap convolution5x5(Bitmap bmp, float[] v) {
+    public Bitmap convolution5x5(Bitmap bmp, float[] v) {
         RenderScript rs = RenderScript.create(ctx);
 
         Allocation input = Allocation.createFromBitmap(rs, bmp);

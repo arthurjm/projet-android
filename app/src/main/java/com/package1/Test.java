@@ -1,6 +1,5 @@
 package com.package1;
 
-
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
