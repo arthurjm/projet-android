@@ -50,16 +50,25 @@ public class Convolution {
         }
     }
 
+    public void setGaussienMask(double gamma) {
+        int tempWeight = 0;
+        int x = pxWidth / 2;
+        for (int i = -x; i <= x; i++) {
+            for (int j = -x; j <= x; j++) {
+                double v = 10 * (Math.exp(-(i * i + j * j) / (2 * gamma * gamma)));
+                mask[i + x][j + x] = (int) v;
+                tempWeight += (int) v;
+            }
+        }
+        weightTotal=tempWeight;
+    }
+
     public void setPxHeight(int pxHeight) {
         this.pxHeight = pxHeight;
     }
 
     public void setPxWidth(int pxWidth) {
         this.pxWidth = pxWidth;
-    }
-
-    public void setWeightTotal(int weightTotal) {
-        this.weightTotal = weightTotal;
     }
 
     public int[][] getMask() {
