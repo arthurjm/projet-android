@@ -213,12 +213,12 @@ public class PhotoRecycler extends AppCompatActivity {
         if (!dir.exists()) {
             dir.mkdir();
         }
-        final String fileName = System.currentTimeMillis() + ".jpeg";
+        final String fileName = System.currentTimeMillis() + ".jpg";
         File file = new File(dir, fileName);
         //System.out.println(file);
         try {
             FileOutputStream out = new FileOutputStream(file);
-            imageEditing.compress(Bitmap.CompressFormat.JPEG, 50, out);
+            imageEditingCopy.compress(Bitmap.CompressFormat.JPEG, 50, out);
             out.flush();
             Log.i("imgSvg", "isSucessfull");
             out.close();
@@ -234,7 +234,7 @@ public class PhotoRecycler extends AppCompatActivity {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        if(Build.VERSION.SDK_INT< Build.VERSION_CODES.KITKAT) {
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file" + fileName)));
         }
         else{

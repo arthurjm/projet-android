@@ -80,7 +80,6 @@ public class Convolution {
     public Bitmap applicationConvolution(Bitmap original) {
         int width = original.getWidth();
         int height = original.getHeight();
-        Bitmap res = Bitmap.createBitmap(width, height, original.getConfig());
         int[][] tabPixR = new int[width][height];
         int[][] tabPixG = new int[width][height];
         int[][] tabPixB = new int[width][height];
@@ -144,8 +143,8 @@ public class Convolution {
                 tabPixels[index] = Color.rgb(tempR, tempG, tempB);
             }
         }
-        res.setPixels(tabPixels, 0, width, 0, 0, width, height);
-        return res;
+        original.setPixels(tabPixels, 0, width, 0, 0, width, height);
+        return original;
     }
 }
 
