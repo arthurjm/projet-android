@@ -23,6 +23,7 @@
         android:layout_marginRight="8dp"
         android:textAlignment="center"
         android:textAllCaps="false"
+        android:textColor="@color/white"
         android:textSize="15dp"
         android:textStyle="italic" />
 

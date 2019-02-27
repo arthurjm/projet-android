@@ -1,6 +1,5 @@
 package com.package1.affichage;
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -17,41 +16,72 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
-
 import com.package1.ChanelType;
-import com.package1.ColorManipulation;
 import com.package1.HistogramManipulation;
+import com.package1.Mask.BlurMask;
 import com.package1.R;
 import com.package1.RS;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import static com.package1.MainActivity.image;
 import static com.package1.MainActivity.imageEditing;
 import static com.package1.MainActivity.imageEditingCopy;
 import static com.package1.MainActivity.imgView;
 
+/**
+ * @author Mathieu
+ */
 public class PhotoRecycler extends AppCompatActivity {
 
+    /**
+     * List de FilterStruct
+     * @see FilterStruct
+     */
     private List<FilterStruct> photoList = new ArrayList<>();
+    /**
+     * RecyclerView du layout
+     * @see RecyclerView
+     */
     private RecyclerView photoRecyclerView;
+    /**
+     * Adapter de notre RecyclerView
+     * @see RecyclerViewHorizontalListAdapter
+     */
     private RecyclerViewHorizontalListAdapter photoAdapter;
-
+    /**
+     * SeekBar de notre layout
+     * @see SeekBar
+     */
     public static SeekBar seekBar1;
-
+    /**
+     * Bouton de retour en arriere
+     * @see Button
+     */
     private Button undoBut;
+    /**
+     * Bouton de sauvegarde
+     * @see Button
+     */
     private Button saveBut;
-
-    private RS renderscript;
-    private ColorManipulation colorManipulation;
-    private HistogramManipulation histogramManipulation;
-
-    public static Context context;
+    /**
+     * Renderscript
+     * @see RS
+     */
+    public static RS renderscript;
+    /**
+     * HistogramManipulation
+     * @see HistogramManipulation
+     */
+    public static HistogramManipulation hist;
+    /**
+     * Context
+     * @see Context
+     */
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,19 +96,21 @@ public class PhotoRecycler extends AppCompatActivity {
         photoRecyclerView.setLayoutManager(horizontalLayoutManager);
         photoRecyclerView.setAdapter(photoAdapter);
 
-        photoList();
+        filterList();
 
         // Ajout d'une barre entre les items
         //photoRecyclerView.addItemDecoration(new DividerItemDecoration(PhotoRecycler.this, LinearLayoutManager.HORIZONTAL));
 
     }
 
+    /**
+     * Permet d'initialiser tout ce que nous avons besoin dans le layout
+     */
     public void initiate() {
 
         context = getApplicationContext();
 
         // Filter
-        colorManipulation = new ColorManipulation();
         renderscript = new RS(context);
 
         // Button
@@ -108,6 +140,9 @@ public class PhotoRecycler extends AppCompatActivity {
 
     }
 
+    /**
+     * Permet d'initialiser des actions sur des bouttons
+     */
     public void addListener() {
         undoBut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,18 +154,21 @@ public class PhotoRecycler extends AppCompatActivity {
         saveBut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveImageToGallery();
+                saveImageToGallery(imageEditingCopy);
             }
         });
 
     }
 
-    private void photoList() {
+    /**
+     * Permet d'initialiser la
+     * @see PhotoRecycler#photoList
+     */
+    private void filterList() {
 
         // On redimensionne l'image
         Bitmap rediImageEditing = Bitmap.createScaledBitmap(image, 100, (int) ((image.getHeight() * 100) / image.getWidth()), true);
         Bitmap rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-
 
         FilterStruct fs;
 
@@ -149,73 +187,78 @@ public class PhotoRecycler extends AppCompatActivity {
         photoList.add(fs);
 
         // Constrast setting
-        histogramManipulation = new HistogramManipulation(rediCopy, ChanelType.V);
-        histogramManipulation.linearExtensionLUT(198, 50);
-        fs = new FilterStruct("contrast", histogramManipulation.applyLUT(rediCopy));
+        hist = new HistogramManipulation(rediCopy, ChanelType.V);
+        hist.linearExtensionLUT(198, 50);
+        fs = new FilterStruct("contrast", hist.applyLUT(rediCopy));
         photoList.add(fs);
         rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
 
         // ShiftLight
-        histogramManipulation = new HistogramManipulation(rediCopy, ChanelType.V);
-        histogramManipulation.shiftLUT(45);
-        fs = new FilterStruct("shiftLight", histogramManipulation.applyLUT(rediCopy));
+        hist = new HistogramManipulation(rediCopy, ChanelType.V);
+        hist.shiftLUT(45);
+        fs = new FilterStruct("shiftLight", hist.applyLUT(rediCopy));
         photoList.add(fs);
         rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
 
         // ShiftSaturation
-        histogramManipulation = new HistogramManipulation(rediCopy, ChanelType.S);
-        histogramManipulation.shiftLUT(45);
-        fs = new FilterStruct("shiftSaturation", histogramManipulation.applyLUT(rediCopy));
+        hist = new HistogramManipulation(rediCopy, ChanelType.S);
+        hist.shiftLUT(45);
+        fs = new FilterStruct("shiftSaturation", hist.applyLUT(rediCopy));
         photoList.add(fs);
         rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
 
         // ShiftColor
-        histogramManipulation = new HistogramManipulation(rediCopy, ChanelType.H);
-        histogramManipulation.shiftCycleLUT(250);
-        fs = new FilterStruct("shiftColor", histogramManipulation.applyLUT(rediCopy));
+        hist = new HistogramManipulation(rediCopy, ChanelType.H);
+        hist.shiftCycleLUT(250);
+        fs = new FilterStruct("shiftColor", hist.applyLUT(rediCopy));
         photoList.add(fs);
         rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
 
         // Isohelie
-        histogramManipulation = new HistogramManipulation(rediCopy, ChanelType.H);
-        histogramManipulation.isohelieLUT(8);
-        fs = new FilterStruct("isohelie", histogramManipulation.applyLUT(rediCopy));
+        hist = new HistogramManipulation(rediCopy, ChanelType.H);
+        hist.isohelieLUT(8);
+        fs = new FilterStruct("isohelie", hist.applyLUT(rediCopy));
         photoList.add(fs);
         rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
 
         // EqualizationLight
-        histogramManipulation = new HistogramManipulation(rediCopy, ChanelType.V);
-        histogramManipulation.equalizationLUT();
-        fs = new FilterStruct("equa light", histogramManipulation.applyLUT(rediCopy));
+        hist = new HistogramManipulation(rediCopy, ChanelType.V);
+        hist.equalizationLUT();
+        fs = new FilterStruct("equa light", hist.applyLUT(rediCopy));
         photoList.add(fs);
 
-        // ARTHUR
-        fs = new FilterStruct("arthur", rediCopy);
+        // Blur
+        BlurMask mask = new BlurMask(9);
+        fs = new FilterStruct("blur", renderscript.convolution(rediCopy, mask));
         photoList.add(fs);
 
         photoAdapter.notifyDataSetChanged();
 
     }
 
+    /**
+     * Permet de définir l'imageView du layout
+     * @param bmp
+     */
     public void undo(Bitmap bmp) {
         imgView.setImageBitmap(bmp);
     }
 
-    private void saveImageToGallery() {
-        //save image
+    /**
+     * Permet de sauvegarder une image
+     * @param bmp
+     */
+    private void saveImageToGallery(Bitmap bmp) {
         File dir = new File(Environment.getExternalStorageDirectory(), "image");
-        System.out.println(dir);
         if (!dir.exists()) {
             dir.mkdir();
         }
         final String fileName = System.currentTimeMillis() + "";
         File file = new File(dir, fileName);
-        //System.out.println(file);
         try {
             FileOutputStream out = new FileOutputStream(file);
-            imageEditingCopy.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, out);
             out.flush();
-            Log.i("imgSvg", "isSucessfull");
             out.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
