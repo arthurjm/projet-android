@@ -24,7 +24,8 @@ public class MainActivity extends AppCompatActivity {
     public static Bitmap image;
     public static Bitmap imageEditing;
     public static Bitmap imageEditingCopy;
-    public static ImageView imgView;
+  //  public static CustomImageVIew  imgView;
+    public static  ImageView imgView;
 
     private Uri filePath;
     private String imagepath = null;

@@ -34,7 +34,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
 
     private HistogramManipulation hist;
     private RS renderscript;
-    private int actualFunction;
+    private String actualFunction;
 
     private int progressBar1;
 
@@ -133,7 +133,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 setBorn(seekBar1, 359);
                 setRGBBackground(seekBar1);
                 seekBar1.setProgress(0);
-                actualFunction = 0;
+                actualFunction = "colorize";
                 break;
             // Keepcolor
             case 2:
@@ -143,7 +143,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 setBorn(seekBar1, 359);
                 setRGBBackground(seekBar1);
                 seekBar1.setProgress(0);
-                actualFunction = 1;
+                actualFunction = "keepColor";
                 break;
             // Contrast
             case 3:
@@ -153,7 +153,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 setBorn(seekBar1, 127);
                 setNormalBackground(seekBar1);
                 seekBar1.setProgress(0);
-                actualFunction = 2;
+                actualFunction = "contrast";
                 break;
             // ShiftLight
             case 4:
@@ -163,7 +163,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 setBorn(seekBar1, 200);
                 setNormalBackground(seekBar1);
                 seekBar1.setProgress(0);
-                actualFunction = 3;
+                actualFunction = "shiftLight";
                 break;
             // Shift Saturation
             case 5:
@@ -173,7 +173,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 setBorn(seekBar1, 200);
                 setNormalBackground(seekBar1);
                 seekBar1.setProgress(0);
-                actualFunction = 4;
+                actualFunction = "shitSaturation";
                 break;
             // Shift Color
             case 6:
@@ -183,7 +183,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 setBorn(seekBar1, 359);
                 setRGBBackground(seekBar1);
                 seekBar1.setProgress(0);
-                actualFunction = 5;
+                actualFunction = "shiftColor";
                 break;
             // isoHelie
             case 7:
@@ -193,7 +193,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 setBorn(seekBar1, 22);
                 setNormalBackground(seekBar1);
                 seekBar1.setProgress(2);
-                actualFunction = 6;
+                actualFunction = "isoHelie";
                 break;
             // Equa light
             case 8:
@@ -205,9 +205,11 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 break;
             // Blur
             case 9 :
+                setNormalBackground(seekBar1);
                 setVisible(seekBar1);
+                seekBar1.setProgress(0);
                 setBorn(seekBar1, 15);
-                actualFunction = 7;
+                actualFunction = "blur";
             default:
                 break;
         }
@@ -216,44 +218,44 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
     private void applyFunction() {
 
         switch (actualFunction) {
-            case 0:
+            case "colorize":
                 imgView.setImageBitmap(renderscript.colorize(imageEditingCopy, progressBar1));
                 imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
                 break;
-            case 1:
+            case "keepColor":
                 break;
             // CONTRAST
-            case 2:
+            case "contrast":
                 hist = new HistogramManipulation(imageEditingCopy, ChanelType.V);
                 hist.linearExtensionLUT(128 + progressBar1, 127 - progressBar1);
                 imgView.setImageBitmap(hist.applyLUT(imageEditingCopy));
                 imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
                 break;
-            case 3:
+            case "shiftLight":
                 hist = new HistogramManipulation(imageEditingCopy, ChanelType.V);
                 hist.shiftLUT(progressBar1 - 100);
                 imgView.setImageBitmap(hist.applyLUT(imageEditingCopy));
                 imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
                 break;
-            case 4:
+            case "shiftSaturation":
                 hist = new HistogramManipulation(imageEditingCopy, ChanelType.S);
                 hist.shiftLUT(progressBar1 - 100);
                 imgView.setImageBitmap(hist.applyLUT(imageEditingCopy));
                 imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
                 break;
-            case 5:
+            case "shiftColor":
                 hist = new HistogramManipulation(imageEditingCopy, ChanelType.H);
                 hist.shiftCycleLUT(progressBar1);
                 imgView.setImageBitmap(hist.applyLUT(imageEditingCopy));
                 imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
                 break;
-            case 6:
+            case "isoHelie":
                 hist = new HistogramManipulation(imageEditingCopy, ChanelType.H);
                 hist.isohelieLUT(progressBar1 - 2);
                 imgView.setImageBitmap(hist.applyLUT(imageEditingCopy));
                 imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
                 break;
-            case 7 :
+            case "blur" :
                 BlurMask mask = new BlurMask(progressBar1);
                 imgView.setImageBitmap(renderscript.convolution(imageEditingCopy, mask));
                 imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);

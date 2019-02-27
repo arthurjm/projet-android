@@ -2,8 +2,14 @@ package com.package1.affichage;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,10 +20,15 @@ import android.widget.SeekBar;
 
 import com.package1.ChanelType;
 import com.package1.ColorManipulation;
+import com.package1.CustomImageVIew;
 import com.package1.HistogramManipulation;
 import com.package1.R;
 import com.package1.RS;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -106,6 +117,13 @@ public class PhotoRecycler extends AppCompatActivity {
                 undo(imageEditing);
             }
         });
+        saveBut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveImageToGallery();
+            }
+        });
+
     }
 
     private void photoList() {
@@ -182,6 +200,42 @@ public class PhotoRecycler extends AppCompatActivity {
 
     public void undo(Bitmap bmp) {
         imgView.setImageBitmap(bmp);
+    }
+
+    private void saveImageToGallery() {
+        //save image
+        File dir = new File(Environment.getExternalStorageDirectory(),"image");
+        System.out.println(dir);
+        if (!dir.exists()) {
+            dir.mkdir();
+        }
+        final String fileName = System.currentTimeMillis() + ".jpg";
+        File file = new File(dir, fileName);
+        //System.out.println(file);
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            imageEditing.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            out.flush();
+            Log.i("isSucess", "?");
+            out.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            System.out.println(e);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //add file to gallery
+        try {
+            MediaStore.Images.Media.insertImage(getContentResolver(), file.getAbsolutePath(), fileName, null);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        if(Build.VERSION.SDK_INT< Build.VERSION_CODES.KITKAT) {
+            sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file" + fileName)));
+        }
+        else{
+            MediaScannerConnection.scanFile(this, new String[]{fileName},null,null);
+        }
     }
 
     @Override
