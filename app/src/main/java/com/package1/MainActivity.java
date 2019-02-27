@@ -5,7 +5,9 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -15,6 +17,7 @@ import android.widget.ImageView;
 
 import com.package1.affichage.PhotoRecycler;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -30,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private Uri filePath;
     private String imagepath = null;
     private int PICK_IMAGE_REQUEST = 1;
+
     /**
      * ArrayList de boutons.
      *
@@ -132,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
         cursor.moveToFirst();
         return cursor.getString(column_index);
     }
+
 
     public void filterPage(View view) {
         startActivity(new Intent(this, PhotoRecycler.class));

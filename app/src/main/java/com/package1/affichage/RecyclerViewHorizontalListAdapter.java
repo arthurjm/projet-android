@@ -197,18 +197,19 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 break;
             // Equa light
             case 8:
-                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
+               imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
                 setGone(seekBar1);
                 hist = new HistogramManipulation(imageEditingCopy, ChanelType.V);
                 hist.equalizationLUT();
                 imgView.setImageBitmap(hist.applyLUT(imageEditingCopy));
                 break;
             // Blur
-            case 9 :
+            case 9:
+                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
                 setNormalBackground(seekBar1);
                 setVisible(seekBar1);
                 seekBar1.setProgress(0);
-                setBorn(seekBar1, 15);
+                setBorn(seekBar1, 14);
                 actualFunction = "blur";
             default:
                 break;
@@ -220,7 +221,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
         switch (actualFunction) {
             case "colorize":
                 imgView.setImageBitmap(renderscript.colorize(imageEditingCopy, progressBar1));
-                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
+                imageEditingCopy = renderscript.colorize(imageEditingCopy, progressBar1);
                 break;
             case "keepColor":
                 break;
@@ -229,36 +230,35 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 hist = new HistogramManipulation(imageEditingCopy, ChanelType.V);
                 hist.linearExtensionLUT(128 + progressBar1, 127 - progressBar1);
                 imgView.setImageBitmap(hist.applyLUT(imageEditingCopy));
-                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
+                imageEditingCopy = hist.applyLUT(imageEditingCopy);
                 break;
             case "shiftLight":
                 hist = new HistogramManipulation(imageEditingCopy, ChanelType.V);
                 hist.shiftLUT(progressBar1 - 100);
                 imgView.setImageBitmap(hist.applyLUT(imageEditingCopy));
-                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
+                imageEditingCopy = hist.applyLUT(imageEditingCopy);
                 break;
             case "shiftSaturation":
                 hist = new HistogramManipulation(imageEditingCopy, ChanelType.S);
                 hist.shiftLUT(progressBar1 - 100);
                 imgView.setImageBitmap(hist.applyLUT(imageEditingCopy));
-                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
+                imageEditingCopy = hist.applyLUT(imageEditingCopy);
                 break;
             case "shiftColor":
                 hist = new HistogramManipulation(imageEditingCopy, ChanelType.H);
                 hist.shiftCycleLUT(progressBar1);
                 imgView.setImageBitmap(hist.applyLUT(imageEditingCopy));
-                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
+                imageEditingCopy = hist.applyLUT(imageEditingCopy);
                 break;
             case "isoHelie":
                 hist = new HistogramManipulation(imageEditingCopy, ChanelType.H);
                 hist.isohelieLUT(progressBar1 - 2);
                 imgView.setImageBitmap(hist.applyLUT(imageEditingCopy));
-                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
+                imageEditingCopy = hist.applyLUT(imageEditingCopy);
                 break;
-            case "blur" :
-                BlurMask mask = new BlurMask(progressBar1);
+            case "blur":
+                BlurMask mask = new BlurMask(progressBar1 + 1);
                 imgView.setImageBitmap(renderscript.convolution(imageEditingCopy, mask));
-                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
                 break;
             default:
                 break;
