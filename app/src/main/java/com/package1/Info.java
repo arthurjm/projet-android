@@ -47,7 +47,7 @@ public class Info extends AppCompatActivity {
                 public void onClick(View view) {
                     buttonList.get(1).setVisibility(View.GONE);
                     buttonList.get(0).setVisibility(View.GONE);
-                    text.setText("Nous sommes 4 étudiants en licence 3 d'informatique de Bordeaux. \n Mathieu DUBAN \n Arthur MONDON \n Elias KHATI-LEFRANCOIS \n LiangLiang PAN" +
+                    text.setText("Nous sommes 4 étudiants en licence 3 d'informatique de Bordeaux. \n Mathieu DUBAN \n Elias KHATI-LEFRANCOIS \n Arthur MONDON  \n LiangLiang PAN" +
                             "\n\n Ce projet a été réalisé dans le but de l'UE Projet Technologique.");
                 }
             });
