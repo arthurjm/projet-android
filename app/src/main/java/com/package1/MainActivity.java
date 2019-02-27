@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.nfc.Tag;
 import android.os.Bundle;
@@ -137,6 +139,41 @@ public class MainActivity extends AppCompatActivity {
         return cursor.getString(column_index);
     }
 
+    public Bitmap rotateBitmap(String photoFilePath) {
+
+        BitmapFactory.Options bounds = new BitmapFactory.Options();
+        bounds.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(photoFilePath, bounds);
+
+        BitmapFactory.Options opts = new BitmapFactory.Options();
+        Bitmap bmp = BitmapFactory.decodeFile(photoFilePath, opts);
+
+        ExifInterface exif = null;
+        try {
+            exif = new ExifInterface(photoFilePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+        Matrix matrix = new Matrix();
+        switch (orientation) {
+
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                matrix.postRotate(90);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                matrix.postRotate(180);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                matrix.postRotate(270);
+                break;
+        }
+
+        Bitmap rotatedBitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);
+
+        return rotatedBitmap;
+    }
 
     public void filterPage(View view) {
         startActivity(new Intent(this, PhotoRecycler.class));
