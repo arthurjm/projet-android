@@ -20,7 +20,6 @@ import android.widget.SeekBar;
 
 import com.package1.ChanelType;
 import com.package1.ColorManipulation;
-import com.package1.CustomImageVIew;
 import com.package1.HistogramManipulation;
 import com.package1.R;
 import com.package1.RS;
@@ -96,7 +95,12 @@ public class PhotoRecycler extends AppCompatActivity {
         // Image
         imgView = findViewById(R.id.imageResult);
 
-        imageEditing = Bitmap.createScaledBitmap(image, (int) (image.getWidth() * 0.5), (int) (image.getHeight() * 0.5), true);
+
+        int adaptedWidth=750;
+        if(image.getWidth()<adaptedWidth){
+            adaptedWidth=image.getWidth();
+        }
+        imageEditing = Bitmap.createScaledBitmap(image, adaptedWidth, (int) ((image.getHeight() * adaptedWidth)/image.getWidth()), true);
         imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
 
         imgView.setImageBitmap(imageEditing);
@@ -129,7 +133,7 @@ public class PhotoRecycler extends AppCompatActivity {
     private void photoList() {
 
         // On redimensionne l'image
-        Bitmap rediImageEditing = Bitmap.createScaledBitmap(image, (int) (image.getWidth() * 0.1), (int) (image.getHeight() * 0.1), true);
+        Bitmap rediImageEditing = Bitmap.createScaledBitmap(image, 100, (int) ((image.getHeight() * 100)/image.getWidth()), true);
         Bitmap rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
 
 
@@ -209,14 +213,14 @@ public class PhotoRecycler extends AppCompatActivity {
         if (!dir.exists()) {
             dir.mkdir();
         }
-        final String fileName = System.currentTimeMillis() + ".jpg";
+        final String fileName = System.currentTimeMillis() + ".jpeg";
         File file = new File(dir, fileName);
         //System.out.println(file);
         try {
             FileOutputStream out = new FileOutputStream(file);
-            imageEditing.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            imageEditing.compress(Bitmap.CompressFormat.JPEG, 50, out);
             out.flush();
-            Log.i("isSucess", "?");
+            Log.i("imgSvg", "isSucessfull");
             out.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
