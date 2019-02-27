@@ -95,11 +95,12 @@ public class PhotoRecycler extends AppCompatActivity {
         // Image
         imgView = findViewById(R.id.imageResult);
 
-        int adaptedWidth = 750;
-        if (image.getWidth() < adaptedWidth) {
-            adaptedWidth = image.getWidth();
+
+        int adaptedWidth=750;
+        if(image.getWidth()<adaptedWidth){
+            adaptedWidth=image.getWidth();
         }
-        imageEditing = Bitmap.createScaledBitmap(image, adaptedWidth, (int) ((image.getHeight() * adaptedWidth) / image.getWidth()), true);
+        imageEditing = Bitmap.createScaledBitmap(image, adaptedWidth, (int) ((image.getHeight() * adaptedWidth)/image.getWidth()), true);
         imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
 
         imgView.setImageBitmap(imageEditing);
@@ -132,7 +133,7 @@ public class PhotoRecycler extends AppCompatActivity {
     private void photoList() {
 
         // On redimensionne l'image
-        Bitmap rediImageEditing = Bitmap.createScaledBitmap(image, 100, (int) ((image.getHeight() * 100) / image.getWidth()), true);
+        Bitmap rediImageEditing = Bitmap.createScaledBitmap(image, 100, (int) ((image.getHeight() * 100)/image.getWidth()), true);
         Bitmap rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
 
 
@@ -207,17 +208,17 @@ public class PhotoRecycler extends AppCompatActivity {
 
     private void saveImageToGallery() {
         //save image
-        File dir = new File(Environment.getExternalStorageDirectory(), "image");
+        File dir = new File(Environment.getExternalStorageDirectory(),"image");
         System.out.println(dir);
         if (!dir.exists()) {
             dir.mkdir();
         }
-        final String fileName = System.currentTimeMillis() + "";
+        final String fileName = System.currentTimeMillis() + ".jpeg";
         File file = new File(dir, fileName);
         //System.out.println(file);
         try {
             FileOutputStream out = new FileOutputStream(file);
-            imageEditingCopy.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            imageEditing.compress(Bitmap.CompressFormat.JPEG, 50, out);
             out.flush();
             Log.i("imgSvg", "isSucessfull");
             out.close();
@@ -233,10 +234,11 @@ public class PhotoRecycler extends AppCompatActivity {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+        if(Build.VERSION.SDK_INT< Build.VERSION_CODES.KITKAT) {
             sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file" + fileName)));
-        } else {
-            MediaScannerConnection.scanFile(this, new String[]{fileName}, null, null);
+        }
+        else{
+            MediaScannerConnection.scanFile(this, new String[]{fileName},null,null);
         }
     }
 

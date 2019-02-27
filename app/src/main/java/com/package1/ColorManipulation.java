@@ -46,7 +46,6 @@ public class ColorManipulation {
         int index;
         tabPixels = new int[width * height];
 
-        Bitmap res = Bitmap.createBitmap(width, height, original.getConfig());
         original.getPixels(tabPixels, 0, width, 0, 0, width, height);
 
         for (int y = 0; y < height; y++) {
@@ -59,8 +58,8 @@ public class ColorManipulation {
                 tabPixels[index] = (A << 24) | (R << 16) | (G << 8) | B;
             }
         }
-        res.setPixels(tabPixels, 0, width, 0, 0, width, height);
-        return res;
+        original.setPixels(tabPixels, 0, width, 0, 0, width, height);
+        return original;
     }
 
     /*Méthode permettant de passer l'image en nuances de gris excepté pour les pixels proches d'une couleur (ici "color")
@@ -75,7 +74,6 @@ public class ColorManipulation {
         int colorB = Color.blue(color);
         tabPixels = new int[width * height];
 
-        Bitmap res = Bitmap.createBitmap(width, height, original.getConfig());
         original.getPixels(tabPixels, 0, width, 0, 0, width, height);
 
         for (int y = 0; y < height; y++) {
@@ -92,8 +90,8 @@ public class ColorManipulation {
                 tabPixels[index] = (A << 24) | (R << 16) | (G << 8) | B;
             }
         }
-        res.setPixels(tabPixels, 0, width, 0, 0, width, height);
-        return res;
+        original.setPixels(tabPixels, 0, width, 0, 0, width, height);
+        return original;
     }
 
     public Bitmap convertImageColorization(Bitmap original, int chosenHue) {
@@ -104,7 +102,6 @@ public class ColorManipulation {
         tabPixels = new int[width * height];
         float[] hsv = new float[3];
 
-        Bitmap res = Bitmap.createBitmap(width, height, original.getConfig());
         original.getPixels(tabPixels, 0, width, 0, 0, width, height);
 
         for (int y = 0; y < height; y++) {
@@ -118,8 +115,8 @@ public class ColorManipulation {
                 tabPixels[index] = Color.HSVToColor(hsv);
             }
         }
-        res.setPixels(tabPixels, 0, width, 0, 0, width, height);
-        return res;
+        original.setPixels(tabPixels, 0, width, 0, 0, width, height);
+        return original;
     }
 
 }
