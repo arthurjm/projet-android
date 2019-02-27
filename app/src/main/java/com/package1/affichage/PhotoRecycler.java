@@ -53,9 +53,6 @@ public class PhotoRecycler extends AppCompatActivity {
 
     public static Context context;
 
-    public static Bitmap rediImageEditing;
-    public static Bitmap rediCopy;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +67,6 @@ public class PhotoRecycler extends AppCompatActivity {
         photoRecyclerView.setAdapter(photoAdapter);
 
         photoList();
-
 
         // Ajout d'une barre entre les items
         //photoRecyclerView.addItemDecoration(new DividerItemDecoration(PhotoRecycler.this, LinearLayoutManager.HORIZONTAL));
@@ -94,7 +90,6 @@ public class PhotoRecycler extends AppCompatActivity {
 
         // Image
         imgView = findViewById(R.id.imageResult);
-
 
         int adaptedWidth = 750;
         if (image.getWidth() < adaptedWidth) {
@@ -218,7 +213,7 @@ public class PhotoRecycler extends AppCompatActivity {
         //System.out.println(file);
         try {
             FileOutputStream out = new FileOutputStream(file);
-            imageEditing.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            imageEditingCopy.compress(Bitmap.CompressFormat.JPEG, 100, out);
             out.flush();
             Log.i("imgSvg", "isSucessfull");
             out.close();
