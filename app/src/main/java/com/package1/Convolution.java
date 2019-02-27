@@ -63,6 +63,45 @@ public class Convolution {
         weightTotal=tempWeight;
     }
 
+    public void setSobelMask(boolean isVertical){
+        weightTotal=1;
+        for(int i=0; i<pxWidth;i++){
+            for(int j=0; j<pxHeight;j++){
+                if (isVertical){
+                    if(i==(pxWidth-1)/2){//it means that it is in the middle of the mask (as mask are always odd in width)
+                        mask[i][j]=0;
+                    }else if(i<(pxWidth-1)/2){
+                        mask[i][j]=-1;
+                    }else{
+                        mask[i][j]=1;
+                    }
+                }else{
+                    if(j==(pxHeight-1)/2){//it means that it is in the middle of the mask (as mask are always odd in height)
+                        mask[i][j]=0;
+                    }else if(j<(pxHeight-1)/2){
+                        mask[i][j]=-1;
+                    }else{
+                        mask[i][j]=1;
+                    }
+                }
+            }
+        }
+    }
+
+    public void setLaplacianMask(){
+        weightTotal=1;
+        for(int i=0; i<pxWidth;i++) {
+            for (int j = 0; j < pxHeight; j++) {
+                if(i==(pxWidth-1)/2 && j==(pxHeight-1)/2){
+                    mask[i][j]=pxHeight*pxWidth-1;
+                }else{
+                    mask[i][j]=-1;
+                }
+            }
+        }
+    }
+
+
     public void setPxHeight(int pxHeight) {
         this.pxHeight = pxHeight;
     }
@@ -77,6 +116,15 @@ public class Convolution {
 
     public void setMask(int[][] mask) {
         this.mask = mask;
+    }
+
+    private int limitValue(int value, int limit){
+        if(value>limit){
+            value=limit;
+        }else if(value<0){
+            value=0;
+        }
+        return value;
     }
 
     /*
@@ -147,6 +195,77 @@ public class Convolution {
                         tempR = tempR / localWeight;
                         tempG = tempG / localWeight;
                         tempB = tempB / localWeight;
+                    }
+                }
+                tabPixels[index] = Color.rgb(tempR, tempG, tempB);
+            }
+        }
+        original.setPixels(tabPixels, 0, width, 0, 0, width, height);
+        return original;
+    }
+
+    public Bitmap edgeDetection(Bitmap original) {
+        int width = original.getWidth();
+        int height = original.getHeight();
+        int[][] tabPixR = new int[width][height];
+        int[][] tabPixG = new int[width][height];
+        int[][] tabPixB = new int[width][height];
+        int R, G, B, index, tempR, tempG, tempB, localWeight;
+        int[] tabPixels = new int[width * height];
+        original.getPixels(tabPixels, 0, width, 0, 0, width, height);
+        //initialisation des tableaux des trois canaux R,G,B des pixels du bitmap passé en parametre
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                index = y * width + x;
+                R = (tabPixels[index] >> 16) & 0xff;
+                G = (tabPixels[index] >> 8) & 0xff;
+                B = tabPixels[index] & 0xff;
+                tabPixR[x][y] = R;
+                tabPixG[x][y] = G;
+                tabPixB[x][y] = B;
+            }
+        }
+        //boucle de l'application du masque
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                index = y * width + x;
+                tempR = 0;
+                tempG = 0;
+                tempB = 0;
+                //entre dans le if si le pixel central permet d'appliquer le masque en entier
+                if (!(x < pxWidth / 2 || y < pxHeight / 2 || x > width - (pxWidth + 1) / 2 || y > height - (pxHeight + 1) / 2)) {
+                    for (int j = 0; j < pxHeight; j++) {
+                        for (int i = 0; i < pxWidth; i++) {
+                            tempR += tabPixR[x + i - pxWidth / 2][y + j - pxHeight / 2] * mask[i][j];
+                            tempG += tabPixG[x + i - pxWidth / 2][y + j - pxHeight / 2] * mask[i][j];
+                            tempB += tabPixB[x + i - pxWidth / 2][y + j - pxHeight / 2] * mask[i][j];
+                        }
+                    }
+
+                    tempR = limitValue(tempR,255);
+                    tempG = limitValue(tempG,255);
+                    tempB = limitValue(tempB,255);
+                } else { //sinon, on applique le traitement d'une bordure
+                    localWeight = 0;
+                    for (int j = 0; j < pxHeight; j++) {
+                        for (int i = 0; i < pxWidth; i++) {
+                            if ((x + i - pxWidth / 2) >= 0 && (x + i - pxWidth / 2) < width
+                                    && (y + j - pxHeight / 2) >= 0 && (y + j - pxHeight / 2) < height) {
+                                tempR += tabPixR[x + i - pxWidth / 2][y + j - pxHeight / 2] * mask[i][j];
+                                tempG += tabPixG[x + i - pxWidth / 2][y + j - pxHeight / 2] * mask[i][j];
+                                tempB += tabPixB[x + i - pxWidth / 2][y + j - pxHeight / 2] * mask[i][j];
+                                localWeight += mask[i][j];
+                            }
+                        }
+                    }
+                    if (localWeight == 0) {//si le poid a appliquer est 0 on doit éviter la division par 0, on entre donc dans cette boucle
+                        tempR = 0;
+                        tempG = 0;
+                        tempB = 0;
+                    } else {
+                        tempR = limitValue(tempR / localWeight,255);
+                        tempG = limitValue(tempG / localWeight,255);
+                        tempB = limitValue(tempB / localWeight,255);
                     }
                 }
                 tabPixels[index] = Color.rgb(tempR, tempG, tempB);
