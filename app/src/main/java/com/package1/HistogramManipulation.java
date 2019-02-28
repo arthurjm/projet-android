@@ -13,7 +13,7 @@ public class HistogramManipulation {
      */
     static private int NumberofValues = 256;
 
-    int[] LUT = new int[NumberofValues];
+    public int[] LUT = new int[NumberofValues];
     Histogram histogram;
     int R, G, B;
 
@@ -171,15 +171,16 @@ public class HistogramManipulation {
 
     /**
      * Function used to "equalize" the histogram.
+     * Starting with the value 0 and going up.
      */
     public void equalizationLUT() {
-        int average = histogram.getAverage();
-        int tempCount = 0, nextValue = 0;
+        int average = histogram.getCount()/NumberofValues;
+        int tempCount = 0;
+        int nextValue = 0;
         for (int i = 0; i < NumberofValues; i++) {
             LUT[i] = nextValue;
             tempCount += histogram.getHistogramValue(i);
-
-            if ((tempCount / average) > 1) {
+            if ((tempCount / average) >= 1) {
                 nextValue += (tempCount / average);
                 if (nextValue > NumberofValues - 1) {
                     nextValue = NumberofValues - 1;
@@ -189,13 +190,18 @@ public class HistogramManipulation {
         }
     }
 
+    /**
+     * Function used to "equalize" the histogram.
+     * Starting with the value maximum and going down.
+     */
     public void LUThistogramEq() {
-        int average = histogram.getAverage();
-        int tempCount = 0, nextValue = NumberofValues - 1;
+        int average = histogram.getCount()/NumberofValues;
+        int tempCount = 0;
+        int nextValue = NumberofValues - 1;
         for (int i = 0; i < NumberofValues; i++) {
             LUT[NumberofValues - 1 - i] = nextValue;
             tempCount += histogram.getHistogramValue(NumberofValues - 1 - i);
-            if ((tempCount / average) > 1) {
+            if ((tempCount / average) >= 1) {
                 nextValue -= (tempCount / average);
                 if (nextValue < 0) {
                     nextValue = 0;
