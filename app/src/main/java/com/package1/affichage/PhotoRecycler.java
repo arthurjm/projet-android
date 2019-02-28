@@ -77,7 +77,7 @@ public class PhotoRecycler extends AppCompatActivity {
      */
     private Button undoBut;
     /**
-     * Boutton to save
+     * Button to save
      *
      * @see Button
      */
@@ -89,7 +89,7 @@ public class PhotoRecycler extends AppCompatActivity {
      */
     public static RS renderscript;
     /**
-     * a variable of  type HistogramManipulation
+     * a variable of type HistogramManipulation
      *
      * @see HistogramManipulation
      */
@@ -153,7 +153,7 @@ public class PhotoRecycler extends AppCompatActivity {
 
         imgView.setImageBitmap(imageEditing);
 
-        //Seekbar
+        // SeekBar
         seekBar1 = findViewById(R.id.seekBarFull);
         seekBar1.setVisibility(View.GONE);
         seekBar2 = findViewById(R.id.seekBarDemi);
@@ -192,82 +192,83 @@ public class PhotoRecycler extends AppCompatActivity {
 
         // On redimensionne l'image
         Bitmap rediImageEditing = Bitmap.createScaledBitmap(image, 100, (int) ((image.getHeight() * 100) / image.getWidth()), true);
-        Bitmap rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+        Bitmap rediCopy;
 
         FilterStruct fs;
 
-        // togrey
+        // ToGrey
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
         fs = new FilterStruct("grey", renderscript.toGrey(rediCopy));
         photoList.add(fs);
-        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
 
         // Colorize
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
         fs = new FilterStruct("colorize", renderscript.colorize(rediCopy, 180));
         photoList.add(fs);
-        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
 
         // KeepColor
-        fs = new FilterStruct("keepColor", renderscript.keepHue(rediCopy, 180, 120));
-        photoList.add(fs);
         rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+        fs = new FilterStruct("keepColor", renderscript.keepHue(rediCopy, 180, 60));
+        photoList.add(fs);
 
         // Constrast setting
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
         hist = new HistogramManipulation(rediCopy, ChanelType.V);
         hist.linearExtensionLUT(198, 50);
         fs = new FilterStruct("contrast", hist.applyLUT(rediCopy));
         photoList.add(fs);
-        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
 
         // ShiftLight
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
         hist = new HistogramManipulation(rediCopy, ChanelType.V);
         hist.shiftLUT(45);
         fs = new FilterStruct("shiftLight", hist.applyLUT(rediCopy));
         photoList.add(fs);
-        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
 
         // ShiftSaturation
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
         hist = new HistogramManipulation(rediCopy, ChanelType.S);
         hist.shiftLUT(45);
         fs = new FilterStruct("shiftSaturation", hist.applyLUT(rediCopy));
         photoList.add(fs);
-        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
 
         // ShiftColor
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
         hist = new HistogramManipulation(rediCopy, ChanelType.H);
-        hist.shiftCycleLUT(120);
+        hist.shiftCycleLUT(250);
         fs = new FilterStruct("shiftColor", hist.applyLUT(rediCopy));
         photoList.add(fs);
-        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
 
         // Isohelie
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
         hist = new HistogramManipulation(rediCopy, ChanelType.V);
         hist.isohelieLUT(4);
         fs = new FilterStruct("isohelie", hist.applyLUT(rediCopy));
         photoList.add(fs);
-        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
 
         // EqualizationLight
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
         hist = new HistogramManipulation(rediCopy, ChanelType.V);
         hist.equalizationLUT();
         fs = new FilterStruct("equa light", hist.applyLUT(rediCopy));
         photoList.add(fs);
-        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
 
         // Blur
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
         BlurMask mask = new BlurMask(9);
         fs = new FilterStruct("blur", renderscript.convolution(rediCopy, mask));
         photoList.add(fs);
-        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
 
         // Gaussian
-        GaussianBlur maskGaussian = new GaussianBlur(5, 2.5);
-        fs = new FilterStruct("gaussian", renderscript.convolution(rediCopy, mask));
-        photoList.add(fs);
         rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+        GaussianBlur maskGaussian = new GaussianBlur(5, 2.5);
+        fs = new FilterStruct("gaussian", renderscript.convolution(rediCopy, maskGaussian));
+        photoList.add(fs);
 
         // Laplacien
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
         LaplacienMask maskLaplacien = new LaplacienMask();
-        fs = new FilterStruct("laplacien", renderscript.convolution(rediCopy, mask));
+        fs = new FilterStruct("laplacien", renderscript.convolution(rediCopy, maskLaplacien));
         photoList.add(fs);
 
         photoAdapter.notifyDataSetChanged();
@@ -286,9 +287,10 @@ public class PhotoRecycler extends AppCompatActivity {
 
     /**
      * reset progression seekbar's progression
+     *
      * @see SeekBar#setProgress(int)
      */
-    public void resetSeekbar(){
+    public void resetSeekbar() {
         seekBar1.setProgress(0);
         seekBar2.setProgress(0);
     }

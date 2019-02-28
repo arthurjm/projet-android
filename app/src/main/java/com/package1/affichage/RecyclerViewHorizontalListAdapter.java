@@ -107,7 +107,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                useFonction(position);
+                useFunction(position);
                 // Action lorsque l'on clique sur l'image
                 String productName = horizontalPhotoList.get(position).getFilterName().toString();
                 Toast.makeText(context, productName + " is selected", Toast.LENGTH_SHORT).show();
@@ -211,7 +211,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
      * @see PhotoRecycler#seekBar1
      * @see RecyclerViewHorizontalListAdapter#actualFunction
      */
-    private void useFonction(final int position) {
+    private void useFunction(final int position) {
         renderscript = new RS(context);
         addListener();
         // If we want reset imageView
@@ -222,6 +222,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
             case 0:
                 setGone(seekBar1, seekBar2);
                 imgView.setImageBitmap(renderscript.toGrey(imageEditingCopy));
+                imageEditingCopy = renderscript.toGrey(imageEditingCopy);
                 break;
             // Colorize
             case 1:
@@ -289,10 +290,11 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 break;
             // Equa light
             case 8:
-                setGone(seekBar1,seekBar2);
+                setGone(seekBar1, seekBar2);
                 hist = new HistogramManipulation(imageEditingCopy, ChanelType.V);
                 hist.equalizationLUT();
                 imgView.setImageBitmap(hist.applyLUT(imageEditingCopy));
+                imageEditingCopy = hist.applyLUT(imageEditingCopy);
                 break;
             // Blur
             case 9:
@@ -317,6 +319,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 setGone(seekBar1, seekBar2);
                 LaplacienMask maskLaplacien = new LaplacienMask();
                 imgView.setImageBitmap(renderscript.convolution(imageEditingCopy, maskLaplacien));
+                imageEditingCopy = renderscript.convolution(imageEditingCopy, maskLaplacien);
                 break;
             default:
                 break;
@@ -376,7 +379,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
         }
 
         // Apply modification
-        if(tmp != null){
+        if (tmp != null) {
             imgView.setImageBitmap(tmp);
             imageEditingCopy = tmp;
         }

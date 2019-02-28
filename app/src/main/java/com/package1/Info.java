@@ -14,12 +14,11 @@ public class Info extends AppCompatActivity {
      */
     public TextView text;
     /**
-     *  An arraylist of buttons
+     * An arraylist of buttons
      */
     public ArrayList<Button> buttonList;
 
     /**
-     *
      * @param savedUnstanceState
      */
     protected void onCreate(Bundle savedUnstanceState) {
