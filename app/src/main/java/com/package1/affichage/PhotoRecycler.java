@@ -209,7 +209,7 @@ public class PhotoRecycler extends AppCompatActivity {
 
         // ShiftColor
         hist = new HistogramManipulation(rediCopy, ChanelType.H);
-        hist.shiftCycleLUT(250);
+        hist.shiftCycleLUT(120);
         fs = new FilterStruct("shiftColor", hist.applyLUT(rediCopy));
         photoList.add(fs);
         rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
