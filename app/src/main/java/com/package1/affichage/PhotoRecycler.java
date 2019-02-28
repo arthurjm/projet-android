@@ -16,17 +16,22 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
+
 import com.package1.ChanelType;
 import com.package1.HistogramManipulation;
 import com.package1.Mask.BlurMask;
+import com.package1.Mask.GaussianBlur;
+import com.package1.Mask.LaplacienMask;
 import com.package1.R;
 import com.package1.RS;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import static com.package1.MainActivity.image;
 import static com.package1.MainActivity.imageEditing;
 import static com.package1.MainActivity.imageEditingCopy;
@@ -38,52 +43,68 @@ import static com.package1.MainActivity.imgView;
 public class PhotoRecycler extends AppCompatActivity {
 
     /**
-     * List de FilterStruct
+     * List of FilterStruct
+     *
      * @see FilterStruct
      */
     private List<FilterStruct> photoList = new ArrayList<>();
     /**
-     * RecyclerView du layout
+     * RecyclerView of layout
+     *
      * @see RecyclerView
      */
     private RecyclerView photoRecyclerView;
     /**
-     * Adapter de notre RecyclerView
      * @see RecyclerViewHorizontalListAdapter
      */
     private RecyclerViewHorizontalListAdapter photoAdapter;
     /**
-     * SeekBar de notre layout
+     * SeekBar of layout
+     *
      * @see SeekBar
      */
     public static SeekBar seekBar1;
     /**
-     * Bouton de retour en arriere
+     * SeekBar of layout
+     *
+     * @see SeekBar
+     */
+    public static SeekBar seekBar2;
+    /**
+     * Button to back
+     *
      * @see Button
      */
     private Button undoBut;
     /**
-     * Bouton de sauvegarde
+     * Boutton to save
+     *
      * @see Button
      */
     private Button saveBut;
     /**
-     * Renderscript
+     * a variable of type Renderscript
+     *
      * @see RS
      */
     public static RS renderscript;
     /**
-     * HistogramManipulation
+     * a variable of  type HistogramManipulation
+     *
      * @see HistogramManipulation
      */
     public static HistogramManipulation hist;
     /**
-     * Context
+     * a variable of type Context
+     *
      * @see Context
      */
     private Context context;
 
     @Override
+    /**
+     *
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.photo_recycle_view);
@@ -104,7 +125,7 @@ public class PhotoRecycler extends AppCompatActivity {
     }
 
     /**
-     * Permet d'initialiser tout ce que nous avons besoin dans le layout
+     * To initiate buttons seekbars and  context in layout
      */
     public void initiate() {
 
@@ -135,13 +156,15 @@ public class PhotoRecycler extends AppCompatActivity {
         //Seekbar
         seekBar1 = findViewById(R.id.seekBarFull);
         seekBar1.setVisibility(View.GONE);
+        seekBar2 = findViewById(R.id.seekBarDemi);
+        seekBar2.setVisibility(View.GONE);
 
         addListener();
 
     }
 
     /**
-     * Permet d'initialiser des actions sur des bouttons
+     * To link the corresponding action with each button
      */
     public void addListener() {
         undoBut.setOnClickListener(new View.OnClickListener() {
@@ -161,7 +184,8 @@ public class PhotoRecycler extends AppCompatActivity {
     }
 
     /**
-     * Permet d'initialiser la
+     * To initiate photoList
+     *
      * @see PhotoRecycler#photoList
      */
     private void filterList() {
@@ -182,9 +206,10 @@ public class PhotoRecycler extends AppCompatActivity {
         photoList.add(fs);
         rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
 
-        // A REVOIR AVEC LE RS
-        fs = new FilterStruct("keepColor", rediCopy);
+        // KeepColor
+        fs = new FilterStruct("keepColor", renderscript.keepHue(rediCopy, 180, 120));
         photoList.add(fs);
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
 
         // Constrast setting
         hist = new HistogramManipulation(rediCopy, ChanelType.V);
@@ -226,10 +251,23 @@ public class PhotoRecycler extends AppCompatActivity {
         hist.equalizationLUT();
         fs = new FilterStruct("equa light", hist.applyLUT(rediCopy));
         photoList.add(fs);
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
 
         // Blur
         BlurMask mask = new BlurMask(9);
         fs = new FilterStruct("blur", renderscript.convolution(rediCopy, mask));
+        photoList.add(fs);
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+
+        // Gaussian
+        GaussianBlur maskGaussian = new GaussianBlur(5, 2.5);
+        fs = new FilterStruct("gaussian", renderscript.convolution(rediCopy, mask));
+        photoList.add(fs);
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+
+        // Laplacien
+        LaplacienMask maskLaplacien = new LaplacienMask();
+        fs = new FilterStruct("laplacien", renderscript.convolution(rediCopy, mask));
         photoList.add(fs);
 
         photoAdapter.notifyDataSetChanged();
@@ -237,7 +275,8 @@ public class PhotoRecycler extends AppCompatActivity {
     }
 
     /**
-     * Permet de définir l'imageView du layout
+     * to define the imageView in layout
+     *
      * @param bmp
      */
     public void undo(Bitmap bmp) {
@@ -245,7 +284,8 @@ public class PhotoRecycler extends AppCompatActivity {
     }
 
     /**
-     * Permet de sauvegarder une image
+     * to save the image
+     *
      * @param bmp
      */
     private void saveImageToGallery(Bitmap bmp) {
@@ -280,36 +320,54 @@ public class PhotoRecycler extends AppCompatActivity {
     }
 
     @Override
+    /**
+     *
+     */
     protected void onStart() {
         super.onStart();
         Log.i("CV", "onStart()");
     }
 
     @Override
+    /**
+     *
+     */
     protected void onResume() {
         super.onResume();
         Log.i("CV", "onResume()");
     }
 
     @Override
+    /**
+     *
+     */
     protected void onPause() {
         super.onPause();
         Log.i("CV", "onPause()");
     }
 
     @Override
+    /**
+     *
+     */
     protected void onStop() {
         super.onStop();
         Log.i("CV", "onStop()");
     }
 
     @Override
+    /**
+     *
+     */
     protected void onRestart() {
         super.onRestart();
         Log.i("CV", "onRestart()");
     }
 
     @Override
+    /**
+     *
+     */
     protected void onDestroy() {
         super.onDestroy();
         Log.i("CV", "onDestroy()");

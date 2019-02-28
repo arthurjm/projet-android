@@ -5,12 +5,32 @@ import android.graphics.Color;
 
 
 public class Convolution {
-    private int pxHeight; //taille de la convolution
+    /**
+     *
+     * the height of convolution
+     *
+     */
+    private int pxHeight;
+    /**
+     *the width of convolution
+     */
     private int pxWidth;
+    /**
+     *the mask for the convolution
+     */
     private int[][] mask;
+    /**
+     *the weight total
+     */
     private int weightTotal = 0;
 
-    //constructeur associant un masque de convolution (tab) de hauteur et largeur différente
+
+    /**
+     *construction of a convolution with a mask (newHeight and newWidth are different)
+     * @param tab
+     * @param newWidth the width of mask
+     * @param newHeight the height of height
+     */
     public Convolution(int[][] tab, int newWidth, int newHeight) {
         pxHeight = newHeight;
         pxWidth = newWidth;
@@ -27,17 +47,29 @@ public class Convolution {
 
     }
 
-    //constructeur associant un masque de convolution (tab) de hauteur et largeur égales
+    /**
+     *construction of a convolution with a mask (same newHeight and newWidth)
+     * @param tab
+     * @param newWidth the width of mask
+     */
     public Convolution(int[][] tab, int newWidth) {
         this(tab, newWidth, newWidth);
     }
 
-    //constructeur associant un masque de convolution moyenneur de hauteur et largeur identique
+
+    /**
+     * construction of a convolution with a mask (same newHeight and newWidth)
+     * @param newWidth the width of mask
+     */
     public Convolution(int newWidth) {
         this(newWidth, newWidth);
     }
 
-    //constructeur associant un masque de convolution moyenneur de hauteur et largeur différentes
+    /**
+     * construction of a convolution with a mask (newHeight and newWidth are different)
+     * @param newWidth the width of mask
+     * @param newHeight the height of mask
+     */
     public Convolution(int newWidth, int newHeight) {
         pxWidth = newWidth;
         pxHeight = newHeight;
@@ -50,6 +82,10 @@ public class Convolution {
         }
     }
 
+    /**
+     * creat a Gaussien mask
+     * @param gamma to decide each indice of the mask
+     */
     public void setGaussienMask(double gamma) {
         int tempWeight = 0;
         int x = pxWidth / 2;
@@ -63,6 +99,10 @@ public class Convolution {
         weightTotal=tempWeight;
     }
 
+    /**
+     * to creat a sobel mask
+     * @param isVertical
+     */
     public void setSobelMask(boolean isVertical){
         weightTotal=1;
         for(int i=0; i<pxWidth;i++){
@@ -88,6 +128,9 @@ public class Convolution {
         }
     }
 
+    /**
+     * to creat a laplacian mask
+     */
     public void setLaplacianMask(){
         weightTotal=1;
         for(int i=0; i<pxWidth;i++) {
@@ -101,23 +144,44 @@ public class Convolution {
         }
     }
 
-
+    /**
+     * to set the height with the value pxHeight
+     * @param pxHeight the value to set
+     */
     public void setPxHeight(int pxHeight) {
         this.pxHeight = pxHeight;
     }
 
+    /**
+     * to set the width with the value pxWidth
+     * @param pxWidth the value to set
+     */
     public void setPxWidth(int pxWidth) {
         this.pxWidth = pxWidth;
     }
 
+    /**
+     * to get the mask
+     * @return
+     */
     public int[][] getMask() {
         return mask;
     }
 
+    /**
+     * to set the mask
+     * @param mask
+     */
     public void setMask(int[][] mask) {
         this.mask = mask;
     }
 
+    /**
+     * to limit the value not exceeding a value limit
+     * @param value the value to limit
+     * @param limit the value limit
+     * @return
+     */
     private int limitValue(int value, int limit){
         if(value>limit){
             value=limit;
@@ -134,6 +198,12 @@ public class Convolution {
             l'on manque de pixels pour appliquer l'ensemble du masque (ici le choix a été fait de réaliser la moyenne des pixels
             accessibles en respectant les poids du masque).
              */
+
+    /**
+     * to apply the mask to the image
+     * @param original the orginal image
+     * @return image processed
+     */
     public Bitmap applicationConvolution(Bitmap original) {
         int width = original.getWidth();
         int height = original.getHeight();
@@ -204,6 +274,11 @@ public class Convolution {
         return original;
     }
 
+    /**
+     *apply the mask to the image except edge of the image
+     * @param original the original image
+     * @return the image processed
+     */
     public Bitmap edgeDetection(Bitmap original) {
         int width = original.getWidth();
         int height = original.getHeight();

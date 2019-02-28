@@ -11,7 +11,7 @@ int maskHeight;
 
 int weight;
 
-uchar4 RS_KERNEL test(uchar4 in, uint32_t x, uint32_t y) {
+uchar4 RS_KERNEL convolution(uchar4 in, uint32_t x, uint32_t y) {
     uchar4 out = in;
 
     float4 temp = 0.0f;
