@@ -12,6 +12,7 @@ import android.renderscript.ScriptIntrinsicConvolve5x5;
 import android.renderscript.Type;
 import android.util.Log;
 
+import com.android.rssample.ScriptC_applyLUT;
 import com.android.rssample.ScriptC_colorize;
 import com.android.rssample.ScriptC_convolution;
 import com.android.rssample.ScriptC_grey;
@@ -101,7 +102,7 @@ public class RS {
     /**
      * Apply a convolution to an image
      * @param bmp
-     * @param mask
+     * @param mask The object Mask to apply
      * @return
      */
     public Bitmap convolution(Bitmap bmp, Mask mask) {
@@ -125,7 +126,38 @@ public class RS {
         script.set_maskHeight(mask.getHeight());
         script.set_weight(mask.getWeight());
 
-        script.forEach_test(input, output);
+        script.forEach_convolution(input, output);
+
+
+        script.destroy();
+
+        output.copyTo(res);
+        return res;
+    }
+
+    public Bitmap applyLUT(Bitmap bmp, HistogramManipulation HM) {
+        setInputOutput(bmp);
+        Bitmap res = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), bmp.getConfig());
+
+        ScriptC_applyLUT script = new ScriptC_applyLUT(rs);
+
+        Type.Builder maskType = new Type.Builder(rs, Element.I32(rs));
+        maskType.setX(256);
+        Allocation maskAllocation = Allocation.createTyped(rs, maskType.create());
+        maskAllocation.copyFrom(HM.LUT);
+
+        int canal = 0;
+        if (HM.histogram.getChanel() == ChanelType.R) {
+            canal = 1;
+        }
+        if (HM.histogram.getChanel() == ChanelType.G) {
+            canal = 2;
+        }
+        if (HM.histogram.getChanel() == ChanelType.B) {
+            canal = 3;
+        }
+        script.set_canal(canal);
+        script.forEach_applyLUT(input, output);
 
 
         script.destroy();
