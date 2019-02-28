@@ -214,17 +214,17 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
     private void useFonction(final int position) {
         renderscript = new RS(context);
         addListener();
+        // If we want reset imageView
+        //imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
+        imgView.setImageBitmap(imageEditingCopy);
         switch (position) {
-            // togrey
+            // ToGrey
             case 0:
-                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
                 setGone(seekBar1, seekBar2);
                 imgView.setImageBitmap(renderscript.toGrey(imageEditingCopy));
                 break;
             // Colorize
             case 1:
-                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
-                imgView.setImageBitmap(imageEditingCopy);
                 setVisible(seekBar1);
                 setGone(seekBar2);
                 setBorn(seekBar1, 359);
@@ -232,10 +232,8 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 seekBar1.setProgress(0);
                 actualFunction = "colorize";
                 break;
-            // Keepcolor
+            // KeepColor
             case 2:
-                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
-                imgView.setImageBitmap(imageEditingCopy);
                 setVisible(seekBar1, seekBar2);
                 setBorn(seekBar1, 359);
                 setBorn(seekBar2, 180);
@@ -246,8 +244,6 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 break;
             // Contrast
             case 3:
-                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
-                imgView.setImageBitmap(imageEditingCopy);
                 setVisible(seekBar1);
                 setGone(seekBar2);
                 setBorn(seekBar1, 127);
@@ -257,8 +253,6 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 break;
             // ShiftLight
             case 4:
-                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
-                imgView.setImageBitmap(imageEditingCopy);
                 setVisible(seekBar1);
                 setGone(seekBar2);
                 setBorn(seekBar1, 200);
@@ -268,8 +262,6 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 break;
             // Shift Saturation
             case 5:
-                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
-                imgView.setImageBitmap(imageEditingCopy);
                 setVisible(seekBar1);
                 setGone(seekBar2);
                 setBorn(seekBar1, 200);
@@ -279,8 +271,6 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 break;
             // Shift Color
             case 6:
-                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
-                imgView.setImageBitmap(imageEditingCopy);
                 setVisible(seekBar1);
                 setGone(seekBar2);
                 setBorn(seekBar1, 255);
@@ -290,8 +280,6 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 break;
             // isoHelie
             case 7:
-                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
-                imgView.setImageBitmap(imageEditingCopy);
                 setVisible(seekBar1);
                 setGone(seekBar2);
                 setBorn(seekBar1, 8);
@@ -301,7 +289,6 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 break;
             // Equa light
             case 8:
-                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
                 setGone(seekBar1,seekBar2);
                 hist = new HistogramManipulation(imageEditingCopy, ChanelType.V);
                 hist.equalizationLUT();
@@ -309,7 +296,6 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 break;
             // Blur
             case 9:
-                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
                 setNormalBackground(seekBar1);
                 setVisible(seekBar1);
                 setGone(seekBar2);
@@ -319,7 +305,6 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 break;
             // Gaussian
             case 10:
-                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
                 setNormalBackground(seekBar1);
                 setVisible(seekBar1);
                 setGone(seekBar2);
@@ -329,7 +314,6 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 break;
             // Laplacien
             case 11:
-                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
                 setGone(seekBar1, seekBar2);
                 LaplacienMask maskLaplacien = new LaplacienMask();
                 imgView.setImageBitmap(renderscript.convolution(imageEditingCopy, maskLaplacien));
@@ -346,54 +330,55 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
      */
     private void applyFunction() {
 
+        Bitmap tmp = null;
+
         switch (actualFunction) {
             case "colorize":
-                imgView.setImageBitmap(renderscript.colorize(imageEditingCopy, progressBar1));
-                imageEditingCopy = renderscript.colorize(imageEditingCopy, progressBar1);
+                tmp = (renderscript.colorize(imageEditingCopy, progressBar1));
                 break;
             case "keepColor":
-                imgView.setImageBitmap(renderscript.keepHue(imageEditingCopy, progressBar1, progressBar2));
-                imageEditingCopy = renderscript.keepHue(imageEditingCopy, progressBar1, progressBar2);
+                tmp = renderscript.keepHue(imageEditingCopy, progressBar1, progressBar2);
                 break;
             case "contrast":
                 hist = new HistogramManipulation(imageEditingCopy, ChanelType.V);
                 hist.linearExtensionLUT(128 + progressBar1, 127 - progressBar1);
-                imgView.setImageBitmap(hist.applyLUT(imageEditingCopy));
-                imageEditingCopy = hist.applyLUT(imageEditingCopy);
+                tmp = hist.applyLUT(imageEditingCopy);
                 break;
             case "shiftLight":
                 hist = new HistogramManipulation(imageEditingCopy, ChanelType.V);
                 hist.shiftLUT(progressBar1 - 100);
-                imgView.setImageBitmap(hist.applyLUT(imageEditingCopy));
-                imageEditingCopy = hist.applyLUT(imageEditingCopy);
+                tmp = hist.applyLUT(imageEditingCopy);
                 break;
             case "shiftSaturation":
                 hist = new HistogramManipulation(imageEditingCopy, ChanelType.S);
                 hist.shiftLUT(progressBar1 - 100);
-                imgView.setImageBitmap(hist.applyLUT(imageEditingCopy));
-                imageEditingCopy = hist.applyLUT(imageEditingCopy);
+                tmp = hist.applyLUT(imageEditingCopy);
                 break;
             case "shiftColor":
                 hist = new HistogramManipulation(imageEditingCopy, ChanelType.H);
                 hist.shiftCycleLUT(progressBar1);
-                imgView.setImageBitmap(hist.applyLUT(imageEditingCopy));
-                imageEditingCopy = hist.applyLUT(imageEditingCopy);
+                tmp = hist.applyLUT(imageEditingCopy);
                 break;
             case "isohelie":
                 hist = new HistogramManipulation(imageEditingCopy, ChanelType.V);
                 hist.isohelieLUT(progressBar1 + 2);
-                imgView.setImageBitmap(hist.applyLUT(imageEditingCopy));
-                imageEditingCopy = hist.applyLUT(imageEditingCopy);
+                tmp = hist.applyLUT(imageEditingCopy);
                 break;
             case "blur":
                 BlurMask mask = new BlurMask(progressBar1 + 1);
-                imgView.setImageBitmap(renderscript.convolution(imageEditingCopy, mask));
+                tmp = renderscript.convolution(imageEditingCopy, mask);
                 break;
             case "gaussian":
                 GaussianBlur maskGaussian = new GaussianBlur(progressBar1 * 2 + 1, 2.5);
-                imgView.setImageBitmap(renderscript.convolution(imageEditingCopy, maskGaussian));
+                tmp = renderscript.convolution(imageEditingCopy, maskGaussian);
             default:
                 break;
+        }
+
+        // Apply modification
+        if(tmp != null){
+            imgView.setImageBitmap(tmp);
+            imageEditingCopy = tmp;
         }
     }
 

@@ -281,6 +281,16 @@ public class PhotoRecycler extends AppCompatActivity {
      */
     public void undo(Bitmap bmp) {
         imgView.setImageBitmap(bmp);
+        resetSeekbar();
+    }
+
+    /**
+     * reset progression seekbar's progression
+     * @see SeekBar#setProgress(int)
+     */
+    public void resetSeekbar(){
+        seekBar1.setProgress(0);
+        seekBar2.setProgress(0);
     }
 
     /**
