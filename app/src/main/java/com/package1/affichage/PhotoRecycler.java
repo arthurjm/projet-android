@@ -215,8 +215,8 @@ public class PhotoRecycler extends AppCompatActivity {
         rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
 
         // Isohelie
-        hist = new HistogramManipulation(rediCopy, ChanelType.H);
-        hist.isohelieLUT(8);
+        hist = new HistogramManipulation(rediCopy, ChanelType.V);
+        hist.isohelieLUT(4);
         fs = new FilterStruct("isohelie", hist.applyLUT(rediCopy));
         photoList.add(fs);
         rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
