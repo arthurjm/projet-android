@@ -14,6 +14,8 @@ import android.util.Log;
 
 import com.android.rssample.ScriptC_colorize;
 import com.android.rssample.ScriptC_convolution;
+import com.android.rssample.ScriptC_grey;
+import com.android.rssample.ScriptC_keepHue;
 import com.package1.Mask.Mask;
 
 /**
@@ -36,31 +38,6 @@ public class RS {
     }
 
     /**
-     * Intrinsic
-     * Gaussian blur
-     * @param bmp
-     * @param radius
-     */
-    public Bitmap gaussianBlur(Bitmap bmp, float radius) {
-        setInputOutput(bmp);
-        Bitmap res = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), bmp.getConfig());
-
-        ScriptIntrinsicBlur script = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
-
-        script.setInput(input);
-        script.setRadius(radius);
-        script.forEach(output);
-        script.destroy();
-
-        output.copyTo(res);
-        return res;
-    }
-
-    public Bitmap gaussianBlur(Bitmap bmp) {
-        return gaussianBlur(bmp, 25);
-    }
-
-    /**
      * Change la teinte d'une image à une valeur définie (hue) comprise entre 0 et 359
      * @param bmp
      * @param hue
@@ -80,9 +57,30 @@ public class RS {
         return res;
     }
 
+    /**
+     * Keep a giving hue to an image
+     * @param bmp
+     * @param hue
+     * @param precision
+     * @return
+     */
+    public Bitmap keepHue(Bitmap bmp, int hue, int precision) {
+        setInputOutput(bmp);
+        Bitmap res = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), bmp.getConfig());
+
+        ScriptC_keepHue script = new ScriptC_keepHue(rs);
+
+        script.set_hue(hue);
+        script.set_precision(precision);
+        script.forEach_keepHue(input, output);
+        script.destroy();
+
+        output.copyTo(res);
+        return res;
+    }
+
 
     /**
-     * Intrinsic
      * Passe une image couleur en gris
      * @param bmp
      * @return
@@ -91,10 +89,9 @@ public class RS {
         setInputOutput(bmp);
         Bitmap res = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), bmp.getConfig());
 
-        ScriptIntrinsicColorMatrix script = ScriptIntrinsicColorMatrix.create(rs);
+        ScriptC_grey script = new ScriptC_grey(rs);
 
-        script.setGreyscale();
-        script.forEach(input, output);
+        script.forEach_toGrey(input, output);
         script.destroy();
 
         output.copyTo(res);
@@ -102,48 +99,11 @@ public class RS {
     }
 
     /**
-     * Intrinsic
+     * Apply a convolution to an image
      * @param bmp
-     * @param v
+     * @param mask
      * @return
      */
-    public Bitmap convolution3x3(Bitmap bmp, float[] v) {
-        setInputOutput(bmp);
-        Bitmap res = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), bmp.getConfig());
-
-        ScriptIntrinsicConvolve3x3 script = ScriptIntrinsicConvolve3x3.create(rs, Element.U8_4(rs));
-
-        script.setCoefficients(v);
-        script.setInput(input);
-        script.forEach(output);
-        script.destroy();
-
-        output.copyTo(res);
-        return res;
-    }
-
-    /**
-     * Intrinsic
-     * @param bmp
-     * @param v
-     * @return
-     */
-    public Bitmap convolution5x5(Bitmap bmp, float[] v) {
-        setInputOutput(bmp);
-        Bitmap res = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), bmp.getConfig());
-
-        ScriptIntrinsicConvolve5x5 script = ScriptIntrinsicConvolve5x5.create(rs, Element.U8_4(rs));
-
-        script.setCoefficients(v);
-        script.setInput(input);
-        script.forEach(output);
-
-        script.destroy();
-
-        output.copyTo(res);
-        return res;
-    }
-
     public Bitmap convolution(Bitmap bmp, Mask mask) {
         setInputOutput(bmp);
         Bitmap res = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), bmp.getConfig());
@@ -173,41 +133,4 @@ public class RS {
         output.copyTo(res);
         return res;
     }
-
-    /**
-     *
-     * Prewitt
-     float[] Prewitt3x3_h1 = new float[]{
-            -1f, 0f, 1f,
-            -1f, 0f, 1f,
-            -1f, 0f, 1f};
-
-    float[] Prewitt3x3_h2 = new float[]{
-            -1f, -1f, -1f,
-            0f, 0f, 0f,
-            1f, 1f, 1f};
-
-    * Sobel
-    float[] Sobel3x3_h1 = new float[]{
-            -1f, 0f, 1f,
-            -2f, 0f, 2f,
-            -1f, 0f, 1f};
-
-    float[] Sobel3x3_h2 = new float[]{
-            -1f, -2f, -1f,
-            0f, 0f, 0f,
-            1f, 2f, 1f};
-
-    * Laplacien
-    float[] Laplacien3x3_4cx = new float[]{
-            0f, 1f, 0f,
-            1f, -4f, 1f,
-            0f, 1f, 0f};
-
-    float[] Laplacien3x3_8cx = new float[]{
-            1f, 1f, 1f,
-            1f, -8f, 1f,
-            1f, 1f, 1f};
-
-     **/
 }
