@@ -240,7 +240,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
                 imgView.setImageBitmap(imageEditingCopy);
                 setVisible(seekBar1);
-                setBorn(seekBar1, 359);
+                setBorn(seekBar1, 255);
                 setRGBBackground(seekBar1);
                 seekBar1.setProgress(0);
                 actualFunction = "shiftColor";
@@ -250,14 +250,14 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
                 imgView.setImageBitmap(imageEditingCopy);
                 setVisible(seekBar1);
-                setBorn(seekBar1, 22);
+                setBorn(seekBar1, 8);
                 setNormalBackground(seekBar1);
                 seekBar1.setProgress(2);
-                actualFunction = "isoHelie";
+                actualFunction = "isohelie";
                 break;
             // Equa light
             case 8:
-               imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
+                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
                 setGone(seekBar1);
                 hist = new HistogramManipulation(imageEditingCopy, ChanelType.V);
                 hist.equalizationLUT();
@@ -314,9 +314,9 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 imgView.setImageBitmap(hist.applyLUT(imageEditingCopy));
                 imageEditingCopy = hist.applyLUT(imageEditingCopy);
                 break;
-            case "isoHelie":
-                hist = new HistogramManipulation(imageEditingCopy, ChanelType.H);
-                hist.isohelieLUT(progressBar1 - 2);
+            case "isohelie":
+                hist = new HistogramManipulation(imageEditingCopy, ChanelType.V);
+                hist.isohelieLUT(progressBar1+2);
                 imgView.setImageBitmap(hist.applyLUT(imageEditingCopy));
                 imageEditingCopy = hist.applyLUT(imageEditingCopy);
                 break;
