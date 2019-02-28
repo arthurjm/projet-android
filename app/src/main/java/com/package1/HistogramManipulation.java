@@ -176,12 +176,12 @@ public class HistogramManipulation {
     public void equalizationLUT() {
         int average = histogram.getCount()/NumberofValues;
         int tempCount = 0;
-        int nextValue = 0;
+        float nextValue = 0;
         for (int i = 0; i < NumberofValues; i++) {
-            LUT[i] = nextValue;
+            LUT[i] = (int) nextValue;
             tempCount += histogram.getHistogramValue(i);
             if ((tempCount / average) >= 1) {
-                nextValue += (tempCount / average);
+                nextValue += ((float)tempCount / average);
                 if (nextValue > NumberofValues - 1) {
                     nextValue = NumberofValues - 1;
                 }
@@ -197,12 +197,12 @@ public class HistogramManipulation {
     public void equalizationAlternateLUT() {
         int average = histogram.getCount()/NumberofValues;
         int tempCount = 0;
-        int nextValue = NumberofValues - 1;
+        float nextValue = NumberofValues - 1;
         for (int i = 0; i < NumberofValues; i++) {
-            LUT[NumberofValues - 1 - i] = nextValue;
+            LUT[NumberofValues - 1 - i] = (int) nextValue;
             tempCount += histogram.getHistogramValue(NumberofValues - 1 - i);
             if ((tempCount / average) >= 1) {
-                nextValue -= (tempCount / average);
+                nextValue -= ((float)tempCount / average);
                 if (nextValue < 0) {
                     nextValue = 0;
                 }
