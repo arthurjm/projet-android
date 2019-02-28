@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
+import android.widget.Toast;
 
 import com.package1.ChanelType;
 import com.package1.HistogramManipulation;
@@ -321,6 +322,7 @@ public class PhotoRecycler extends AppCompatActivity {
         //add file to gallery
         try {
             MediaStore.Images.Media.insertImage(getContentResolver(), file.getAbsolutePath(), fileName, null);
+            Toast.makeText(context,"save", Toast.LENGTH_SHORT).show();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
