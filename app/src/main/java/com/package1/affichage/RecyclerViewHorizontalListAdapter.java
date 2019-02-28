@@ -217,6 +217,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
         // If we want reset imageView
         //imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
         imgView.setImageBitmap(imageEditingCopy);
+        //imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
         switch (position) {
             // ToGrey
             case 0:
@@ -333,56 +334,50 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
      */
     private void applyFunction() {
 
-        Bitmap tmp = null;
-
         switch (actualFunction) {
             case "colorize":
-                tmp = (renderscript.colorize(imageEditingCopy, progressBar1));
+                imageEditingCopy = (renderscript.colorize(imageEditing, progressBar1));
                 break;
             case "keepColor":
-                tmp = renderscript.keepHue(imageEditingCopy, progressBar1, progressBar2);
+                imageEditingCopy = renderscript.keepHue(imageEditing, progressBar1, progressBar2);
                 break;
             case "contrast":
-                hist = new HistogramManipulation(imageEditingCopy, ChanelType.V);
+                hist = new HistogramManipulation(imageEditing, ChanelType.V);
                 hist.linearExtensionLUT(128 + progressBar1, 127 - progressBar1);
-                tmp = hist.applyLUT(imageEditingCopy);
+                imageEditingCopy = hist.applyLUT(imageEditing);
                 break;
             case "shiftLight":
-                hist = new HistogramManipulation(imageEditingCopy, ChanelType.V);
+                hist = new HistogramManipulation(imageEditing, ChanelType.V);
                 hist.shiftLUT(progressBar1 - 100);
-                tmp = hist.applyLUT(imageEditingCopy);
+                imageEditingCopy = hist.applyLUT(imageEditing);
                 break;
             case "shiftSaturation":
-                hist = new HistogramManipulation(imageEditingCopy, ChanelType.S);
+                hist = new HistogramManipulation(imageEditing, ChanelType.S);
                 hist.shiftLUT(progressBar1 - 100);
-                tmp = hist.applyLUT(imageEditingCopy);
+                imageEditingCopy = hist.applyLUT(imageEditing);
                 break;
             case "shiftColor":
-                hist = new HistogramManipulation(imageEditingCopy, ChanelType.H);
+                hist = new HistogramManipulation(imageEditing, ChanelType.H);
                 hist.shiftCycleLUT(progressBar1);
-                tmp = hist.applyLUT(imageEditingCopy);
+                imageEditingCopy = hist.applyLUT(imageEditing);
                 break;
             case "isohelie":
-                hist = new HistogramManipulation(imageEditingCopy, ChanelType.V);
+                hist = new HistogramManipulation(imageEditing, ChanelType.V);
                 hist.isohelieLUT(progressBar1 + 2);
-                tmp = hist.applyLUT(imageEditingCopy);
+                imageEditingCopy = hist.applyLUT(imageEditing);
                 break;
             case "blur":
                 BlurMask mask = new BlurMask(progressBar1 + 1);
-                tmp = renderscript.convolution(imageEditingCopy, mask);
+                imageEditingCopy = renderscript.convolution(imageEditing, mask);
                 break;
             case "gaussian":
                 GaussianBlur maskGaussian = new GaussianBlur(progressBar1 * 2 + 1, 2.5);
-                tmp = renderscript.convolution(imageEditingCopy, maskGaussian);
+                imageEditingCopy = renderscript.convolution(imageEditing, maskGaussian);
             default:
                 break;
         }
 
-        // Apply modification
-        if (tmp != null) {
-            imgView.setImageBitmap(tmp);
-            imageEditingCopy = tmp;
-        }
+        imgView.setImageBitmap(imageEditingCopy);
     }
 
     /**

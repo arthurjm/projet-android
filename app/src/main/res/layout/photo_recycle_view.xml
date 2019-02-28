@@ -11,10 +11,7 @@
         android:id="@+id/linearLayout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="60dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -30,9 +27,10 @@
 
     <com.github.chrisbanes.photoview.PhotoView
         android:id="@+id/imageResult"
-        android:layout_width="397dp"
-        android:layout_height="415dp"
+        android:layout_width="fill_parent"
+        android:layout_height="350dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -46,50 +44,70 @@
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/undo"
-        app:layout_constraintVertical_bias="0.536" />
+        app:layout_constraintTop_toBottomOf="@+id/undo" />
+
+    <Button
+        android:id="@+id/apply"
+        android:layout_width="wrap_content"
+        android:layout_height="38dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:alpha="0.80"
+        android:fontFamily="sans-serif-black"
+        android:text="@string/apply"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textStyle="italic"
+        android:typeface="monospace"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageResult" />
 
     <Button
         android:id="@+id/save"
-        android:layout_width="56dp"
+        android:layout_width="wrap_content"
         android:layout_height="38dp"
-        android:layout_marginTop="424dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:alpha="0.80"
         android:fontFamily="sans-serif-black"
-        android:text="Save"
+        android:text="@string/save"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textStyle="italic"
+        android:typeface="monospace"
+        app:layout_constraintEnd_toStartOf="@+id/undo"
+        app:layout_constraintStart_toEndOf="@+id/apply"
+        app:layout_constraintTop_toBottomOf="@+id/imageResult" />
+
+    <Button
+        android:id="@+id/undo"
+        android:layout_width="wrap_content"
+        android:layout_height="38dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:alpha="0.80"
+        android:fontFamily="sans-serif-black"
+        android:text="@string/undo"
         android:textAlignment="center"
         android:textAllCaps="false"
         android:textStyle="italic"
         android:typeface="monospace"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/imageResult" />
 
-    <Button
-        android:id="@+id/undo"
-        android:layout_width="56dp"
-        android:layout_height="38dp"
-        android:layout_marginTop="424dp"
-        android:alpha="0.80"
-        android:fontFamily="sans-serif-black"
-        android:text="Undo"
-        android:textAlignment="center"
-        android:textAllCaps="false"
-        android:textStyle="italic"
-        android:typeface="monospace"
-        app:layout_constraintEnd_toStartOf="@+id/save"
-        app:layout_constraintTop_toTopOf="@+id/imageResult" />
 
     <SeekBar
         android:id="@+id/seekBarDemi"
         android:layout_width="313dp"
         android:layout_height="22dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toTopOf="@+id/seekBarFull"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/undo" />
+        app:layout_constraintTop_toBottomOf="@+id/save" />
 
 </android.support.constraint.ConstraintLayout>

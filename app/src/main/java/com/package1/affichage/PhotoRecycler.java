@@ -84,6 +84,12 @@ public class PhotoRecycler extends AppCompatActivity {
      */
     private Button saveBut;
     /**
+     * Button to apply a script
+     *
+     * @see Button
+     */
+    private Button applyBut;
+    /**
      * a variable of type Renderscript
      *
      * @see RS
@@ -101,6 +107,10 @@ public class PhotoRecycler extends AppCompatActivity {
      * @see Context
      */
     private Context context;
+    /**
+     * New dimension for the image
+     */
+    private int adaptedWidth;
 
     @Override
     /**
@@ -138,6 +148,7 @@ public class PhotoRecycler extends AppCompatActivity {
         // Button
         undoBut = findViewById(R.id.undo);
         saveBut = findViewById(R.id.save);
+        applyBut = findViewById(R.id.apply);
 
         // RecyclerVIew
         photoRecyclerView = findViewById(R.id.idRecyclerViewHorizontalList);
@@ -145,7 +156,7 @@ public class PhotoRecycler extends AppCompatActivity {
         // Image
         imgView = findViewById(R.id.imageResult);
 
-        int adaptedWidth = 750;
+        adaptedWidth = 750;
         if (image.getWidth() < adaptedWidth) {
             adaptedWidth = image.getWidth();
         }
@@ -171,14 +182,21 @@ public class PhotoRecycler extends AppCompatActivity {
         undoBut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
+                imageEditing = Bitmap.createScaledBitmap(image, adaptedWidth, (int) ((image.getHeight() * adaptedWidth) / image.getWidth()), true);
                 undo(imageEditing);
             }
         });
         saveBut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveImageToGallery(imageEditingCopy);
+                imageEditing = imageEditingCopy.copy(Bitmap.Config.ARGB_8888, true);
+                saveImageToGallery(imageEditing);
+            }
+        });
+        applyBut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imageEditing = imageEditingCopy.copy(Bitmap.Config.ARGB_8888, true);
             }
         });
 
