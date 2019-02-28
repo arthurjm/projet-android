@@ -194,7 +194,7 @@ public class HistogramManipulation {
      * Function used to "equalize" the histogram.
      * Starting with the value maximum and going down.
      */
-    public void LUThistogramEq() {
+    public void equalizationAlternateLUT() {
         int average = histogram.getCount()/NumberofValues;
         int tempCount = 0;
         int nextValue = NumberofValues - 1;

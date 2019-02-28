@@ -234,7 +234,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 setBorn(seekBar1, 200);
                 setNormalBackground(seekBar1);
                 seekBar1.setProgress(0);
-                actualFunction = "shitSaturation";
+                actualFunction = "shiftSaturation";
                 break;
             // Shift Color
             case 6:
