@@ -76,7 +76,6 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
 
     /**
      * Permet de spécifier le continu de notre RecyclerView
-     *
      * @param holder
      * @param position
      */
