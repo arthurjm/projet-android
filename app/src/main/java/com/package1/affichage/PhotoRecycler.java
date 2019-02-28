@@ -38,52 +38,55 @@ import static com.package1.MainActivity.imgView;
 public class PhotoRecycler extends AppCompatActivity {
 
     /**
-     * List de FilterStruct
+     * List of FilterStruct
      * @see FilterStruct
      */
     private List<FilterStruct> photoList = new ArrayList<>();
     /**
-     * RecyclerView du layout
+     * RecyclerView of layout
      * @see RecyclerView
      */
     private RecyclerView photoRecyclerView;
     /**
-     * Adapter de notre RecyclerView
+     *
      * @see RecyclerViewHorizontalListAdapter
      */
     private RecyclerViewHorizontalListAdapter photoAdapter;
     /**
-     * SeekBar de notre layout
+     * SeekBar of layout
      * @see SeekBar
      */
     public static SeekBar seekBar1;
     /**
-     * Bouton de retour en arriere
+     * Button to back
      * @see Button
      */
     private Button undoBut;
     /**
-     * Bouton de sauvegarde
+     * Boutton to save
      * @see Button
      */
     private Button saveBut;
     /**
-     * Renderscript
+     * a variable of type Renderscript
      * @see RS
      */
     public static RS renderscript;
     /**
-     * HistogramManipulation
+     * a variable of  type HistogramManipulation
      * @see HistogramManipulation
      */
     public static HistogramManipulation hist;
     /**
-     * Context
+     * a variable of type Context
      * @see Context
      */
     private Context context;
 
     @Override
+    /**
+     *
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.photo_recycle_view);
@@ -104,7 +107,7 @@ public class PhotoRecycler extends AppCompatActivity {
     }
 
     /**
-     * Permet d'initialiser tout ce que nous avons besoin dans le layout
+     * To initiate buttons seekbars and  context in layout
      */
     public void initiate() {
 
@@ -141,7 +144,7 @@ public class PhotoRecycler extends AppCompatActivity {
     }
 
     /**
-     * Permet d'initialiser des actions sur des bouttons
+     * To link the corresponding action with each button
      */
     public void addListener() {
         undoBut.setOnClickListener(new View.OnClickListener() {
@@ -161,10 +164,11 @@ public class PhotoRecycler extends AppCompatActivity {
     }
 
     /**
-     * Permet d'initialiser la
+     *
      * @see PhotoRecycler#photoList
      */
     private void filterList() {
+
 
         // On redimensionne l'image
         Bitmap rediImageEditing = Bitmap.createScaledBitmap(image, 100, (int) ((image.getHeight() * 100) / image.getWidth()), true);
@@ -237,7 +241,7 @@ public class PhotoRecycler extends AppCompatActivity {
     }
 
     /**
-     * Permet de définir l'imageView du layout
+     * to define the imageView in layout
      * @param bmp
      */
     public void undo(Bitmap bmp) {
@@ -245,7 +249,7 @@ public class PhotoRecycler extends AppCompatActivity {
     }
 
     /**
-     * Permet de sauvegarder une image
+     * to save the image
      * @param bmp
      */
     private void saveImageToGallery(Bitmap bmp) {
@@ -280,36 +284,54 @@ public class PhotoRecycler extends AppCompatActivity {
     }
 
     @Override
+    /**
+     *
+     */
     protected void onStart() {
         super.onStart();
         Log.i("CV", "onStart()");
     }
 
     @Override
+    /**
+     *
+     */
     protected void onResume() {
         super.onResume();
         Log.i("CV", "onResume()");
     }
 
     @Override
+    /**
+     *
+     */
     protected void onPause() {
         super.onPause();
         Log.i("CV", "onPause()");
     }
 
     @Override
+    /**
+     *
+     */
     protected void onStop() {
         super.onStop();
         Log.i("CV", "onStop()");
     }
 
     @Override
+    /**
+     *
+     */
     protected void onRestart() {
         super.onRestart();
         Log.i("CV", "onRestart()");
     }
 
     @Override
+    /**
+     *
+     */
     protected void onDestroy() {
         super.onDestroy();
         Log.i("CV", "onDestroy()");

@@ -3,18 +3,29 @@ package com.package1;
 /**
  * Class permettant de créer des histogrammes à partir de tableaux de valeurs numériques
  */
-public class Histogram {
+public class
+Histogram {
 
     /**
-     * The Number of values that can be taken by the values of the histogram, must be the same value as in the "HistogramManipulation" class
+     * The Number of values that can be taken by the values of the histogram,
+     * must be the same value as in the "HistogramManipulation" class
      */
     static private int NumberofValues = 256;
-
+    /**
+     *
+     */
     private int histogramValue[] = new int[NumberofValues];
+    /**
+     *
+     */
     private int min, max, count, average;
+    /**
+     *
+     */
     private ChanelType chanel;
 
     /**
+     *
      * @param tab
      * @param newChanel
      */
@@ -23,6 +34,10 @@ public class Histogram {
         setHistogram(tab);
     }
 
+    /**
+     *
+     * @param tab
+     */
     public void setHistogram(int[] tab) {
         int tempTotalValue = 0;
         int valueTemp;
