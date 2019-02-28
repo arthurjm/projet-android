@@ -30,27 +30,27 @@ import static com.package1.affichage.PhotoRecycler.seekBar1;
 public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<RecyclerViewHorizontalListAdapter.PhotoViewHolder> {
 
     /**
-     * List de FilterStruct
+     * List of FilterStruct
      * @see FilterStruct
      */
     private List<FilterStruct> horizontalPhotoList;
     /**
-     * Context
+     * a variable of type Context
      * @see Context
      */
     private Context context;
     /**
-     * La fonction actuelle
+     * a variable of type string to represent the fonction actual
      */
     private String actualFunction;
     /**
-     * Valeur de la seekBar
+     * Vale of the seekBar
      * @see PhotoRecycler#seekBar1
      */
     private int progressBar1;
 
     /**
-     * Constructeur
+     * A Construction
      * @param horizontalPhotoList
      * @param context
      */
@@ -60,7 +60,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
     }
 
     /**
-     * Permet d'initialiser le viewHolder
+     * To initialise the viewHolder
      *
      * @param parent
      * @param viewType
