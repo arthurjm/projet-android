@@ -25,27 +25,44 @@ import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity {
-
+    /**
+     * The original image
+     */
     public static Bitmap image;
+    /**
+     * The image processing
+     */
     public static Bitmap imageEditing;
+    /**
+     * A copy of the image processing
+     */
     public static Bitmap imageEditingCopy;
-  //  public static CustomImageVIew  imgView;
+    /**
+     *The image displayed on the screen
+     */
     public static  ImageView imgView;
-
+    /**
+     *
+     */
     private Uri filePath;
+    /**
+     *
+     */
     private String imagepath = null;
+    /**
+     * We set the code "PICK_IMAGE_REQUEST" as 1
+     */
     private int PICK_IMAGE_REQUEST = 1;
 
     /**
-     * ArrayList de boutons.
-     *
+     * An arraylist of buttons.
      * @see Button
      */
     public ArrayList<Button> buttonList;
 
 
     /**
-     * Permet d'initialiser les boutons.
+     * To set each button on the screen
      */
     public void initiateButton() {
 
@@ -68,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Permet d'ajouter des actions à des boutons.
+     * To link the corresponding action with each button
      */
     public void addListenerOnButton() {
 
@@ -106,7 +123,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
+    /**
+     *
+     * @param requestCode the same code in the foction "startActivityForResult" to make sure the datas from which Activity
+     * @param resultCode the code returned by the methode "setResult()" of Activity
+     * @param data a variable of type data
+     */
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
@@ -131,6 +153,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * To get the path of Uri
+     * @param uri
+     * @return a variable of type String
+     */
     public String getPath(Uri uri) {
         String[] projection = {MediaStore.Images.Media.DATA};
         Cursor cursor = managedQuery(uri, projection, null, null, null);
@@ -139,6 +166,11 @@ public class MainActivity extends AppCompatActivity {
         return cursor.getString(column_index);
     }
 
+    /**
+     * To rotate the image
+     * @param photoFilePath
+     * @return a vaibale of type Bitmap
+     */
     public Bitmap rotateBitmap(String photoFilePath) {
 
         BitmapFactory.Options bounds = new BitmapFactory.Options();
@@ -175,14 +207,26 @@ public class MainActivity extends AppCompatActivity {
         return rotatedBitmap;
     }
 
+    /**
+     *
+     * @param view
+     */
     public void filterPage(View view) {
         startActivity(new Intent(this, PhotoRecycler.class));
     }
 
+    /**
+     *
+     * @param view
+     */
     public void infoPage(View view) {
         startActivity(new Intent(this, Info.class));
     }
 
+    /**
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -197,36 +241,54 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     *
+     */
     @Override
     protected void onStart() {
         super.onStart();
         Log.i("CV", "onStart()");
     }
 
+    /**
+     *
+     */
     @Override
     protected void onResume() {
         super.onResume();
         Log.i("CV", "onResume()");
     }
 
+    /**
+     *
+     */
     @Override
     protected void onPause() {
         super.onPause();
         Log.i("CV", "onPause()");
     }
 
+    /**
+     *
+     */
     @Override
     protected void onStop() {
         super.onStop();
         Log.i("CV", "onStop()");
     }
 
+    /**
+     *
+     */
     @Override
     protected void onRestart() {
         super.onRestart();
         Log.i("CV", "onRestart()");
     }
 
+    /**
+     *
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();

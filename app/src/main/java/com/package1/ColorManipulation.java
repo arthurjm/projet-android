@@ -6,12 +6,26 @@ import android.graphics.Color;
 import java.util.Random;
 
 public class ColorManipulation {
-
+    /**
+     * a variable of type random
+     * to pick a color ar random
+     */
     static Random random = new Random();//sert pour la colorisation
-
+    /**
+     * a list of variable int
+     * to create a list of pixels of the image processing
+     */
     private int[] tabPixels;
+    /**
+     * variables of type int
+     */
     private int A, R, G, B;
 
+    /**
+     *
+     * @param index
+     * @param isA
+     */
     public void convert(int index, boolean isA) {
         if (isA) {
             A = (tabPixels[index] >> 24) & 0xff;
@@ -34,10 +48,10 @@ public class ColorManipulation {
     //Methode permettant le passage d'une image couleur à une image en nuances de gris
 
     /**
-     * toGrey
+     * to gray the image
      *
-     * @param original
-     * @return
+     * @param original the original image
+     * @return an image grayed
      */
     public Bitmap convertImageGreyScale(Bitmap original) {
 
@@ -62,8 +76,15 @@ public class ColorManipulation {
         return original;
     }
 
-    /*Méthode permettant de passer l'image en nuances de gris excepté pour les pixels proches d'une couleur (ici "color")
-        par rapport à des seuils (un pour chaque canal RGB)
+
+    /**
+     * To gray an image except the pixels which are close with the param color
+     * @param original the original image
+     * @param color the color chosen
+     * @param seuilR
+     * @param seuilG
+     * @param seuilB
+     * @return an image processed
      */
     public Bitmap convertImageSelectiveDesaturation(Bitmap original, int color, int seuilR, int seuilG, int seuilB) {
         int width = original.getWidth();
@@ -94,6 +115,12 @@ public class ColorManipulation {
         return original;
     }
 
+    /**
+     * To colorize an image
+     * @param original the original image
+     * @param chosenHue the color chosen
+     * @return an image processed (colorized)
+     */
     public Bitmap convertImageColorization(Bitmap original, int chosenHue) {
         int width = original.getWidth();
         int height = original.getHeight();

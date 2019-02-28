@@ -9,26 +9,34 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class Info extends AppCompatActivity {
-
+    /**
+     * A text to set some explications
+     */
     public TextView text;
+    /**
+     *  An arraylist of buttons
+     */
     public ArrayList<Button> buttonList;
 
+    /**
+     *
+     * @param savedUnstanceState
+     */
     protected void onCreate(Bundle savedUnstanceState) {
         super.onCreate(savedUnstanceState);
         setContentView(R.layout.info);
-
         initiate();
         addListener();
-
     }
 
+    /**
+     * To set each button on the screen
+     */
     public void initiate() {
 
         text = findViewById(R.id.textInfo);
-
         buttonList = new ArrayList<>();
         Button tb;
-
         tb = findViewById(R.id.infoBut);
         buttonList.add(tb);
         tb = findViewById(R.id.infoBut2);
@@ -39,6 +47,9 @@ public class Info extends AppCompatActivity {
 
     }
 
+    /**
+     * To link the corresponding action with each button
+     */
     public void addListener() {
 
         if (buttonList != null && buttonList.isEmpty() != true) {
