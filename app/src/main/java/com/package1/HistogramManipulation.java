@@ -145,10 +145,16 @@ public class HistogramManipulation {
     /**
      * This function will reduce the number of values that can be taken by the values stored in the histogram.
      * May also be called "Posterisation".
+     * the depth must be at least 2 and if greater than NumberofValues/5, the effect will not be seen.
      *
      * @param depth the number of values that the stored values in the histogram will take
      */
     public void isohelieLUT(int depth) {
+        if(depth<2){
+            depth=2;
+        }else if(depth>NumberofValues/5){
+            depth=NumberofValues/5;
+        }
         int tempDepth = 1;
         int nextValue = 0;
         int nbofValues = 1;

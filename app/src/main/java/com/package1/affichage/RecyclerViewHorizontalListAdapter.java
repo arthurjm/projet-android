@@ -240,7 +240,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
                 imgView.setImageBitmap(imageEditingCopy);
                 setVisible(seekBar1);
-                setBorn(seekBar1, 359);
+                setBorn(seekBar1, 255);
                 setRGBBackground(seekBar1);
                 seekBar1.setProgress(0);
                 actualFunction = "shiftColor";
@@ -250,7 +250,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
                 imgView.setImageBitmap(imageEditingCopy);
                 setVisible(seekBar1);
-                setBorn(seekBar1, 22);
+                setBorn(seekBar1, 10);
                 setNormalBackground(seekBar1);
                 seekBar1.setProgress(2);
                 actualFunction = "isoHelie";
