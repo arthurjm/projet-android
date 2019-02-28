@@ -16,17 +16,22 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
+
 import com.package1.ChanelType;
 import com.package1.HistogramManipulation;
 import com.package1.Mask.BlurMask;
+import com.package1.Mask.GaussianBlur;
+import com.package1.Mask.LaplacienMask;
 import com.package1.R;
 import com.package1.RS;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import static com.package1.MainActivity.image;
 import static com.package1.MainActivity.imageEditing;
 import static com.package1.MainActivity.imageEditingCopy;
@@ -39,46 +44,59 @@ public class PhotoRecycler extends AppCompatActivity {
 
     /**
      * List of FilterStruct
+     *
      * @see FilterStruct
      */
     private List<FilterStruct> photoList = new ArrayList<>();
     /**
      * RecyclerView of layout
+     *
      * @see RecyclerView
      */
     private RecyclerView photoRecyclerView;
     /**
-     *
      * @see RecyclerViewHorizontalListAdapter
      */
     private RecyclerViewHorizontalListAdapter photoAdapter;
     /**
      * SeekBar of layout
+     *
      * @see SeekBar
      */
     public static SeekBar seekBar1;
     /**
+     * SeekBar of layout
+     *
+     * @see SeekBar
+     */
+    public static SeekBar seekBar2;
+    /**
      * Button to back
+     *
      * @see Button
      */
     private Button undoBut;
     /**
      * Boutton to save
+     *
      * @see Button
      */
     private Button saveBut;
     /**
      * a variable of type Renderscript
+     *
      * @see RS
      */
     public static RS renderscript;
     /**
      * a variable of  type HistogramManipulation
+     *
      * @see HistogramManipulation
      */
     public static HistogramManipulation hist;
     /**
      * a variable of type Context
+     *
      * @see Context
      */
     private Context context;
@@ -138,6 +156,8 @@ public class PhotoRecycler extends AppCompatActivity {
         //Seekbar
         seekBar1 = findViewById(R.id.seekBarFull);
         seekBar1.setVisibility(View.GONE);
+        seekBar2 = findViewById(R.id.seekBarDemi);
+        seekBar2.setVisibility(View.GONE);
 
         addListener();
 
@@ -164,11 +184,11 @@ public class PhotoRecycler extends AppCompatActivity {
     }
 
     /**
+     * To initiate photoList
      *
      * @see PhotoRecycler#photoList
      */
     private void filterList() {
-
 
         // On redimensionne l'image
         Bitmap rediImageEditing = Bitmap.createScaledBitmap(image, 100, (int) ((image.getHeight() * 100) / image.getWidth()), true);
@@ -186,9 +206,10 @@ public class PhotoRecycler extends AppCompatActivity {
         photoList.add(fs);
         rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
 
-        // A REVOIR AVEC LE RS
-        fs = new FilterStruct("keepColor", rediCopy);
+        // KeepColor
+        fs = new FilterStruct("keepColor", renderscript.keepHue(rediCopy, 180, 120));
         photoList.add(fs);
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
 
         // Constrast setting
         hist = new HistogramManipulation(rediCopy, ChanelType.V);
@@ -230,10 +251,23 @@ public class PhotoRecycler extends AppCompatActivity {
         hist.equalizationLUT();
         fs = new FilterStruct("equa light", hist.applyLUT(rediCopy));
         photoList.add(fs);
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
 
         // Blur
         BlurMask mask = new BlurMask(9);
         fs = new FilterStruct("blur", renderscript.convolution(rediCopy, mask));
+        photoList.add(fs);
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+
+        // Gaussian
+        GaussianBlur maskGaussian = new GaussianBlur(5, 2.5);
+        fs = new FilterStruct("gaussian", renderscript.convolution(rediCopy, mask));
+        photoList.add(fs);
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+
+        // Laplacien
+        LaplacienMask maskLaplacien = new LaplacienMask();
+        fs = new FilterStruct("laplacien", renderscript.convolution(rediCopy, mask));
         photoList.add(fs);
 
         photoAdapter.notifyDataSetChanged();
@@ -242,6 +276,7 @@ public class PhotoRecycler extends AppCompatActivity {
 
     /**
      * to define the imageView in layout
+     *
      * @param bmp
      */
     public void undo(Bitmap bmp) {
@@ -250,6 +285,7 @@ public class PhotoRecycler extends AppCompatActivity {
 
     /**
      * to save the image
+     *
      * @param bmp
      */
     private void saveImageToGallery(Bitmap bmp) {
