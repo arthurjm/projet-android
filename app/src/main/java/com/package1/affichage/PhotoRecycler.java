@@ -157,7 +157,7 @@ public class PhotoRecycler extends AppCompatActivity {
         // Image
         imgView = findViewById(R.id.imageResult);
 
-        adaptedWidth = 800;
+        adaptedWidth = 1500;
         if (image.getWidth() < adaptedWidth) {
             adaptedWidth = image.getWidth();
         }
@@ -259,7 +259,7 @@ public class PhotoRecycler extends AppCompatActivity {
         // ShiftColor
         rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
         hist = new HistogramManipulation(rediCopy, ChanelType.H);
-        hist.shiftCycleLUT(250);
+        hist.shiftCycleLUT(120);
         //fs = new FilterStruct("shiftColor", hist.applyLUT(rediCopy));
         fs = new FilterStruct("shiftColor", renderscript.applyLUT(rediCopy, hist));
         photoList.add(fs);

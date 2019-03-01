@@ -53,8 +53,8 @@ uchar4 RS_KERNEL applyLUT(uchar4 in, uint32_t x, uint32_t y) {
 		v = maxRGB;
 
 		if (canal == 4) { // 4 == canal H
-			int index = h * (255/359);
-			h = rsGetElementAt_int(LUT, index) * (359/255);
+			int index = h * 255/359;
+			h = rsGetElementAt_int(LUT, index) * 359/255;
 		}
 		if (canal == 5) { // 5 == canal S
 			int index = (int) (s * 255);
