@@ -5,35 +5,36 @@ int hue;
 int precision;
 
 uchar4 RS_KERNEL keepHue ( uchar4 in ) {
-  uchar4 out = in;
+	uchar4 out = in;
 
-  float maxRGB = max(in.r, max(in.g, in.b));
-  float minRGB = min(min(in.r, in.g), in.b);
-  maxRGB = maxRGB;
-  minRGB = minRGB;
-  float delta = maxRGB - minRGB;
+	float r = in.r / 255.0;
+	float g = in.g / 255.0;
+	float b = in.b / 255.0;
 
-  float h, s, v;
-  //h
-  if (minRGB == maxRGB) {
-    h = 0;
-  }
-  if (maxRGB == in.r) {
-    h = fmod( (60 * (in.g - in.b)/delta + 360), 360);
-  }
-  if (maxRGB == in.g) {
-    h = fmod( (60 * (in.b - in.r)/delta + 120), 360);
-  }
-  if (maxRGB == in.b) {
-    h = fmod( (60 * (in.r - in.g)/delta + 240), 360);
-  }
+	float maxRGB = max(r, max(g, b));
+	float minRGB = min(min(r, g), b);
+	float delta = maxRGB - minRGB;
 
-  if (!( h < (hue + precision)%360 && h > (hue - precision)%360 )) {
-    float grey = (0.30 * in.r + 0.59 * in.g + 0.11 * in.b);
-    out.r = grey;
-    out.g = grey;
-    out.b = grey;
-  }
+	float h;
+	if (minRGB == maxRGB) {
+		h = 0;
+	}
+	if (maxRGB == r) {
+		h = fmod( (60 * (g - b)/delta + 360), 359);
+	}
+	if (maxRGB == g) {
+		h = fmod( (60 * (b - r)/delta + 120), 359);
+	}
+	if (maxRGB == b) {
+		h = fmod( (60 * (r - g)/delta + 240), 359);
+	}
 
-  return out;
+	if (!( h < (hue + precision)%359 && h > (hue - precision)%359 )) {
+		float grey = (0.30 * in.r + 0.59 * in.g + 0.11 * in.b);
+		out.r = grey;
+		out.g = grey;
+		out.b = grey;
+	}
+
+	return out;
 }
