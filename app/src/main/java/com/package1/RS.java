@@ -5,12 +5,7 @@ import android.graphics.Bitmap;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
-import android.renderscript.ScriptIntrinsicBlur;
-import android.renderscript.ScriptIntrinsicColorMatrix;
-import android.renderscript.ScriptIntrinsicConvolve3x3;
-import android.renderscript.ScriptIntrinsicConvolve5x5;
 import android.renderscript.Type;
-import android.util.Log;
 
 import com.android.rssample.ScriptC_applyLUT;
 import com.android.rssample.ScriptC_colorize;
@@ -80,7 +75,6 @@ public class RS {
         return res;
     }
 
-
     /**
      * Passe une image couleur en gris
      * @param bmp
@@ -128,7 +122,6 @@ public class RS {
 
         script.forEach_convolution(input, output);
 
-
         script.destroy();
 
         output.copyTo(res);
@@ -155,6 +148,15 @@ public class RS {
         }
         if (HM.histogram.getChanel() == ChanelType.B) {
             canal = 3;
+        }
+        if (HM.histogram.getChanel() == ChanelType.H) {
+            canal = 4;
+        }
+        if (HM.histogram.getChanel() == ChanelType.S) {
+            canal = 5;
+        }
+        if (HM.histogram.getChanel() == ChanelType.V) {
+            canal = 6;
         }
         script.set_canal(canal);
         script.forEach_applyLUT(input, output);
