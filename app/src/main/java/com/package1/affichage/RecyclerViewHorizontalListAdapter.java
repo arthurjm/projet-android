@@ -217,13 +217,12 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
         // If we want reset imageView
         //imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
         imgView.setImageBitmap(imageEditingCopy);
-        //imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
         switch (position) {
             // ToGrey
             case 0:
                 setGone(seekBar1, seekBar2);
-                imgView.setImageBitmap(renderscript.toGrey(imageEditingCopy));
-                imageEditingCopy = renderscript.toGrey(imageEditingCopy);
+                imgView.setImageBitmap(renderscript.toGrey(imageEditing));
+                imageEditingCopy = renderscript.toGrey(imageEditing);
                 break;
             // Colorize
             case 1:
@@ -292,10 +291,10 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
             // Equa light
             case 8:
                 setGone(seekBar1, seekBar2);
-                hist = new HistogramManipulation(imageEditingCopy, ChanelType.V);
+                hist = new HistogramManipulation(imageEditing, ChanelType.V);
                 hist.equalizationLUT();
-                imgView.setImageBitmap(hist.applyLUT(imageEditingCopy));
-                imageEditingCopy = hist.applyLUT(imageEditingCopy);
+                imgView.setImageBitmap(hist.applyLUT(imageEditing));
+                imageEditingCopy = hist.applyLUT(imageEditing);
                 break;
             // Blur
             case 9:
@@ -319,8 +318,8 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
             case 11:
                 setGone(seekBar1, seekBar2);
                 LaplacienMask maskLaplacien = new LaplacienMask();
-                imgView.setImageBitmap(renderscript.convolution(imageEditingCopy, maskLaplacien));
-                imageEditingCopy = renderscript.convolution(imageEditingCopy, maskLaplacien);
+                imgView.setImageBitmap(renderscript.convolution(imageEditing, maskLaplacien));
+                imageEditingCopy = renderscript.convolution(imageEditing, maskLaplacien);
                 break;
             default:
                 break;
