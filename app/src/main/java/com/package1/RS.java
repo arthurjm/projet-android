@@ -6,7 +6,6 @@ import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.Type;
-import android.util.Log;
 
 import com.android.rssample.ScriptC_applyLUT;
 import com.android.rssample.ScriptC_colorize;
@@ -19,6 +18,7 @@ import com.package1.Mask.Mask;
 /**
  * Created by amondon001 on 22/02/19.
  * Classe regroupant le renderscript
+ * Aucune classe ne modifie directement une image, renvoient une nouvelle image
  */
 
 public class RS {
@@ -153,18 +153,21 @@ public class RS {
         return res;
     }
 
+    /**
+     * Applique une LUT passée en paramètre à une image passée en paramètre
+     * @param bmp
+     * @param HM
+     * @return
+     */
     public Bitmap applyLUT(Bitmap bmp, HistogramManipulation HM) {
         setInputOutput(bmp);
         Bitmap res = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), bmp.getConfig());
 
         ScriptC_applyLUT script = new ScriptC_applyLUT(rs);
 
-        /*Type.Builder maskType = new Type.Builder(rs, Element.I32(rs));
-        maskType.setX(256);*/
         Allocation LUT = Allocation.createSized(rs, Element.I32(rs), HM.LUT.length);
         LUT.copyFrom(HM.LUT);
 
-        Log.i("LUT", HM.toString());
         int canal = 0;
         if (HM.histogram.getChanel() == ChanelType.R) {
             canal = 1;
@@ -187,7 +190,6 @@ public class RS {
         script.set_LUT(LUT);
         script.set_canal(canal);
         script.forEach_applyLUT(input, output);
-
 
         script.destroy();
 
