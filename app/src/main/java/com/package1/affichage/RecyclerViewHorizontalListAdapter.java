@@ -18,6 +18,7 @@ import com.package1.HistogramManipulation;
 import com.package1.Mask.BlurMask;
 import com.package1.Mask.GaussianBlur;
 import com.package1.Mask.LaplacienMask;
+import com.package1.Mask.SobelMask;
 import com.package1.R;
 import com.package1.RS;
 
@@ -221,7 +222,6 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
             // ToGrey
             case 0:
                 setGone(seekBar1, seekBar2);
-                imgView.setImageBitmap(renderscript.toGrey(imageEditing));
                 imageEditingCopy = renderscript.toGrey(imageEditing);
                 break;
             // Colorize
@@ -293,7 +293,6 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 setGone(seekBar1, seekBar2);
                 hist = new HistogramManipulation(imageEditing, ChanelType.V);
                 hist.equalizationLUT();
-                imgView.setImageBitmap(hist.applyLUT(imageEditing));
                 imageEditingCopy = hist.applyLUT(imageEditing);
                 break;
             // Blur
@@ -318,12 +317,29 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
             case 11:
                 setGone(seekBar1, seekBar2);
                 LaplacienMask maskLaplacien = new LaplacienMask();
-                imgView.setImageBitmap(renderscript.convolution(imageEditing, maskLaplacien));
                 imageEditingCopy = renderscript.convolution(imageEditing, maskLaplacien);
+                break;
+            // Sobel vertical
+            case 12:
+                setGone(seekBar1, seekBar2);
+                SobelMask sobelMaskVertical = new SobelMask(true);
+                imageEditingCopy = renderscript.convolution(imageEditing, sobelMaskVertical);
+                break;
+            // Sobel horizontal
+            case 13:
+                setGone(seekBar1, seekBar2);
+                SobelMask sobelMaskHorizontal = new SobelMask(false);
+                imageEditingCopy = renderscript.convolution(imageEditing, sobelMaskHorizontal);
+                break;
+            // Invert
+            case 14:
+                setGone(seekBar1, seekBar2);
+                imageEditingCopy = renderscript.invert(imageEditing);
                 break;
             default:
                 break;
         }
+        imgView.setImageBitmap(imageEditingCopy);
     }
 
     /**
@@ -349,6 +365,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 hist = new HistogramManipulation(imageEditing, ChanelType.V);
                 hist.shiftLUT(progressBar1 - 100);
                 imageEditingCopy = hist.applyLUT(imageEditing);
+                //imageEditingCopy = renderscript.applyLUT(imageEditing, hist);
                 break;
             case "shiftSaturation":
                 hist = new HistogramManipulation(imageEditing, ChanelType.S);
@@ -359,6 +376,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 hist = new HistogramManipulation(imageEditing, ChanelType.H);
                 hist.shiftCycleLUT(progressBar1);
                 imageEditingCopy = hist.applyLUT(imageEditing);
+                //imageEditingCopy = renderscript.applyLUT(imageEditing, hist);
                 break;
             case "isohelie":
                 hist = new HistogramManipulation(imageEditing, ChanelType.V);
