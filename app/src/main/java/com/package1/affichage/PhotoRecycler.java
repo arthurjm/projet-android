@@ -236,42 +236,48 @@ public class PhotoRecycler extends AppCompatActivity {
         rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
         hist = new HistogramManipulation(rediCopy, ChanelType.V);
         hist.linearExtensionLUT(198, 50);
-        fs = new FilterStruct("contrast", hist.applyLUT(rediCopy));
+        //fs = new FilterStruct("contrast", hist.applyLUT(rediCopy));
+        fs = new FilterStruct("contrast", renderscript.applyLUT(rediCopy, hist));
         photoList.add(fs);
 
         // ShiftLight
         rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
         hist = new HistogramManipulation(rediCopy, ChanelType.V);
         hist.shiftLUT(45);
-        fs = new FilterStruct("shiftLight", hist.applyLUT(rediCopy));
+        //fs = new FilterStruct("shiftLight", hist.applyLUT(rediCopy));
+        fs = new FilterStruct("shiftLight", renderscript.applyLUT(rediCopy, hist));
         photoList.add(fs);
 
         // ShiftSaturation
         rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
         hist = new HistogramManipulation(rediCopy, ChanelType.S);
         hist.shiftLUT(45);
-        fs = new FilterStruct("shiftSaturation", hist.applyLUT(rediCopy));
+        //fs = new FilterStruct("shiftSaturation", hist.applyLUT(rediCopy));
+        fs = new FilterStruct("shiftSaturation", renderscript.applyLUT(rediCopy, hist));
         photoList.add(fs);
 
         // ShiftColor
         rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
         hist = new HistogramManipulation(rediCopy, ChanelType.H);
         hist.shiftCycleLUT(250);
-        fs = new FilterStruct("shiftColor", hist.applyLUT(rediCopy));
+        //fs = new FilterStruct("shiftColor", hist.applyLUT(rediCopy));
+        fs = new FilterStruct("shiftColor", renderscript.applyLUT(rediCopy, hist));
         photoList.add(fs);
 
         // Isohelie
         rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
         hist = new HistogramManipulation(rediCopy, ChanelType.V);
         hist.isohelieLUT(4);
-        fs = new FilterStruct("isohelie", hist.applyLUT(rediCopy));
+        //fs = new FilterStruct("isohelie", hist.applyLUT(rediCopy));
+        fs = new FilterStruct("isohelie", renderscript.applyLUT(rediCopy, hist));
         photoList.add(fs);
 
         // EqualizationLight
         rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
         hist = new HistogramManipulation(rediCopy, ChanelType.V);
         hist.equalizationLUT();
-        fs = new FilterStruct("equa light", hist.applyLUT(rediCopy));
+        //fs = new FilterStruct("equa light", hist.applyLUT(rediCopy));
+        fs = new FilterStruct("equa light", renderscript.applyLUT(rediCopy, hist));
         photoList.add(fs);
 
         // Blur

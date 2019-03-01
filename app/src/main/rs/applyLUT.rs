@@ -25,7 +25,8 @@ uchar4 RS_KERNEL applyLUT(uchar4 in, uint32_t x, uint32_t y) {
 		float minRGB = min(min(r, g), b);
 		float delta = maxRGB - minRGB;
 
-		float h, s, v;
+		float s, v;
+		int h;
 		//h
 		if (minRGB == maxRGB) {
 			h = 0;
@@ -53,17 +54,15 @@ uchar4 RS_KERNEL applyLUT(uchar4 in, uint32_t x, uint32_t y) {
 
 		if (canal == 4) { // 4 == canal H
 			int index = h * (255/359);
-			/*index = max(0, index);
-			index = max(255, index);*/
-			h = (float) ((float)rsGetElementAt_int(LUT, (int) index) * (359.0/255.0));
+			h = rsGetElementAt_int(LUT, index) * (359/255);
 		}
 		if (canal == 5) { // 5 == canal S
 			int index = (int) (s * 255);
-			s = (float) ((float)rsGetElementAt_int(LUT, (int) index) / 255.0);
+			s = rsGetElementAt_int(LUT, index) / 255.0;
 		}
 		if (canal == 6) { // 6 == canal V
 			int index = (int) (v * 255);
-			v = (float) ((float)rsGetElementAt_int(LUT, (int) index) / 255.0);
+			v = rsGetElementAt_int(LUT, index) / 255.0;
 		}
 
 		float f, l, m, n;
