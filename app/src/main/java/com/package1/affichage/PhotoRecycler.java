@@ -156,7 +156,7 @@ public class PhotoRecycler extends AppCompatActivity {
         // Image
         imgView = findViewById(R.id.imageResult);
 
-        adaptedWidth = 750;
+        adaptedWidth = 800;
         if (image.getWidth() < adaptedWidth) {
             adaptedWidth = image.getWidth();
         }
