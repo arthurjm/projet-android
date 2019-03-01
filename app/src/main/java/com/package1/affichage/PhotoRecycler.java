@@ -23,6 +23,7 @@ import com.package1.HistogramManipulation;
 import com.package1.Mask.BlurMask;
 import com.package1.Mask.GaussianBlur;
 import com.package1.Mask.LaplacienMask;
+import com.package1.Mask.SobelMask;
 import com.package1.R;
 import com.package1.RS;
 
@@ -183,6 +184,7 @@ public class PhotoRecycler extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 imageEditing = Bitmap.createScaledBitmap(image, adaptedWidth, (int) ((image.getHeight() * adaptedWidth) / image.getWidth()), true);
+                imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
                 undo(imageEditing);
             }
         });
@@ -217,17 +219,17 @@ public class PhotoRecycler extends AppCompatActivity {
 
         // ToGrey
         rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-        fs = new FilterStruct("grey", renderscript.toGrey(rediCopy));
+        fs = new FilterStruct("Grey", renderscript.toGrey(rediCopy));
         photoList.add(fs);
 
         // Colorize
         rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-        fs = new FilterStruct("colorize", renderscript.colorize(rediCopy, 180));
+        fs = new FilterStruct("Colorize", renderscript.colorize(rediCopy, 180));
         photoList.add(fs);
 
         // KeepColor
         rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-        fs = new FilterStruct("keepColor", renderscript.keepHue(rediCopy, 180, 60));
+        fs = new FilterStruct("Keep Hue", renderscript.keepHue(rediCopy, 180, 60));
         photoList.add(fs);
 
         // Constrast setting
@@ -275,7 +277,7 @@ public class PhotoRecycler extends AppCompatActivity {
         // Blur
         rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
         BlurMask mask = new BlurMask(9);
-        fs = new FilterStruct("blur", renderscript.convolution(rediCopy, mask));
+        fs = new FilterStruct("Blur", renderscript.convolution(rediCopy, mask));
         photoList.add(fs);
 
         // Gaussian
@@ -288,6 +290,23 @@ public class PhotoRecycler extends AppCompatActivity {
         rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
         LaplacienMask maskLaplacien = new LaplacienMask();
         fs = new FilterStruct("laplacien", renderscript.convolution(rediCopy, maskLaplacien));
+        photoList.add(fs);
+
+        // Sobel vertical
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+        SobelMask sobelMaskVertical = new SobelMask(true);
+        fs = new FilterStruct("Sobel V", renderscript.convolution(rediCopy, sobelMaskVertical));
+        photoList.add(fs);
+
+        // Sobel horizontal
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+        SobelMask sobelMaskHorizontal = new SobelMask(false);
+        fs = new FilterStruct("Sobel H", renderscript.convolution(rediCopy, sobelMaskHorizontal));
+        photoList.add(fs);
+
+        // Invert
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+        fs = new FilterStruct("Invert", renderscript.invert(rediCopy));
         photoList.add(fs);
 
         photoAdapter.notifyDataSetChanged();

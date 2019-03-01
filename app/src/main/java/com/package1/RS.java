@@ -6,28 +6,35 @@ import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.Type;
+import android.util.Log;
 
 import com.android.rssample.ScriptC_applyLUT;
 import com.android.rssample.ScriptC_colorize;
 import com.android.rssample.ScriptC_convolution;
 import com.android.rssample.ScriptC_grey;
+import com.android.rssample.ScriptC_invert;
 import com.android.rssample.ScriptC_keepHue;
 import com.package1.Mask.Mask;
 
 /**
  * Created by amondon001 on 22/02/19.
+ * Classe regroupant le renderscript
  */
 
 public class RS {
 
     RenderScript rs;
-    Allocation input;
-    Allocation output;
+    Allocation input; // L'image à traiter
+    Allocation output; // L'image traitée
 
     public RS(Context ctx) {
         rs = RenderScript.create(ctx);
     }
 
+    /**
+     * Initialise les allocations avec l'image passée en paramètre
+     * @param bmp
+     */
     private void setInputOutput(Bitmap bmp) {
         input = Allocation.createFromBitmap(rs, bmp);
         output = Allocation.createTyped(rs, input.getType());
@@ -94,6 +101,24 @@ public class RS {
     }
 
     /**
+     * Inverse les couleurs d'une image
+     * @param bmp
+     * @return
+     */
+    public Bitmap invert(Bitmap bmp) {
+        setInputOutput(bmp);
+        Bitmap res = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), bmp.getConfig());
+
+        ScriptC_invert script = new ScriptC_invert(rs);
+
+        script.forEach_invert(input, output);
+        script.destroy();
+
+        output.copyTo(res);
+        return res;
+    }
+
+    /**
      * Apply a convolution to an image
      * @param bmp
      * @param mask The object Mask to apply
@@ -134,11 +159,12 @@ public class RS {
 
         ScriptC_applyLUT script = new ScriptC_applyLUT(rs);
 
-        Type.Builder maskType = new Type.Builder(rs, Element.I32(rs));
-        maskType.setX(256);
-        Allocation maskAllocation = Allocation.createTyped(rs, maskType.create());
-        maskAllocation.copyFrom(HM.LUT);
+        /*Type.Builder maskType = new Type.Builder(rs, Element.I32(rs));
+        maskType.setX(256);*/
+        Allocation LUT = Allocation.createSized(rs, Element.I32(rs), HM.LUT.length);
+        LUT.copyFrom(HM.LUT);
 
+        Log.i("LUT", HM.toString());
         int canal = 0;
         if (HM.histogram.getChanel() == ChanelType.R) {
             canal = 1;
@@ -158,6 +184,7 @@ public class RS {
         if (HM.histogram.getChanel() == ChanelType.V) {
             canal = 6;
         }
+        script.set_LUT(LUT);
         script.set_canal(canal);
         script.forEach_applyLUT(input, output);
 
