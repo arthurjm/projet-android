@@ -247,7 +247,8 @@ public class HistogramManipulation {
                 tab[i] = ((255 << 24) | (R << 16) | (G << 8) | B); //the pixel is stocked in ARGB format. The A is 255 for the pixel to be visible.
             }
         }
-        original.setPixels(tab, 0, original.getWidth(), 0, 0, original.getWidth(), original.getHeight());
-        return original;
+        Bitmap res = Bitmap.createBitmap(original.getWidth(), original.getHeight(), original.getConfig());
+        res.setPixels(tab, 0, original.getWidth(), 0, 0, original.getWidth(), original.getHeight());
+        return res;
     }
 }

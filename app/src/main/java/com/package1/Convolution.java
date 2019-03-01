@@ -212,6 +212,7 @@ public class Convolution {
         int[][] tabPixB = new int[width][height];
         int R, G, B, index, tempR, tempG, tempB, localWeight;
         int[] tabPixels = new int[width * height];
+        Bitmap res = Bitmap.createBitmap(width, height, original.getConfig());
         original.getPixels(tabPixels, 0, width, 0, 0, width, height);
         //initialisation des tableaux des trois canaux R,G,B des pixels du bitmap passé en parametre
         for (int y = 0; y < height; y++) {
@@ -270,8 +271,8 @@ public class Convolution {
                 tabPixels[index] = Color.rgb(tempR, tempG, tempB);
             }
         }
-        original.setPixels(tabPixels, 0, width, 0, 0, width, height);
-        return original;
+        res.setPixels(tabPixels, 0, width, 0, 0, width, height);
+        return res;
     }
 
     /**
@@ -287,6 +288,7 @@ public class Convolution {
         int[][] tabPixB = new int[width][height];
         int R, G, B, index, tempR, tempG, tempB, localWeight;
         int[] tabPixels = new int[width * height];
+        Bitmap res = Bitmap.createBitmap(width, height, original.getConfig());
         original.getPixels(tabPixels, 0, width, 0, 0, width, height);
         //initialisation des tableaux des trois canaux R,G,B des pixels du bitmap passé en parametre
         for (int y = 0; y < height; y++) {
@@ -346,8 +348,8 @@ public class Convolution {
                 tabPixels[index] = Color.rgb(tempR, tempG, tempB);
             }
         }
-        original.setPixels(tabPixels, 0, width, 0, 0, width, height);
-        return original;
+        res.setPixels(tabPixels, 0, width, 0, 0, width, height);
+        return res;
     }
 }
 
