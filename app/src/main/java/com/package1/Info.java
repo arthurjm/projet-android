@@ -55,8 +55,6 @@ public class Info extends AppCompatActivity {
             buttonList.get(0).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    buttonList.get(1).setVisibility(View.GONE);
-                    buttonList.get(0).setVisibility(View.GONE);
                     text.setText("Nous sommes 4 étudiants en licence 3 d'informatique de Bordeaux. \n Mathieu DUBAN \n Elias KHATI-LEFRANCOIS \n Arthur MONDON  \n LiangLiang PAN" +
                             "\n\n Ce projet a été réalisé dans le but de l'UE Projet Technologique.");
                 }
@@ -64,13 +62,13 @@ public class Info extends AppCompatActivity {
             buttonList.get(1).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    text.setText("ToGrey -> met une image en gris \nColorize -> permet de colorizer une image avec une couleur choisie\nKeepcolor -> permet de choisir une couleur à garder et son niveau d'intensite\n" +
+                            "Contrast -> permet d'augmenter le contraste de l'image");
                 }
             });
             buttonList.get(2).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    buttonList.get(1).setVisibility(View.VISIBLE);
-                    buttonList.get(0).setVisibility(View.VISIBLE);
                     text.setText("");
                 }
             });

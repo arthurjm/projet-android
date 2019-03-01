@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.package1.affichage.PhotoRecycler;
 
@@ -38,9 +39,9 @@ public class MainActivity extends AppCompatActivity {
      */
     public static Bitmap imageEditingCopy;
     /**
-     *The image displayed on the screen
+     * The image displayed on the screen
      */
-    public static  ImageView imgView;
+    public static ImageView imgView;
     /**
      *
      */
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * An arraylist of buttons.
+     *
      * @see Button
      */
     public ArrayList<Button> buttonList;
@@ -93,8 +95,10 @@ public class MainActivity extends AppCompatActivity {
             buttonList.get(0).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(image != null){
+                    if (image != null) {
                         filterPage(view);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "You need to choose a picture", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -124,10 +128,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     *
      * @param requestCode the same code in the foction "startActivityForResult" to make sure the datas from which Activity
-     * @param resultCode the code returned by the methode "setResult()" of Activity
-     * @param data a variable of type data
+     * @param resultCode  the code returned by the methode "setResult()" of Activity
+     * @param data        a variable of type data
      */
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -146,8 +149,7 @@ public class MainActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-        else {
+        } else {
             image = (Bitmap) data.getExtras().get("data");
         }
 
@@ -155,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * To get the path of Uri
+     *
      * @param uri
      * @return a variable of type String
      */
@@ -168,6 +171,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * To rotate the image
+     *
      * @param photoFilePath
      * @return a vaibale of type Bitmap
      */
@@ -208,7 +212,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     *
      * @param view
      */
     public void filterPage(View view) {
@@ -216,7 +219,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     *
      * @param view
      */
     public void infoPage(View view) {
@@ -224,7 +226,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     *
      * @param savedInstanceState
      */
     @Override
