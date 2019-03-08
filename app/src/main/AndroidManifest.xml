@@ -20,6 +20,7 @@
         </activity>
 
         <activity android:name=".affichage.PhotoRecycler"
+            android:screenOrientation="portrait"
             android:label="Recycler"
             android:parentActivityName=".MainActivity">
             <meta-data
@@ -29,6 +30,7 @@
         </activity>
 
         <activity android:name=".Info"
+            android:screenOrientation="portrait"
             android:label="Information"
             android:parentActivityName=".MainActivity">
             <meta-data
