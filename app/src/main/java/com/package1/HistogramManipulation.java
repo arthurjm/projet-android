@@ -3,15 +3,13 @@ package com.package1;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 
+import static com.package1.Histogram.NumberofValues;
+
 /**
  * This class will be used to build histogram of chosen chanel on a bitmap, and allow to change it with LUT.
  */
 public class HistogramManipulation {
 
-    /**
-     * The Number of values that can be taken by the values of the histogram, must be the same value as in the "Histogram" class
-     */
-    static private int NumberofValues = 256;
 
     public int[] LUT = new int[NumberofValues];
     Histogram histogram;

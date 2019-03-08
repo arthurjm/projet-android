@@ -54,13 +54,20 @@ public class MainActivity extends AppCompatActivity {
      * We set the code "PICK_IMAGE_REQUEST" as 1
      */
     private int PICK_IMAGE_REQUEST = 1;
-
     /**
-     * An arraylist of buttons.
-     *
-     * @see Button
+     * Access to gallery
      */
-    public ArrayList<Button> buttonList;
+    private Button gallery;
+    /**
+     * Access to camera
+     */
+    private Button camera;
+    /**
+     * @// TODO: 08/03/19 CHANGE THIS
+     * Not permanent
+     * Access to apply filter
+     */
+    private Button apply;
 
 
     /**
@@ -68,21 +75,9 @@ public class MainActivity extends AppCompatActivity {
      */
     public void initiateButton() {
 
-        buttonList = new ArrayList<>();
-        Button tb;
-
-        // Test recycler
-        tb = findViewById(R.id.thirdButton);
-        buttonList.add(tb);
-
-        tb = findViewById(R.id.gallery_mainActivity);
-        buttonList.add(tb);
-
-        tb = findViewById(R.id.camera_mainActivity);
-        buttonList.add(tb);
-
-        tb = findViewById(R.id.information);
-        buttonList.add(tb);
+        gallery = findViewById(R.id.gallery);
+        camera  =findViewById(R.id.camera);
+        apply = findViewById(R.id.thirdButton);
 
     }
 
@@ -91,8 +86,8 @@ public class MainActivity extends AppCompatActivity {
      */
     public void addListenerOnButton() {
 
-        if (buttonList != null) {
-            buttonList.get(0).setOnClickListener(new View.OnClickListener() {
+        if (gallery != null && camera != null) {
+            apply.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (image != null) {
@@ -102,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             });
-            buttonList.get(1).setOnClickListener(new View.OnClickListener() {
+            gallery.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -111,17 +106,11 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             });
-            buttonList.get(2).setOnClickListener(new View.OnClickListener() {
+            camera.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     startActivityForResult(intent, 0);
-                }
-            });
-            buttonList.get(3).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    infoPage(view);
                 }
             });
         }
