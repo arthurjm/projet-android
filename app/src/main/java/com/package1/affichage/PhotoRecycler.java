@@ -19,6 +19,7 @@ import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.package1.ChanelType;
+import com.package1.FaceDetection;
 import com.package1.HistogramManipulation;
 import com.package1.Mask.BlurMask;
 import com.package1.Mask.GaussianBlur;
@@ -96,6 +97,7 @@ public class PhotoRecycler extends AppCompatActivity {
      * @see RS
      */
     public static RS renderscript;
+    public static FaceDetection faceDetection;
     /**
      * a variable of type HistogramManipulation
      *
@@ -145,6 +147,8 @@ public class PhotoRecycler extends AppCompatActivity {
 
         // Filter
         renderscript = new RS(context);
+
+        faceDetection = new FaceDetection(context);
 
         // Button
         undoBut = findViewById(R.id.undo);
@@ -314,6 +318,11 @@ public class PhotoRecycler extends AppCompatActivity {
         rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
         fs = new FilterStruct("Invert", renderscript.invert(rediCopy));
         photoList.add(fs);
+
+        // FaceDetection
+        /*rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+        fs = new FilterStruct("Face Detection", faceDetection.putSunglass(rediCopy));
+        photoList.add(fs);*/
 
         photoAdapter.notifyDataSetChanged();
 

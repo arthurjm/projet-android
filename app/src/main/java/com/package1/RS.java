@@ -17,15 +17,15 @@ import com.package1.Mask.Mask;
 
 /**
  * Created by amondon001 on 22/02/19.
- * Classe regroupant le renderscript
- * Aucune classe ne modifie directement une image, renvoient une nouvelle image
+ * Classe regroupant l'appel des noyaux renderscript
+ * Les fonctions ne modifient pas l'image passée en paramètre mais renvoient une nouvelle image
  */
 
 public class RS {
 
-    RenderScript rs;
-    Allocation input; // L'image à traiter
-    Allocation output; // L'image traitée
+    private RenderScript rs;
+    private Allocation input; // L'image à traiter
+    private Allocation output; // L'image traitée
 
     public RS(Context ctx) {
         rs = RenderScript.create(ctx);
@@ -44,7 +44,7 @@ public class RS {
      * Change la teinte d'une image à une valeur définie (hue) comprise entre 0 et 359
      * @param bmp
      * @param hue
-     * @return
+     * @return a new bitamp
      */
     public Bitmap colorize(Bitmap bmp, int hue) {
         setInputOutput(bmp);

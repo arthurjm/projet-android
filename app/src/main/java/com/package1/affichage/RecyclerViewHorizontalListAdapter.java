@@ -27,6 +27,7 @@ import java.util.List;
 import static com.package1.MainActivity.imageEditing;
 import static com.package1.MainActivity.imageEditingCopy;
 import static com.package1.MainActivity.imgView;
+import static com.package1.affichage.PhotoRecycler.faceDetection;
 import static com.package1.affichage.PhotoRecycler.hist;
 import static com.package1.affichage.PhotoRecycler.renderscript;
 import static com.package1.affichage.PhotoRecycler.seekBar1;
@@ -336,6 +337,11 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 setGone(seekBar1, seekBar2);
                 imageEditingCopy = renderscript.invert(imageEditing);
                 break;
+
+            // Face Detection
+            /*case 15:
+                setGone(seekBar1, seekBar2);
+                imageEditingCopy = faceDetection.putSunglass(imageEditing);*/
             default:
                 break;
         }
