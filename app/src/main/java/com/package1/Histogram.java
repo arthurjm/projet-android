@@ -10,7 +10,7 @@ Histogram {
      * The Number of values that can be taken by the values of the histogram,
      * must be the same value as in the "HistogramManipulation" class
      */
-    static private int NumberofValues = 256;
+    static public int NumberofValues = 256;
     /**
      *
      */

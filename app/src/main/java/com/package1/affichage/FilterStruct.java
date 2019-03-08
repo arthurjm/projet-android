@@ -8,13 +8,13 @@ import android.graphics.Bitmap;
 public class FilterStruct {
 
     /**
-     * Nom du filtre
+     * Filter name
      * @see FilterStruct#getFilterName()
      * @see FilterStruct#setFilterName(String)
      */
     public String filterName;
     /**
-     * Image avec le filtre applique
+     * Image with filter
      * @see FilterStruct#getImage()
      * @see FilterStruct#setImage(Bitmap)
      */
