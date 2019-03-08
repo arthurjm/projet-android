@@ -11,6 +11,7 @@ import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -22,7 +23,9 @@ import com.package1.affichage.PhotoRecycler;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -50,10 +53,13 @@ public class MainActivity extends AppCompatActivity {
      *
      */
     private String imagepath = null;
+    private String photoPath;
     /**
      * We set the code "PICK_IMAGE_REQUEST" as 1
      */
     private int PICK_IMAGE_REQUEST = 1;
+    private static final int RETOUR_PRENDRE_PHOTO = 1;
+    private int REQUEST_IMAGE_CAPTURE = 1;
     /**
      * Access to gallery
      */
@@ -109,6 +115,8 @@ public class MainActivity extends AppCompatActivity {
             camera.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    //takePhoto();
+                   // dispatchTakePictureIntent();
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     startActivityForResult(intent, 0);
                 }
@@ -116,6 +124,73 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void takePhoto() {
+
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        if (intent.resolveActivity(getPackageManager()) != null){
+            // Create unique name
+
+            String time = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            File photoDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            try{
+                File photoFile = File.createTempFile("photo" + time,".jpg" , photoDir);
+                // Register complet path
+                photoPath = photoFile.getAbsolutePath();
+                // create URI
+                Uri photoUri;
+                photoUri = FileProvider.getUriForFile(MainActivity.this,
+                        MainActivity.this.getApplicationContext().getPackageName()+".provider",
+                        photoFile);
+
+                // transfert URI to intent for register photo in temp file
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                startActivityForResult(intent, RETOUR_PRENDRE_PHOTO);
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        photoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+                ex.printStackTrace();
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.package1.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
+        }
+    }
     /**
      * @param requestCode the same code in the foction "startActivityForResult" to make sure the datas from which Activity
      * @param resultCode  the code returned by the methode "setResult()" of Activity
@@ -124,6 +199,22 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
+
+        // TEST
+
+        if (requestCode == RETOUR_PRENDRE_PHOTO && resultCode == RESULT_OK){
+
+            image = BitmapFactory.decodeFile(photoPath);
+            imgView.setImageBitmap(image);
+
+        }
+
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            image = (Bitmap) extras.get("data");
+
+        }
+
 
         // Load photo
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
@@ -141,6 +232,8 @@ public class MainActivity extends AppCompatActivity {
         } else {
             image = (Bitmap) data.getExtras().get("data");
         }
+
+
 
     }
 
