@@ -1,5 +1,6 @@
 package com.package1;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -58,8 +59,7 @@ public class MainActivity extends AppCompatActivity {
      * We set the code "PICK_IMAGE_REQUEST" as 1
      */
     private int PICK_IMAGE_REQUEST = 1;
-    private static final int RETOUR_PRENDRE_PHOTO = 1;
-    private int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int TAKE_PHOTO = 1;
     /**
      * Access to gallery
      */
@@ -69,21 +69,23 @@ public class MainActivity extends AppCompatActivity {
      */
     private Button camera;
     /**
-     * @// TODO: 08/03/19 CHANGE THIS
      * Not permanent
      * Access to apply filter
      */
     private Button apply;
 
+    public Context context;
 
     /**
      * To set each button on the screen
      */
-    public void initiateButton() {
+    public void initiate() {
 
         gallery = findViewById(R.id.gallery);
-        camera  =findViewById(R.id.camera);
-        apply = findViewById(R.id.thirdButton);
+        camera = findViewById(R.id.camera);
+        apply = findViewById(R.id.apply);
+
+        context = getApplicationContext();
 
     }
 
@@ -106,19 +108,17 @@ public class MainActivity extends AppCompatActivity {
             gallery.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    loadPhoto();
+                   /* Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     intent.setType("image/*");
-                    startActivityForResult(intent, 1);
+                    startActivityForResult(intent, PICK_IMAGE_REQUEST);*/
 
                 }
             });
             camera.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //takePhoto();
-                   // dispatchTakePictureIntent();
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(intent, 0);
+                    takePhoto();
                 }
             });
         }
@@ -128,32 +128,31 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-        if (intent.resolveActivity(getPackageManager()) != null){
+        if (intent.resolveActivity(getPackageManager()) != null) {
             // Create unique name
-
             String time = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
             File photoDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-            try{
-                File photoFile = File.createTempFile("photo" + time,".jpg" , photoDir);
+            try {
+                File photoFile = File.createTempFile("photo" + time, ".jpg", photoDir);
                 // Register complet path
                 photoPath = photoFile.getAbsolutePath();
                 // create URI
                 Uri photoUri;
-                photoUri = FileProvider.getUriForFile(MainActivity.this,
-                        MainActivity.this.getApplicationContext().getPackageName()+".provider",
-                        photoFile);
+                if (photoFile != null) {
+                    photoUri = FileProvider.getUriForFile(context, "com.package1.fileprovider", photoFile);
+                    // transfert URI to intent for register photo in temp file
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                    startActivityForResult(intent, TAKE_PHOTO);
+                }
 
-                // transfert URI to intent for register photo in temp file
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-                startActivityForResult(intent, RETOUR_PRENDRE_PHOTO);
-            } catch (IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
 
         }
     }
 
-    private File createImageFile() throws IOException {
+    public File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
@@ -169,28 +168,15 @@ public class MainActivity extends AppCompatActivity {
         return image;
     }
 
-    private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-                ex.printStackTrace();
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this,
-                        "com.package1.fileprovider",
-                        photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-            }
+    public void loadPhoto() {
+
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            intent.setType("image/*");
+            startActivityForResult(intent, PICK_IMAGE_REQUEST);
         }
     }
+
     /**
      * @param requestCode the same code in the foction "startActivityForResult" to make sure the datas from which Activity
      * @param resultCode  the code returned by the methode "setResult()" of Activity
@@ -198,23 +184,17 @@ public class MainActivity extends AppCompatActivity {
      */
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+        filePath = null;
+
         super.onActivityResult(requestCode, resultCode, data);
 
-        // TEST
-
-        if (requestCode == RETOUR_PRENDRE_PHOTO && resultCode == RESULT_OK){
-
-            image = BitmapFactory.decodeFile(photoPath);
-            imgView.setImageBitmap(image);
-
+        // Camera
+        if (requestCode == TAKE_PHOTO && resultCode == RESULT_OK) {
+            if (photoPath != null) {
+                image = rotateBitmap(photoPath);
+                //image = BitmapFactory.decodeFile(photoPath);
+            }
         }
-
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            image = (Bitmap) extras.get("data");
-
-        }
-
 
         // Load photo
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
@@ -223,17 +203,16 @@ public class MainActivity extends AppCompatActivity {
             imagepath = getPath(filePath);
 
             try {
-                image = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-                //image = rotateBitmap(imagepath);
+                if (filePath != null) {
 
+                    image = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                    // image = rotateBitmap(imagepath);
+
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else {
-            image = (Bitmap) data.getExtras().get("data");
         }
-
-
 
     }
 
@@ -319,7 +298,7 @@ public class MainActivity extends AppCompatActivity {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inMutable = true;
 
-        initiateButton();
+        initiate();
         addListenerOnButton();
 
     }
