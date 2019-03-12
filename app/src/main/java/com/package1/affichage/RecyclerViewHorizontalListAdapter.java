@@ -296,6 +296,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 hist = new HistogramManipulation(imageEditing, ChanelType.V);
                 hist.equalizationLUT();
                 imageEditingCopy = hist.applyLUT(imageEditing);
+                imageEditingCopy = renderscript.applyLUT(imageEditing, hist);
                 break;
             // Blur
             case 9:
@@ -345,9 +346,9 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 break;
 
             // Face Detection
-            /*case 15:
+            case 15:
                 setGone(seekBar1, seekBar2);
-                imageEditingCopy = faceDetection.putSunglass(imageEditing);*/
+                imageEditingCopy = faceDetection.putSunglass(imageEditing);
             default:
                 break;
         }
@@ -383,31 +384,31 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
             case "contrast":
                 hist = new HistogramManipulation(imageEditing, ChanelType.V);
                 hist.linearExtensionLUT(128 + progressBar1, 127 - progressBar1);
-                //imageEditingCopy = hist.applyLUT(imageEditing); //java version
+                imageEditingCopy = hist.applyLUT(imageEditing); //java version
                 imageEditingCopy = renderscript.applyLUT(imageEditing, hist);
                 break;
             case "shiftLight":
                 hist = new HistogramManipulation(imageEditing, ChanelType.V);
                 hist.shiftLUT(progressBar1 - 100);
-                //imageEditingCopy = hist.applyLUT(imageEditing); //java version
+                imageEditingCopy = hist.applyLUT(imageEditing); //java version
                 imageEditingCopy = renderscript.applyLUT(imageEditing, hist);
                 break;
             case "shiftSaturation":
                 hist = new HistogramManipulation(imageEditing, ChanelType.S);
                 hist.shiftLUT(progressBar1 - 100);
-                //imageEditingCopy = hist.applyLUT(imageEditing); //java version
+                imageEditingCopy = hist.applyLUT(imageEditing); //java version
                 imageEditingCopy = renderscript.applyLUT(imageEditing, hist);
                 break;
             case "shiftColor":
                 hist = new HistogramManipulation(imageEditing, ChanelType.H);
                 hist.shiftCycleLUT(progressBar1);
-                //imageEditingCopy = hist.applyLUT(imageEditing); //java version
+                imageEditingCopy = hist.applyLUT(imageEditing); //java version
                 imageEditingCopy = renderscript.applyLUT(imageEditing, hist);
                 break;
             case "isohelie":
                 hist = new HistogramManipulation(imageEditing, ChanelType.V);
                 hist.isohelieLUT(progressBar1 + 2);
-                //imageEditingCopy = hist.applyLUT(imageEditing); //java version
+                imageEditingCopy = hist.applyLUT(imageEditing); //java version
                 imageEditingCopy = renderscript.applyLUT(imageEditing, hist);
                 break;
             case "blur":
