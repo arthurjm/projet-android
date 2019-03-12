@@ -5,6 +5,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
 import android.util.Log;
 import android.util.SparseArray;
 
@@ -15,11 +18,15 @@ import com.google.android.gms.vision.face.Landmark;
 
 public class FaceDetection {
     private Bitmap sunglass;
+    private Bitmap hat;
+    private Bitmap beard;
     private FaceDetector faceDetector;
     private Canvas canvas;
 
     public FaceDetection(Context ctx) {
         sunglass = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.sunglass);
+        hat = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.hat);
+        beard = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.beard);
 
         faceDetector = new FaceDetector.Builder(ctx)
                 .setTrackingEnabled(false)
@@ -33,11 +40,13 @@ public class FaceDetection {
         canvas = new Canvas(tmpBmp);
         canvas.drawBitmap(bmp, 0, 0, null);
 
+
         Frame frame = new Frame.Builder().setBitmap(bmp).build();
         SparseArray<Face> sparseArray = faceDetector.detect(frame);
 
         for (int i = 0; i < sparseArray.size(); i++) {
-            com.google.android.gms.vision.face.Face face = sparseArray.valueAt(i);
+            Face face = sparseArray.valueAt(i);
+            Log.i("FACE", "Nb visages " + i+1);
             directLandmarks(face);
         }
 
@@ -49,15 +58,34 @@ public class FaceDetection {
             int cx = (int) (landmark.getPosition().x);
             int cy = (int) (landmark.getPosition().y);
 
-            drawOnImageView(landmark.getType(), cx, cy);
+            drawOnImageView(landmark.getType(), cx, cy, face);
         }
     }
 
-    private void drawOnImageView(int type, int cx, int cy) {
+    private void drawOnImageView(int type, int cx, int cy, Face face) {
         if (type == Landmark.NOSE_BASE) {
-            Log.i("test", "test");
+            Paint rectPaint = new Paint();
+            rectPaint.setStrokeWidth(5);
+            rectPaint.setColor(Color.RED);
+            rectPaint.setStyle(Paint.Style.STROKE);
+
+            float x1 = face.getPosition().x;
+            float y1 = face.getPosition().y;
+            float x2 = x1 + face.getWidth();
+            float y2 = y1 + face.getHeight();
+            RectF rectF = new RectF(x1, y1, x2, y2);
+            Log.i("FACE", "Face x1:" + x1 + " x2:" + x2 + " y1:" + y1 + " y2:" + y2);
+            //canvas.drawRoundRect(rectF, 2, 2, rectPaint);
+
+            Log.i("FACE", "Nose position x:" + cx + " y:" + cy);
+
+            int scaleWidth = sunglass.getScaledWidth(canvas);
             int scaleHeight = sunglass.getScaledHeight(canvas);
-            canvas.drawBitmap(sunglass, cx, cy, null);
+            Log.i("FACE", "Scale width:" + scaleWidth + " height:" + scaleHeight);
+            //canvas.drawBitmap(sunglass, cx - (scaleWidth/2), cy - scaleHeight, null);
+            canvas.drawBitmap(sunglass, null, rectF, null);
+            canvas.drawBitmap(hat, null, new RectF(x1, y1 - face.getHeight()/2, x2, y1 + face.getHeight()/2), null);
+            canvas.drawBitmap(beard, null, new RectF(x1, y2- face.getHeight()/2, x2, y2 + face.getHeight()/2), null);
         }
     }
 }
