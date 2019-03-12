@@ -339,16 +339,16 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 setGone(seekBar1, seekBar2);
                 imageEditingCopy = renderscript.invert(imageEditing);
                 break;
-            // Rotate
-            case 15:
-                setGone(seekBar1, seekBar2);
-                imageEditingCopy = RotateBitmap(imageEditingCopy, 90);
-                break;
-
             // Face Detection
             case 15:
                 setGone(seekBar1, seekBar2);
                 imageEditingCopy = faceDetection.putSunglass(imageEditing);
+                break;
+            // Rotate
+            case 16:
+                setGone(seekBar1, seekBar2);
+                imageEditingCopy = RotateBitmap(imageEditingCopy, 90);
+                break;
             default:
                 break;
         }
@@ -357,6 +357,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
 
     /**
      * Rotate a bitmap
+     *
      * @param source
      * @param angle
      * @return bitmap flip with angle
