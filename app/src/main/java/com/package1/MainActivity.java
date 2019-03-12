@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
     public Context context;
 
+
     /**
      * To set each button on the screen
      */
@@ -99,7 +100,8 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     if (image != null) {
-                        filterPage(view);
+                        //filterPage(view);
+                        filterPage();
                     } else {
                         Toast.makeText(getApplicationContext(), "You need to choose a picture", Toast.LENGTH_SHORT).show();
                     }
@@ -175,6 +177,7 @@ public class MainActivity extends AppCompatActivity {
             intent.setType("image/*");
             startActivityForResult(intent, PICK_IMAGE_REQUEST);
         }
+
     }
 
     /**
@@ -192,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == TAKE_PHOTO && resultCode == RESULT_OK) {
             if (photoPath != null) {
                 image = rotateBitmap(photoPath);
-                //image = BitmapFactory.decodeFile(photoPath);
+                filterPage();
             }
         }
 
@@ -206,7 +209,9 @@ public class MainActivity extends AppCompatActivity {
                 if (filePath != null) {
 
                     image = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-                    // image = rotateBitmap(imagepath);
+                    //image = rotateBitmap(filePath.toString());
+                    filterPage();
+
 
                 }
             } catch (IOException e) {
@@ -279,6 +284,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this, PhotoRecycler.class));
     }
 
+    public void filterPage(){
+        startActivity(new Intent(this, PhotoRecycler.class));
+    }
     /**
      * @param view
      */

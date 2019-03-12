@@ -2,6 +2,7 @@ package com.package1.affichage;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -337,6 +338,11 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 setGone(seekBar1, seekBar2);
                 imageEditingCopy = renderscript.invert(imageEditing);
                 break;
+            // Rotate
+            case 15:
+                setGone(seekBar1, seekBar2);
+                imageEditingCopy = RotateBitmap(imageEditingCopy, 90);
+                break;
 
             // Face Detection
             /*case 15:
@@ -349,7 +355,19 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
     }
 
     /**
-     * Permet d'appliquer les fonctions par rapport a la valeur de la seekBar
+     * Rotate a bitmap
+     * @param source
+     * @param angle
+     * @return bitmap flip with angle
+     */
+    public Bitmap RotateBitmap(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+    }
+
+    /**
+     * Apply functions with value of seekBar
      *
      * @see PhotoRecycler#seekBar1
      */

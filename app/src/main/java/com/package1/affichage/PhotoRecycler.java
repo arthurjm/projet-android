@@ -324,6 +324,12 @@ public class PhotoRecycler extends AppCompatActivity {
         fs = new FilterStruct("Face Detection", faceDetection.putSunglass(rediCopy));
         photoList.add(fs);*/
 
+        // Rotate
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+        fs = new FilterStruct("Rotate", rediCopy);
+        photoList.add(fs);
+
+
         photoAdapter.notifyDataSetChanged();
 
     }
