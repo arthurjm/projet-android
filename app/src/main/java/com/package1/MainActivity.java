@@ -211,8 +211,6 @@ public class MainActivity extends AppCompatActivity {
                     image = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                     //image = rotateBitmap(filePath.toString());
                     filterPage();
-
-
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -277,12 +275,6 @@ public class MainActivity extends AppCompatActivity {
         return rotatedBitmap;
     }
 
-    /**
-     * @param view
-     */
-    public void filterPage(View view) {
-        startActivity(new Intent(this, PhotoRecycler.class));
-    }
 
     public void filterPage(){
         startActivity(new Intent(this, PhotoRecycler.class));

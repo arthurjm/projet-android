@@ -2,10 +2,7 @@ package com.package1.affichage;
 
 import android.graphics.Bitmap;
 
-/**
- * @author Mathieu
- */
-public class FilterStruct {
+public class MenuStruct {
 
     /**
      * Filter name
@@ -19,28 +16,15 @@ public class FilterStruct {
      * @see FilterStruct#setImage(Bitmap)
      */
     public Bitmap image;
-    /**
-     * Type of filter
-     * @see FilterType
-     */
-    public FilterType type;
 
     /**
      * Constructeur
      * @param filterName
      * @param image
      */
-    public FilterStruct(String filterName, Bitmap image, FilterType type) {
+    public MenuStruct(String filterName, Bitmap image) {
         this.filterName = filterName;
         this.image = image;
-        this.type = type;
-    }
-
-
-    public FilterType getFilterType(){ return type;}
-
-    public void setFilterType(FilterType type){
-        this.type = type;
     }
 
     public String getFilterName() {
@@ -56,4 +40,5 @@ public class FilterStruct {
     public void setImage(Bitmap image){
         this.image = image;
     }
+
 }

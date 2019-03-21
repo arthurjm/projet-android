@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -51,10 +52,8 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
      * @see Context
      */
     private Context context;
-    /**
-     * a variable of type string to represent the fonction actual
-     */
-    private String actualFunction;
+
+    private FilterType filterType;
     /**
      * Vale of the seekBar
      *
@@ -68,15 +67,23 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
      */
     private int progressBar2;
 
+    private RecyclerType rt;
+
+    public void setFilterType(FilterType filterType) {
+        this.filterType = filterType;
+    }
+
     /**
      * A Construction
      *
      * @param horizontalPhotoList
      * @param context
      */
-    public RecyclerViewHorizontalListAdapter(List<FilterStruct> horizontalPhotoList, Context context) {
+    public RecyclerViewHorizontalListAdapter(List<FilterStruct> horizontalPhotoList, Context context, RecyclerType rt) {
         this.horizontalPhotoList = horizontalPhotoList;
         this.context = context;
+        this.rt = rt;
+
     }
 
     /**
@@ -110,7 +117,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                useFunction(position);
+                useFunction(horizontalPhotoList.get(position).getFilterType());
                 // Action lorsque l'on clique sur l'image
                 String productName = horizontalPhotoList.get(position).getFilterName().toString();
                 Toast.makeText(context, productName + " is selected", Toast.LENGTH_SHORT).show();
@@ -207,152 +214,180 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
      * Permet 2 choses :
      * - si la fonction n'a pas besoin de seekBar, alors on n'affiche pas de seekBar, et on change l'imageView avec le resultat de la fonction
      *
-     * @param position
      * @see PhotoRecycler#seekBar1
      * @see com.package1.MainActivity#imgView
      * - si la fonction a besoin d'une seekbar, alors on l'affiche et on definit ses parametres , et on change l'était actualFonction
-     * @see PhotoRecycler#seekBar1
-     * @see RecyclerViewHorizontalListAdapter#actualFunction
+     * @see PhotoRecycler#
      */
-    private void useFunction(final int position) {
+    private void useFunction(FilterType type) {
         renderscript = new RS(context);
         addListener();
         // If we want reset imageView
         //imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
         imgView.setImageBitmap(imageEditingCopy);
-        switch (position) {
-            // ToGrey
-            case 0:
+
+        // Which functions we want to use with the adequat List
+        switch (rt) {
+            case Color:
+                colorFunction(type);
+                break;
+            case Saturation:
+                saturationFunction(type);
+                break;
+            case Mask:
+                maskFunction(type);
+                break;
+            case Extras:
+                extraFunction(type);
+                break;
+            default:
+                break;
+
+
+        }
+        imgView.setImageBitmap(imageEditingCopy);
+    }
+
+    private void colorFunction(FilterType type) {
+        switch (type) {
+            case Grey:
                 setGone(seekBar1, seekBar2);
                 imageEditingCopy = renderscript.toGrey(imageEditing);
                 break;
-            // Colorize
-            case 1:
+            case Colorize:
                 setVisible(seekBar1);
                 setGone(seekBar2);
                 setBorn(seekBar1, 359);
                 setRGBBackground(seekBar1);
                 seekBar1.setProgress(0);
-                actualFunction = "colorize";
+                setFilterType(FilterType.Colorize);
                 break;
-            // KeepColor
-            case 2:
+            case KeepHue:
                 setVisible(seekBar1, seekBar2);
                 setBorn(seekBar1, 359);
                 setBorn(seekBar2, 180);
                 setRGBBackground(seekBar1);
                 seekBar1.setProgress(0);
                 seekBar2.setProgress(0);
-                actualFunction = "keepColor";
+                setFilterType(FilterType.KeepHue);
                 break;
-            // Contrast
-            case 3:
+            case Invert:
+                setGone(seekBar1, seekBar2);
+                imageEditingCopy = renderscript.invert(imageEditing);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void saturationFunction(FilterType type) {
+        switch (type) {
+            case Contrast:
                 setVisible(seekBar1);
                 setGone(seekBar2);
                 setBorn(seekBar1, 127);
                 setNormalBackground(seekBar1);
                 seekBar1.setProgress(0);
-                actualFunction = "contrast";
+                setFilterType(FilterType.Contrast);
                 break;
-            // ShiftLight
-            case 4:
+            case ShiftLight:
                 setVisible(seekBar1);
                 setGone(seekBar2);
                 setBorn(seekBar1, 200);
                 setNormalBackground(seekBar1);
                 seekBar1.setProgress(0);
-                actualFunction = "shiftLight";
+                setFilterType(FilterType.ShiftLight);
                 break;
-            // Shift Saturation
-            case 5:
+            case ShiftSaturation:
                 setVisible(seekBar1);
                 setGone(seekBar2);
                 setBorn(seekBar1, 200);
                 setNormalBackground(seekBar1);
                 seekBar1.setProgress(0);
-                actualFunction = "shiftSaturation";
+                setFilterType(FilterType.ShiftSaturation);
                 break;
-            // Shift Color
-            case 6:
+            case ShiftColor:
                 setVisible(seekBar1);
                 setGone(seekBar2);
                 setBorn(seekBar1, 255);
                 setRGBBackground(seekBar1);
                 seekBar1.setProgress(0);
-                actualFunction = "shiftColor";
+                setFilterType(FilterType.ShiftColor);
                 break;
-            // isoHelie
-            case 7:
+            case Isohelie:
                 setVisible(seekBar1);
                 setGone(seekBar2);
                 setBorn(seekBar1, 8);
                 setNormalBackground(seekBar1);
                 seekBar1.setProgress(2);
-                actualFunction = "isohelie";
+                setFilterType(FilterType.Isohelie);
                 break;
-            // Equa light
-            case 8:
+            case EquaLight:
                 setGone(seekBar1, seekBar2);
                 hist = new HistogramManipulation(imageEditing, ChanelType.V);
                 hist.equalizationLUT();
                 imageEditingCopy = hist.applyLUT(imageEditing);
                 imageEditingCopy = renderscript.applyLUT(imageEditing, hist);
                 break;
-            // Blur
-            case 9:
+            default:
+                break;
+
+        }
+    }
+
+    private void maskFunction(FilterType type) {
+        switch (type) {
+            case Blur:
                 setNormalBackground(seekBar1);
                 setVisible(seekBar1);
                 setGone(seekBar2);
                 seekBar1.setProgress(0);
                 setBorn(seekBar1, 14);
-                actualFunction = "blur";
+                setFilterType(FilterType.Blur);
                 break;
-            // Gaussian
-            case 10:
+            case Gaussian:
                 setNormalBackground(seekBar1);
                 setVisible(seekBar1);
                 setGone(seekBar2);
                 seekBar1.setProgress(0);
                 setBorn(seekBar1, 5);
-                actualFunction = "gaussian";
+                setFilterType(FilterType.Gaussian);
                 break;
-            // Laplacien
-            case 11:
+            case Laplacien:
                 setGone(seekBar1, seekBar2);
                 LaplacienMask maskLaplacien = new LaplacienMask();
                 imageEditingCopy = renderscript.convolution(imageEditing, maskLaplacien);
                 break;
-            // Sobel vertical
-            case 12:
+            case SobelV:
                 setGone(seekBar1, seekBar2);
                 SobelMask sobelMaskVertical = new SobelMask(true);
                 imageEditingCopy = renderscript.convolution(imageEditing, sobelMaskVertical);
                 break;
-            // Sobel horizontal
-            case 13:
+            case SobelH:
                 setGone(seekBar1, seekBar2);
                 SobelMask sobelMaskHorizontal = new SobelMask(false);
                 imageEditingCopy = renderscript.convolution(imageEditing, sobelMaskHorizontal);
                 break;
-            // Invert
-            case 14:
-                setGone(seekBar1, seekBar2);
-                imageEditingCopy = renderscript.invert(imageEditing);
+            default:
                 break;
-            // Face Detection
-            case 15:
+
+        }
+    }
+
+    private void extraFunction(FilterType type) {
+        switch (type) {
+            case FaceDetection:
                 setGone(seekBar1, seekBar2);
                 imageEditingCopy = faceDetection.putSunglass(imageEditing);
                 break;
-            // Rotate
-            case 16:
+            case Rotate:
                 setGone(seekBar1, seekBar2);
                 imageEditingCopy = RotateBitmap(imageEditingCopy, 90);
                 break;
             default:
                 break;
+
         }
-        imgView.setImageBitmap(imageEditingCopy);
     }
 
     /**
@@ -375,48 +410,48 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
      */
     private void applyFunction() {
 
-        switch (actualFunction) {
-            case "colorize":
+        switch (filterType) {
+            case Colorize:
                 imageEditingCopy = (renderscript.colorize(imageEditing, progressBar1));
                 break;
-            case "keepColor":
+            case KeepHue:
                 imageEditingCopy = renderscript.keepHue(imageEditing, progressBar1, progressBar2);
                 break;
-            case "contrast":
+            case Contrast:
                 hist = new HistogramManipulation(imageEditing, ChanelType.V);
                 hist.linearExtensionLUT(128 + progressBar1, 127 - progressBar1);
                 imageEditingCopy = hist.applyLUT(imageEditing); //java version
                 imageEditingCopy = renderscript.applyLUT(imageEditing, hist);
                 break;
-            case "shiftLight":
+            case ShiftLight:
                 hist = new HistogramManipulation(imageEditing, ChanelType.V);
                 hist.shiftLUT(progressBar1 - 100);
                 imageEditingCopy = hist.applyLUT(imageEditing); //java version
                 imageEditingCopy = renderscript.applyLUT(imageEditing, hist);
                 break;
-            case "shiftSaturation":
+            case ShiftSaturation:
                 hist = new HistogramManipulation(imageEditing, ChanelType.S);
                 hist.shiftLUT(progressBar1 - 100);
                 imageEditingCopy = hist.applyLUT(imageEditing); //java version
                 imageEditingCopy = renderscript.applyLUT(imageEditing, hist);
                 break;
-            case "shiftColor":
+            case ShiftColor:
                 hist = new HistogramManipulation(imageEditing, ChanelType.H);
                 hist.shiftCycleLUT(progressBar1);
                 imageEditingCopy = hist.applyLUT(imageEditing); //java version
                 imageEditingCopy = renderscript.applyLUT(imageEditing, hist);
                 break;
-            case "isohelie":
+            case Isohelie:
                 hist = new HistogramManipulation(imageEditing, ChanelType.V);
                 hist.isohelieLUT(progressBar1 + 2);
                 imageEditingCopy = hist.applyLUT(imageEditing); //java version
                 imageEditingCopy = renderscript.applyLUT(imageEditing, hist);
                 break;
-            case "blur":
+            case Blur:
                 BlurMask mask = new BlurMask(progressBar1 + 1);
                 imageEditingCopy = renderscript.convolution(imageEditing, mask);
                 break;
-            case "gaussian":
+            case Gaussian:
                 GaussianBlur maskGaussian = new GaussianBlur(progressBar1 * 2 + 1, 2.5);
                 imageEditingCopy = renderscript.convolution(imageEditing, maskGaussian);
             default:

@@ -6,8 +6,8 @@
 
     <ImageView
         android:id="@+id/idProductImage"
-        android:layout_width="133dp"
-        android:layout_height="92dp" />
+        android:layout_width="125dp"
+        android:layout_height="83dp" />
 
     <TextView
         android:id="@+id/idProductName"
