@@ -199,7 +199,7 @@ public class PhotoRecycler extends AppCompatActivity {
      */
     public void addListener() {
 
-        Button reset = findViewById(R.id.delete);
+       /* Button reset = findViewById(R.id.delete);
         reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -216,7 +216,7 @@ public class PhotoRecycler extends AppCompatActivity {
                 imageEditing = imageEditingCopy.copy(Bitmap.Config.ARGB_8888, true);
                 saveImageToGallery(imageEditing);
             }
-        });
+        });*/
         undoBut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -243,7 +243,7 @@ public class PhotoRecycler extends AppCompatActivity {
             case Color:
                 colorList();
                 break;
-            case Saturation:
+            case Contrast:
                 saturationList();
                 break;
             case Mask:
@@ -267,16 +267,22 @@ public class PhotoRecycler extends AppCompatActivity {
 
         Bitmap rediImageEditing = Bitmap.createScaledBitmap(image, 100, (int) ((image.getHeight() * 100) / image.getWidth()), true);
         Bitmap t = BitmapFactory.decodeResource(context.getResources(),
-                R.drawable.beard);
+                R.drawable.color);
 
         // CHANGER LES IMAGES
-        ms = new MenuStruct("Color", rediImageEditing);
+        ms = new MenuStruct("Color", t);
         menuList.add(ms);
-        ms = new MenuStruct("Saturation", rediImageEditing);
+        t = BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.contrast);
+        ms = new MenuStruct("Contrast", t);
         menuList.add(ms);
-        ms = new MenuStruct("Mask", rediImageEditing);
+        t = BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.mask);
+        ms = new MenuStruct("Mask", t);
         menuList.add(ms);
-        ms = new MenuStruct("Extras", rediImageEditing);
+        t = BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.extra);
+        ms = new MenuStruct("Extras", t);
         menuList.add(ms);
 
         menuAdapter.notifyDataSetChanged();
@@ -325,7 +331,7 @@ public class PhotoRecycler extends AppCompatActivity {
 
     public static void saturationList() {
 
-        photoAdapter = new RecyclerViewHorizontalListAdapter(saturationList, context, RecyclerType.Saturation);
+        photoAdapter = new RecyclerViewHorizontalListAdapter(saturationList, context, RecyclerType.Contrast);
         photoRecyclerView.setAdapter(photoAdapter);
 
         if (saturationList.isEmpty() == true) {

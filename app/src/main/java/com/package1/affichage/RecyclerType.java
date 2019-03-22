@@ -2,7 +2,7 @@ package com.package1.affichage;
 
 public enum RecyclerType {
     Color,
-    Saturation,
+    Contrast,
     Mask,
     Extras,
     Nothing

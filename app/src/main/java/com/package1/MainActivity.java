@@ -96,17 +96,6 @@ public class MainActivity extends AppCompatActivity {
     public void addListenerOnButton() {
 
         if (gallery != null && camera != null) {
-            apply.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (image != null) {
-                        //filterPage(view);
-                        filterPage();
-                    } else {
-                        Toast.makeText(getApplicationContext(), "You need to choose a picture", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
             gallery.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

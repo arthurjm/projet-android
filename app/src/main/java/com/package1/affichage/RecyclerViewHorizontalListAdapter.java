@@ -232,7 +232,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
             case Color:
                 colorFunction(type);
                 break;
-            case Saturation:
+            case Contrast:
                 saturationFunction(type);
                 break;
             case Mask:
