@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -324,10 +325,12 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 break;
             case EquaLight:
                 setGone(seekBar1, seekBar2);
-                hist = new HistogramManipulation(imageEditing, ChanelType.V);
+                setFilterType(FilterType.EquaLight);
+                /*hist = new HistogramManipulation(imageEditing, ChanelType.V);
                 hist.equalizationLUT();
                 imageEditingCopy = hist.applyLUT(imageEditing);
-                imageEditingCopy = renderscript.applyLUT(imageEditing, hist);
+                imageEditingCopy = renderscript.applyLUT(imageEditing, hist);*/
+                new MyTask().execute(imageEditing);
                 break;
             default:
                 break;
@@ -408,7 +411,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
      *
      * @see PhotoRecycler#seekBar1
      */
-    private void applyFunction() {
+  /*  private void applyFunction() {
 
         switch (filterType) {
             case Colorize:
@@ -459,6 +462,86 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
         }
 
         imgView.setImageBitmap(imageEditingCopy);
+    }*/
+
+
+    private class MyTask extends AsyncTask<Bitmap,Void,Bitmap> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Toast.makeText(context, "  fonction start", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        protected Bitmap doInBackground(Bitmap... Bitmap) {
+            switch (filterType) {
+                case EquaLight:
+                    hist = new HistogramManipulation(Bitmap[0], ChanelType.V);
+                    hist.equalizationLUT();
+                    imageEditingCopy = hist.applyLUT(Bitmap[0]);
+                    break;
+                case Colorize:
+                    imageEditingCopy = (renderscript.colorize(Bitmap[0], progressBar1));
+                    break;
+                case KeepHue:
+                    imageEditingCopy = renderscript.keepHue(Bitmap[0], progressBar1, progressBar2);
+                    break;
+                case Contrast:
+                    hist = new HistogramManipulation(Bitmap[0], ChanelType.V);
+                    hist.linearExtensionLUT(128 + progressBar1, 127 - progressBar1);
+                    //imageEditingCopy = hist.applyLUT(imageEditing); //java version
+                    imageEditingCopy = renderscript.applyLUT(Bitmap[0], hist);
+                    break;
+
+                case ShiftLight:
+                    hist = new HistogramManipulation(Bitmap[0], ChanelType.V);
+                    hist.shiftLUT(progressBar1 - 100);
+                    //imageEditingCopy = hist.applyLUT(imageEditing); //java version
+                    imageEditingCopy = renderscript.applyLUT(Bitmap[0], hist);
+                    break;
+
+                case ShiftSaturation:
+                    hist = new HistogramManipulation(Bitmap[0], ChanelType.S);
+                    hist.shiftLUT(progressBar1 - 100);
+                    //imageEditingCopy = hist.applyLUT(imageEditing); //java version
+                    imageEditingCopy = renderscript.applyLUT(Bitmap[0], hist);
+                    break;
+
+                case ShiftColor:
+                    hist = new HistogramManipulation(Bitmap[0], ChanelType.H);
+                    hist.shiftCycleLUT(progressBar1);
+                    //imageEditingCopy = hist.applyLUT(imageEditing); //java version
+                    imageEditingCopy = renderscript.applyLUT(Bitmap[0], hist);
+
+                    break;
+                case Isohelie:
+                    hist = new HistogramManipulation(Bitmap[0], ChanelType.V);
+                    hist.isohelieLUT(progressBar1 + 2);
+                    //imageEditingCopy = hist.applyLUT(imageEditing); //java version
+                    imageEditingCopy = renderscript.applyLUT(Bitmap[0], hist);
+                    break;
+
+                case Blur:
+                    BlurMask mask = new BlurMask(progressBar1 + 1);
+                    imageEditingCopy = renderscript.convolution(Bitmap[0], mask);
+                    break;
+
+                case Gaussian:
+                    GaussianBlur maskGaussian = new GaussianBlur(progressBar1 * 2 + 1, 2.5);
+                    imageEditingCopy = renderscript.convolution(Bitmap[0], maskGaussian);
+                    break;
+
+                default:
+                    break;
+
+            }
+            return imageEditingCopy;
+        }
+        protected void onPostExecute(Bitmap bitmap) {
+            super.onPostExecute(bitmap);
+            imgView.setImageBitmap(bitmap);
+            Toast.makeText(context, "  fonction end", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -480,7 +563,8 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                applyFunction();
+                new MyTask().execute(imageEditing);
+                //applyFunction();
             }
         });
 
@@ -497,7 +581,8 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                applyFunction();
+                new MyTask().execute(imageEditing);
+                //applyFunction();
             }
         });
 
