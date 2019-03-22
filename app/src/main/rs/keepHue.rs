@@ -29,7 +29,7 @@ uchar4 RS_KERNEL keepHue ( uchar4 in ) {
 		h = fmod( (60 * (r - g)/delta + 240), 359);
 	}
 
-	if (!( h < (hue + precision)%359 && h > (hue - precision)%359 )) {
+	if (min( fmod((h-hue+360), 360),  fmod((hue-h+360), 360) ) > precision) {
 		float grey = (0.30 * in.r + 0.59 * in.g + 0.11 * in.b);
 		out.r = grey;
 		out.g = grey;
