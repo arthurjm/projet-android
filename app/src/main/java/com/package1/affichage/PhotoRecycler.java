@@ -17,7 +17,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.package1.ChanelType;
@@ -51,6 +50,8 @@ public class PhotoRecycler extends AppCompatActivity {
     public static RecyclerView menuRecyclerView;
     private MenuRecyclerAdapter menuAdapter;
 
+    public static Bitmap actualMiniImage;
+
     /**
      * List of FilterStruct
      *
@@ -59,7 +60,7 @@ public class PhotoRecycler extends AppCompatActivity {
     public static List<FilterStruct> photoList = new ArrayList<>();
     public static List<FilterStruct> extraList = new ArrayList<>();
     public static List<FilterStruct> maskList = new ArrayList<>();
-    public static List<FilterStruct> saturationList = new ArrayList<>();
+    public static List<FilterStruct> contrastList = new ArrayList<>();
 
     /**
      * RecyclerView of layout
@@ -84,18 +85,6 @@ public class PhotoRecycler extends AppCompatActivity {
      */
     public static SeekBar seekBar2;
     /**
-     * Button to back
-     *
-     * @see Button
-     */
-    private Button undoBut;
-    /**
-     * Button to apply a script
-     *
-     * @see Button
-     */
-    private Button applyBut;
-    /**
      * a variable of type Renderscript
      *
      * @see RS
@@ -118,6 +107,7 @@ public class PhotoRecycler extends AppCompatActivity {
      * New dimension for the image
      */
     private int adaptedWidth;
+    public static Button back;
 
     @Override
     /**
@@ -147,8 +137,9 @@ public class PhotoRecycler extends AppCompatActivity {
         faceDetection = new FaceDetection(context);
 
         // Button
-        undoBut = findViewById(R.id.undo);
-        applyBut = findViewById(R.id.apply);
+        back = findViewById(R.id.back);
+        back.setVisibility(View.GONE);
+
 
         // RecyclerView
         photoRecyclerView = findViewById(R.id.idRecyclerViewHorizontalList);
@@ -199,7 +190,7 @@ public class PhotoRecycler extends AppCompatActivity {
      */
     public void addListener() {
 
-       /* Button reset = findViewById(R.id.delete);
+        Button reset = findViewById(R.id.back);
         reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -207,16 +198,19 @@ public class PhotoRecycler extends AppCompatActivity {
                 seekBar2.setVisibility(View.GONE);
                 menuRecyclerView.setVisibility(View.VISIBLE);
                 photoRecyclerView.setVisibility(View.GONE);
+                back.setVisibility(View.GONE);
             }
         });
-        Button save = findViewById(R.id.saveGallery);
+
+        Button save = findViewById(R.id.save);
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 imageEditing = imageEditingCopy.copy(Bitmap.Config.ARGB_8888, true);
                 saveImageToGallery(imageEditing);
             }
-        });*/
+        });
+        Button undoBut = findViewById(R.id.undo);
         undoBut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -225,6 +219,7 @@ public class PhotoRecycler extends AppCompatActivity {
                 undo(imageEditing);
             }
         });
+        Button applyBut = findViewById(R.id.apply);
         applyBut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -236,21 +231,26 @@ public class PhotoRecycler extends AppCompatActivity {
 
     /**
      * To change the actual list in RecyclerView
+     *
      * @param rt
      */
     public static void changeList(RecyclerType rt) {
         switch (rt) {
             case Color:
                 colorList();
+                back.setVisibility(View.VISIBLE);
                 break;
             case Contrast:
                 saturationList();
+                back.setVisibility(View.VISIBLE);
                 break;
             case Mask:
                 maskList();
+                back.setVisibility(View.VISIBLE);
                 break;
             case Extras:
                 extrasList();
+                back.setVisibility(View.VISIBLE);
                 break;
             default:
                 break;
@@ -265,24 +265,22 @@ public class PhotoRecycler extends AppCompatActivity {
 
         MenuStruct ms;
 
-        Bitmap rediImageEditing = Bitmap.createScaledBitmap(image, 100, (int) ((image.getHeight() * 100) / image.getWidth()), true);
-        Bitmap t = BitmapFactory.decodeResource(context.getResources(),
-                R.drawable.color);
+        Bitmap imgMenu = BitmapFactory.decodeResource(context.getResources(), R.drawable.color);
 
         // CHANGER LES IMAGES
-        ms = new MenuStruct("Color", t);
+        ms = new MenuStruct("Color", imgMenu, RecyclerType.Color);
         menuList.add(ms);
-        t = BitmapFactory.decodeResource(context.getResources(),
-                R.drawable.contrast);
-        ms = new MenuStruct("Contrast", t);
+
+        imgMenu = BitmapFactory.decodeResource(context.getResources(), R.drawable.contrast);
+        ms = new MenuStruct("Contrast", imgMenu, RecyclerType.Contrast);
         menuList.add(ms);
-        t = BitmapFactory.decodeResource(context.getResources(),
-                R.drawable.mask);
-        ms = new MenuStruct("Mask", t);
+
+        imgMenu = BitmapFactory.decodeResource(context.getResources(), R.drawable.mask);
+        ms = new MenuStruct("Mask", imgMenu, RecyclerType.Mask);
         menuList.add(ms);
-        t = BitmapFactory.decodeResource(context.getResources(),
-                R.drawable.extra);
-        ms = new MenuStruct("Extras", t);
+
+        imgMenu = BitmapFactory.decodeResource(context.getResources(), R.drawable.extra);
+        ms = new MenuStruct("Extras", imgMenu, RecyclerType.Extras);
         menuList.add(ms);
 
         menuAdapter.notifyDataSetChanged();
@@ -290,40 +288,38 @@ public class PhotoRecycler extends AppCompatActivity {
 
     /**
      * To initiate different list
-     *
      */
     public static void colorList() {
 
         photoAdapter = new RecyclerViewHorizontalListAdapter(photoList, context, RecyclerType.Color);
         photoRecyclerView.setAdapter(photoAdapter);
 
-        if (photoList.isEmpty() == true) {
-            // On redimensionne l'image
-            Bitmap rediImageEditing = Bitmap.createScaledBitmap(image, 100, (int) ((image.getHeight() * 100) / image.getWidth()), true);
-            Bitmap rediCopy;
+        actualMiniImage = image.copy(Bitmap.Config.ARGB_8888, true);
+        // On redimensionne l'image
+        Bitmap rediImageEditing = Bitmap.createScaledBitmap(image, 100, (int) ((image.getHeight() * 100) / image.getWidth()), true);
+        Bitmap rediCopy;
 
-            FilterStruct fs;
+        FilterStruct fs;
 
-            // ToGrey
-            rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            fs = new FilterStruct("Grey", renderscript.toGrey(rediCopy), FilterType.Grey);
-            photoList.add(fs);
+        // ToGrey
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+        fs = new FilterStruct("Grey", renderscript.toGrey(rediCopy), FilterType.Grey);
+        photoList.add(fs);
 
-            // Colorize
-            rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            fs = new FilterStruct("Colorize", renderscript.colorize(rediCopy, 180), FilterType.Colorize);
-            photoList.add(fs);
+        // Colorize
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+        fs = new FilterStruct("Colorize", renderscript.colorize(rediCopy, 180), FilterType.Colorize);
+        photoList.add(fs);
 
-            // KeepColor
-            rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            fs = new FilterStruct("KeepHue", renderscript.keepHue(rediCopy, 180, 60), FilterType.KeepHue);
-            photoList.add(fs);
+        // KeepColor
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+        fs = new FilterStruct("KeepHue", renderscript.keepHue(rediCopy, 180, 60), FilterType.KeepHue);
+        photoList.add(fs);
 
-            // Invert
-            rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            fs = new FilterStruct("Invert", renderscript.invert(rediCopy), FilterType.Invert);
-            photoList.add(fs);
-        }
+        // Invert
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+        fs = new FilterStruct("Invert", renderscript.invert(rediCopy), FilterType.Invert);
+        photoList.add(fs);
 
         photoAdapter.notifyDataSetChanged();
 
@@ -331,64 +327,61 @@ public class PhotoRecycler extends AppCompatActivity {
 
     public static void saturationList() {
 
-        photoAdapter = new RecyclerViewHorizontalListAdapter(saturationList, context, RecyclerType.Contrast);
+        photoAdapter = new RecyclerViewHorizontalListAdapter(contrastList, context, RecyclerType.Contrast);
         photoRecyclerView.setAdapter(photoAdapter);
 
-        if (saturationList.isEmpty() == true) {
+        Bitmap rediImageEditing = Bitmap.createScaledBitmap(image, 100, (int) ((image.getHeight() * 100) / image.getWidth()), true);
+        Bitmap rediCopy;
 
-            Bitmap rediImageEditing = Bitmap.createScaledBitmap(image, 100, (int) ((image.getHeight() * 100) / image.getWidth()), true);
-            Bitmap rediCopy;
+        FilterStruct fs;
 
-            FilterStruct fs;
+        // Constrast setting
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+        hist = new HistogramManipulation(rediCopy, ChanelType.V);
+        hist.linearExtensionLUT(198, 50);
+        //fs = new FilterStruct("contrast", hist.applyLUT(rediCopy));
+        fs = new FilterStruct("Contrast", renderscript.applyLUT(rediCopy, hist), FilterType.Contrast);
+        contrastList.add(fs);
 
-            // Constrast setting
-            rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            hist = new HistogramManipulation(rediCopy, ChanelType.V);
-            hist.linearExtensionLUT(198, 50);
-            //fs = new FilterStruct("contrast", hist.applyLUT(rediCopy));
-            fs = new FilterStruct("Contrast", renderscript.applyLUT(rediCopy, hist), FilterType.Contrast);
-            saturationList.add(fs);
+        // ShiftLight
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+        hist = new HistogramManipulation(rediCopy, ChanelType.V);
+        hist.shiftLUT(45);
+        //fs = new FilterStruct("shiftLight", hist.applyLUT(rediCopy));
+        fs = new FilterStruct("ShiftLight", renderscript.applyLUT(rediCopy, hist), FilterType.ShiftLight);
+        contrastList.add(fs);
 
-            // ShiftLight
-            rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            hist = new HistogramManipulation(rediCopy, ChanelType.V);
-            hist.shiftLUT(45);
-            //fs = new FilterStruct("shiftLight", hist.applyLUT(rediCopy));
-            fs = new FilterStruct("ShiftLight", renderscript.applyLUT(rediCopy, hist), FilterType.ShiftLight);
-            saturationList.add(fs);
+        // ShiftSaturation
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+        hist = new HistogramManipulation(rediCopy, ChanelType.S);
+        hist.shiftLUT(45);
+        //fs = new FilterStruct("shiftSaturation", hist.applyLUT(rediCopy));
+        fs = new FilterStruct("ShiftSaturation", renderscript.applyLUT(rediCopy, hist), FilterType.ShiftSaturation);
+        contrastList.add(fs);
 
-            // ShiftSaturation
-            rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            hist = new HistogramManipulation(rediCopy, ChanelType.S);
-            hist.shiftLUT(45);
-            //fs = new FilterStruct("shiftSaturation", hist.applyLUT(rediCopy));
-            fs = new FilterStruct("ShiftSaturation", renderscript.applyLUT(rediCopy, hist),FilterType.ShiftSaturation);
-            saturationList.add(fs);
+        // ShiftColor
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+        hist = new HistogramManipulation(rediCopy, ChanelType.H);
+        hist.shiftCycleLUT(120);
+        //fs = new FilterStruct("shiftColor", hist.applyLUT(rediCopy));
+        fs = new FilterStruct("ShiftColor", renderscript.applyLUT(rediCopy, hist), FilterType.ShiftColor);
+        contrastList.add(fs);
 
-            // ShiftColor
-            rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            hist = new HistogramManipulation(rediCopy, ChanelType.H);
-            hist.shiftCycleLUT(120);
-            //fs = new FilterStruct("shiftColor", hist.applyLUT(rediCopy));
-            fs = new FilterStruct("ShiftColor", renderscript.applyLUT(rediCopy, hist), FilterType.ShiftColor);
-            saturationList.add(fs);
+        // Isohelie
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+        hist = new HistogramManipulation(rediCopy, ChanelType.V);
+        hist.isohelieLUT(4);
+        //fs = new FilterStruct("isohelie", hist.applyLUT(rediCopy));
+        fs = new FilterStruct("Isohelie", renderscript.applyLUT(rediCopy, hist), FilterType.Isohelie);
+        contrastList.add(fs);
 
-            // Isohelie
-            rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            hist = new HistogramManipulation(rediCopy, ChanelType.V);
-            hist.isohelieLUT(4);
-            //fs = new FilterStruct("isohelie", hist.applyLUT(rediCopy));
-            fs = new FilterStruct("Isohelie", renderscript.applyLUT(rediCopy, hist), FilterType.Isohelie);
-            saturationList.add(fs);
-
-            // EqualizationLight
-            rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            hist = new HistogramManipulation(rediCopy, ChanelType.V);
-            hist.equalizationLUT();
-            //fs = new FilterStruct("equa light", hist.applyLUT(rediCopy));
-            fs = new FilterStruct("EquaLight", renderscript.applyLUT(rediCopy, hist), FilterType.EquaLight);
-            saturationList.add(fs);
-        }
+        // EqualizationLight
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+        hist = new HistogramManipulation(rediCopy, ChanelType.V);
+        hist.equalizationLUT();
+        //fs = new FilterStruct("equa light", hist.applyLUT(rediCopy));
+        fs = new FilterStruct("EquaLight", renderscript.applyLUT(rediCopy, hist), FilterType.EquaLight);
+        contrastList.add(fs);
 
         photoAdapter.notifyDataSetChanged();
 
@@ -399,43 +392,41 @@ public class PhotoRecycler extends AppCompatActivity {
         photoAdapter = new RecyclerViewHorizontalListAdapter(maskList, context, RecyclerType.Mask);
         photoRecyclerView.setAdapter(photoAdapter);
 
-        if (maskList.isEmpty() == true) {
-            // On redimensionne l'image
-            Bitmap rediImageEditing = Bitmap.createScaledBitmap(image, 100, (int) ((image.getHeight() * 100) / image.getWidth()), true);
-            Bitmap rediCopy;
+        // On redimensionne l'image
+        Bitmap rediImageEditing = Bitmap.createScaledBitmap(image, 100, (int) ((image.getHeight() * 100) / image.getWidth()), true);
+        Bitmap rediCopy;
 
-            FilterStruct fs;
+        FilterStruct fs;
 
-            // Blur
-            rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            BlurMask mask = new BlurMask(9);
-            fs = new FilterStruct("Blur", renderscript.convolution(rediCopy, mask), FilterType.Blur);
-            maskList.add(fs);
+        // Blur
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+        BlurMask mask = new BlurMask(9);
+        fs = new FilterStruct("Blur", renderscript.convolution(rediCopy, mask), FilterType.Blur);
+        maskList.add(fs);
 
-            // Gaussian
-            rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            GaussianBlur maskGaussian = new GaussianBlur(5, 2.5);
-            fs = new FilterStruct("Gaussian", renderscript.convolution(rediCopy, maskGaussian), FilterType.Gaussian);
-            maskList.add(fs);
+        // Gaussian
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+        GaussianBlur maskGaussian = new GaussianBlur(5, 2.5);
+        fs = new FilterStruct("Gaussian", renderscript.convolution(rediCopy, maskGaussian), FilterType.Gaussian);
+        maskList.add(fs);
 
-            // Laplacien
-            rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            LaplacienMask maskLaplacien = new LaplacienMask();
-            fs = new FilterStruct("Laplacien", renderscript.convolution(rediCopy, maskLaplacien), FilterType.Laplacien);
-            maskList.add(fs);
+        // Laplacien
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+        LaplacienMask maskLaplacien = new LaplacienMask();
+        fs = new FilterStruct("Laplacien", renderscript.convolution(rediCopy, maskLaplacien), FilterType.Laplacien);
+        maskList.add(fs);
 
-            // Sobel vertical
-            rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            SobelMask sobelMaskVertical = new SobelMask(true);
-            fs = new FilterStruct("Sobel V", renderscript.convolution(rediCopy, sobelMaskVertical), FilterType.SobelV);
-            maskList.add(fs);
+        // Sobel vertical
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+        SobelMask sobelMaskVertical = new SobelMask(true);
+        fs = new FilterStruct("Sobel V", renderscript.convolution(rediCopy, sobelMaskVertical), FilterType.SobelV);
+        maskList.add(fs);
 
-            // Sobel horizontal
-            rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            SobelMask sobelMaskHorizontal = new SobelMask(false);
-            fs = new FilterStruct("Sobel H", renderscript.convolution(rediCopy, sobelMaskHorizontal), FilterType.SobelH);
-            maskList.add(fs);
-        }
+        // Sobel horizontal
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+        SobelMask sobelMaskHorizontal = new SobelMask(false);
+        fs = new FilterStruct("Sobel H", renderscript.convolution(rediCopy, sobelMaskHorizontal), FilterType.SobelH);
+        maskList.add(fs);
 
         photoAdapter.notifyDataSetChanged();
 
@@ -445,23 +436,21 @@ public class PhotoRecycler extends AppCompatActivity {
         photoAdapter = new RecyclerViewHorizontalListAdapter(extraList, context, RecyclerType.Extras);
         photoRecyclerView.setAdapter(photoAdapter);
 
-        if(extraList.isEmpty() == true){
-            // On redimensionne l'image
-            Bitmap rediImageEditing = Bitmap.createScaledBitmap(image, 100, (int) ((image.getHeight() * 100) / image.getWidth()), true);
-            Bitmap rediCopy;
+        // On redimensionne l'image
+        Bitmap rediImageEditing = Bitmap.createScaledBitmap(image, 100, (int) ((image.getHeight() * 100) / image.getWidth()), true);
+        Bitmap rediCopy;
 
-            FilterStruct fs;
+        FilterStruct fs;
 
-            // FaceDetection
-            rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            fs = new FilterStruct("Face Detection", faceDetection.putSunglass(rediCopy), FilterType.FaceDetection);
-            extraList.add(fs);
+        // FaceDetection
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+        fs = new FilterStruct("Face Detection", faceDetection.putSunglass(rediCopy), FilterType.FaceDetection);
+        extraList.add(fs);
 
-            // Rotate
-            rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            fs = new FilterStruct("Rotate", rediCopy, FilterType.Rotate);
-            extraList.add(fs);
-        }
+        // Rotate
+        rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+        fs = new FilterStruct("Rotate", rediCopy, FilterType.Rotate);
+        extraList.add(fs);
 
         photoAdapter.notifyDataSetChanged();
 
@@ -486,6 +475,7 @@ public class PhotoRecycler extends AppCompatActivity {
         seekBar1.setProgress(0);
         seekBar2.setProgress(0);
     }
+
     /**
      * to save the image
      *

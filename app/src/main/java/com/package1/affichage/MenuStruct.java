@@ -16,15 +16,27 @@ public class MenuStruct {
      * @see FilterStruct#setImage(Bitmap)
      */
     public Bitmap image;
+    /**
+     * Type of filter
+     * @see FilterType
+     */
+    public RecyclerType type;
 
     /**
      * Constructeur
      * @param filterName
      * @param image
      */
-    public MenuStruct(String filterName, Bitmap image) {
+    public MenuStruct(String filterName, Bitmap image, RecyclerType type) {
         this.filterName = filterName;
         this.image = image;
+        this.type = type;
+    }
+
+    public RecyclerType getRecyclerType(){ return type;}
+
+    public void setReyclerType(RecyclerType type){
+        this.type = type;
     }
 
     public String getFilterName() {

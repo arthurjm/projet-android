@@ -4,18 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blancpasouf"
+    android:background="@color/whiteNuance"
     tools:context="com.package1.affichage.PhotoRecycler">
 
 
     <LinearLayout
         android:id="@+id/Filter"
-        android:layout_width="0dp"
+        android:layout_width="316dp"
         android:layout_height="138dp"
+        android:layout_marginStart="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/Menu"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toEndOf="@+id/back">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/idRecyclerViewHorizontalList"
@@ -30,7 +30,6 @@
         android:layout_height="138dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent">
 
         <android.support.v7.widget.RecyclerView
@@ -92,8 +91,8 @@
         android:id="@+id/undo"
         android:layout_width="wrap_content"
         android:layout_height="38dp"
-        android:layout_marginBottom="88dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="28dp"
+        android:layout_marginBottom="92dp"
         android:alpha="0.80"
         android:fontFamily="sans-serif-black"
         android:text="@string/undo"
@@ -103,5 +102,38 @@
         android:typeface="monospace"
         app:layout_constraintBottom_toTopOf="@+id/Menu"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/save"
+        android:alpha="0.80"
+        android:layout_width="wrap_content"
+        android:layout_height="38dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="92dp"
+        android:fontFamily="sans-serif-black"
+        android:text="@string/save"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textStyle="italic"
+        android:typeface="monospace"
+        app:layout_constraintBottom_toTopOf="@+id/Menu"
+        app:layout_constraintEnd_toStartOf="@+id/undo"
+        app:layout_constraintStart_toEndOf="@+id/apply" />
+
+    <Button
+        android:id="@+id/back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="44dp"
+        android:alpha="0.80"
+        android:fontFamily="sans-serif-black"
+        android:text="@string/back"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textStyle="italic"
+        android:typeface="monospace"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

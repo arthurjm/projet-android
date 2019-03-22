@@ -1,7 +1,6 @@
 package com.package1.affichage;
 
 import android.content.Context;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,10 +13,16 @@ import com.package1.R;
 
 import java.util.List;
 
+import static com.package1.MainActivity.image;
 import static com.package1.MainActivity.imageEditingCopy;
 import static com.package1.MainActivity.imgView;
+import static com.package1.affichage.PhotoRecycler.actualMiniImage;
 import static com.package1.affichage.PhotoRecycler.changeList;
+import static com.package1.affichage.PhotoRecycler.contrastList;
+import static com.package1.affichage.PhotoRecycler.extraList;
+import static com.package1.affichage.PhotoRecycler.maskList;
 import static com.package1.affichage.PhotoRecycler.menuRecyclerView;
+import static com.package1.affichage.PhotoRecycler.photoList;
 import static com.package1.affichage.PhotoRecycler.photoRecyclerView;
 
 public class MenuRecyclerAdapter extends RecyclerView.Adapter<MenuRecyclerAdapter.PhotoViewHolder> {
@@ -79,7 +84,7 @@ public class MenuRecyclerAdapter extends RecyclerView.Adapter<MenuRecyclerAdapte
             @Override
             public void onClick(View v) {
                 // Action lorsque l'on clique sur l'image
-                useFunction(position);
+                useFunction(menuList.get(position).getRecyclerType());
                 String productName = menuList.get(position).getFilterName().toString();
                 Toast.makeText(context, productName + " is selected", Toast.LENGTH_SHORT).show();
             }
@@ -87,26 +92,50 @@ public class MenuRecyclerAdapter extends RecyclerView.Adapter<MenuRecyclerAdapte
 
     }
 
-    public void useFunction(final int position) {
+    public void useFunction(RecyclerType type) {
         imgView.setImageBitmap(imageEditingCopy);
         menuRecyclerView.setVisibility(View.GONE);
         photoRecyclerView.setVisibility(View.VISIBLE);
-        switch (position) {
-            // Color
-            case 0:
-                changeList(RecyclerType.Color);
+        switch (type) {
+            case Color:
+                if (photoList.isEmpty() == true) {
+                    changeList(RecyclerType.Color);
+                } else {
+                    if (actualMiniImage != null && actualMiniImage != image) {
+                        photoList.clear();
+                        changeList(RecyclerType.Color);
+                    }
+                }
                 break;
-            // Saturation
-            case 1:
-                changeList(RecyclerType.Contrast);
+            case Contrast:
+                if (photoList.isEmpty() == true) {
+                    changeList(RecyclerType.Color);
+                } else {
+                    if (actualMiniImage != null && actualMiniImage != image) {
+                        contrastList.clear();
+                        changeList(RecyclerType.Contrast);
+                    }
+                }
                 break;
-            // Mask
-            case 2:
-                changeList(RecyclerType.Mask);
+            case Mask:
+                if (photoList.isEmpty() == true) {
+                    changeList(RecyclerType.Color);
+                } else {
+                    if (actualMiniImage != null && actualMiniImage != image) {
+                        maskList.clear();
+                        changeList(RecyclerType.Mask);
+                    }
+                }
                 break;
-            // Extras
-            case 3:
-                changeList(RecyclerType.Extras);
+            case Extras:
+                if (photoList.isEmpty() == true) {
+                    changeList(RecyclerType.Color);
+                } else {
+                    if (actualMiniImage != null && actualMiniImage != image) {
+                        extraList.clear();
+                        changeList(RecyclerType.Extras);
+                    }
+                }
                 break;
             default:
                 break;

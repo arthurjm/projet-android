@@ -36,7 +36,6 @@ public class FilterStruct {
         this.type = type;
     }
 
-
     public FilterType getFilterType(){ return type;}
 
     public void setFilterType(FilterType type){
