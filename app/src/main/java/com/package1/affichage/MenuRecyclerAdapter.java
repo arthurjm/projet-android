@@ -98,7 +98,7 @@ public class MenuRecyclerAdapter extends RecyclerView.Adapter<MenuRecyclerAdapte
                 break;
             // Saturation
             case 1:
-                changeList(RecyclerType.Saturation);
+                changeList(RecyclerType.Contrast);
                 break;
             // Mask
             case 2:

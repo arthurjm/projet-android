@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
+    android:background="@color/blancpasouf"
     tools:context="com.package1.affichage.PhotoRecycler">
 
 
@@ -12,11 +12,10 @@
         android:id="@+id/Filter"
         android:layout_width="0dp"
         android:layout_height="138dp"
-        android:layout_marginTop="116dp"
+        app:layout_constraintBottom_toBottomOf="@+id/Menu"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.347"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageResult">
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/idRecyclerViewHorizontalList"
@@ -29,11 +28,10 @@
         android:id="@+id/Menu"
         android:layout_width="0dp"
         android:layout_height="138dp"
-        android:layout_marginTop="116dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.347"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageResult">
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/idMenuViewHorizontalList"
@@ -45,44 +43,41 @@
     <com.github.chrisbanes.photoview.PhotoView
         android:id="@+id/imageResult"
         android:layout_width="fill_parent"
-        android:layout_height="361dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/apply"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <SeekBar
         android:id="@+id/seekBarFull"
         android:layout_width="313dp"
-        android:layout_height="22dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         app:layout_constraintBottom_toTopOf="@+id/Filter"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/undo"
-        app:layout_constraintVertical_bias="0.779" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <SeekBar
         android:id="@+id/seekBarDemi"
         android:layout_width="313dp"
-        android:layout_height="22dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
         app:layout_constraintBottom_toTopOf="@+id/seekBarFull"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/apply" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/apply"
         android:layout_width="wrap_content"
         android:layout_height="38dp"
-        android:layout_marginStart="68dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="92dp"
+        android:layout_marginStart="28dp"
         android:alpha="0.80"
         android:fontFamily="sans-serif-black"
         android:text="@string/apply"
@@ -90,15 +85,15 @@
         android:textAllCaps="false"
         android:textStyle="italic"
         android:typeface="monospace"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageResult" />
+        app:layout_constraintBottom_toTopOf="@+id/Menu"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/undo"
         android:layout_width="wrap_content"
         android:layout_height="38dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="48dp"
+        android:layout_marginBottom="88dp"
+        android:layout_marginEnd="8dp"
         android:alpha="0.80"
         android:fontFamily="sans-serif-black"
         android:text="@string/undo"
@@ -106,66 +101,7 @@
         android:textAllCaps="false"
         android:textStyle="italic"
         android:typeface="monospace"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageResult" />
-
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/constraintLayout"
-        android:layout_width="0dp"
-        android:layout_height="32dp"
-        android:layout_marginTop="8dp"
-        android:background="@color/nuanceBlack"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Menu"
-        app:layout_constraintVertical_bias="1.0">
-
-        <Button
-            android:id="@+id/delete"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginEnd="364dp"
-            android:layout_marginBottom="2dp"
-            android:background="@drawable/undo"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="253dp"
-            android:layout_height="17dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:background="@color/darkGray"
-            android:text="Menus"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/saveGallery"
-            app:layout_constraintStart_toEndOf="@+id/delete"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
-
-        <Button
-            android:id="@+id/saveGallery"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="364dp"
-            android:layout_marginBottom="2dp"
-            android:background="@drawable/validate"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
-    </android.support.constraint.ConstraintLayout>
+        app:layout_constraintBottom_toTopOf="@+id/Menu"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
