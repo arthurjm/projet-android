@@ -480,7 +480,6 @@ public class PhotoRecycler extends AppCompatActivity {
         seekBar1.setProgress(0);
         seekBar2.setProgress(0);
     }
-
     /**
      * to save the image
      *
