@@ -6,15 +6,20 @@ import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.Type;
+import android.util.Log;
 
 import com.android.rssample.ScriptC_applyLUT;
 import com.android.rssample.ScriptC_colorize;
 import com.android.rssample.ScriptC_convolution;
+import com.android.rssample.ScriptC_createHistogram;
 import com.android.rssample.ScriptC_grey;
+import com.android.rssample.ScriptC_increaseBorder;
 import com.android.rssample.ScriptC_invert;
 import com.android.rssample.ScriptC_keepHue;
 import com.android.rssample.ScriptC_posterisation;
+import com.package1.Mask.LaplacienMask;
 import com.package1.Mask.Mask;
+import com.package1.Mask.SobelMask;
 
 /**
  * Created by amondon001 on 22/02/19.
@@ -133,7 +138,7 @@ public class RS {
         ScriptC_posterisation script = new ScriptC_posterisation(rs);
 
         script.set_depth(depth);
-        script.invoke_initTest(input, output);
+        script.invoke_initPosterisation(input, output);
         script.destroy();
 
         output.copyTo(res);
@@ -173,6 +178,92 @@ public class RS {
 
         output.copyTo(res);
         return res;
+    }
+
+    /**
+     * Increase borders adding black pixels
+     * @param bmp
+     * @param precision The precision we want to add black pixels
+     * @return
+     */
+    public Bitmap increaseBorder(Bitmap bmp, int precision) {
+        setInputOutput(bmp);
+        Bitmap res = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), bmp.getConfig());
+
+        ScriptC_increaseBorder script = new ScriptC_increaseBorder(rs);
+
+        Mask mask = new SobelMask(true);
+        Type.Builder maskType = new Type.Builder(rs, Element.I32(rs));
+        maskType.setX(mask.getWidth());
+        maskType.setY(mask.getHeight());
+        Allocation maskAllocation = Allocation.createTyped(rs, maskType.create());
+        maskAllocation.copyFrom(mask.getMask());
+
+        script.set_input(input);
+        script.set_width(bmp.getWidth());
+        script.set_height(bmp.getHeight());
+
+        script.set_mask(maskAllocation);
+        script.set_maskWidth(mask.getWidth());
+        script.set_maskHeight(mask.getHeight());
+        script.set_weight(mask.getWeight());
+        script.set_precision(precision);
+
+        script.forEach_increaseBorder(input, output);
+
+        script.destroy();
+
+        output.copyTo(res);
+        return res;
+    }
+
+    /**
+     * Create an histogram on a specified canal
+     * @param bmp
+     * @param channel R or G or B or H or S or V
+     * @return Histogram int tab
+     */
+    public int[] createHistogram(Bitmap bmp, ChanelType channel) {
+        setInputOutput(bmp);
+        Bitmap res = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), bmp.getConfig());
+
+        ScriptC_createHistogram script = new ScriptC_createHistogram(rs);
+
+        int[] outputHistogram = new int[256];
+        for (int i = 0; i < 256; i++) {
+            outputHistogram[i] = 0;
+        }
+        Allocation histogram = Allocation.createSized(rs, Element.I32(rs), 256);
+        histogram.copyFrom(histogram);
+
+        int canal = 0;
+        if (channel == ChanelType.R) {
+            canal = 1;
+        }
+        if (channel == ChanelType.G) {
+            canal = 2;
+        }
+        if (channel == ChanelType.B) {
+            canal = 3;
+        }
+        if (channel == ChanelType.H) {
+            canal = 4;
+        }
+        if (channel == ChanelType.S) {
+            canal = 5;
+        }
+        if (channel == ChanelType.V) {
+            canal = 6;
+        }
+
+        script.bind_histogram(histogram);
+        script.set_canal(canal);
+        script.forEach_createHistogram(input, output);
+
+        script.destroy();
+
+        histogram.copyTo(outputHistogram);
+        return outputHistogram;
     }
 
     /**

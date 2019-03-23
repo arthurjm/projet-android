@@ -345,7 +345,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 setVisible(seekBar1);
                 setGone(seekBar2);
                 seekBar1.setProgress(0);
-                setBorn(seekBar1, 14);
+                setBorn(seekBar1, 10);
                 setFilterType(FilterType.Blur);
                 break;
             case Gaussian:
@@ -370,6 +370,14 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 setGone(seekBar1, seekBar2);
                 SobelMask sobelMaskHorizontal = new SobelMask(false);
                 imageEditingCopy = renderscript.convolution(imageEditing, sobelMaskHorizontal);
+                break;
+            case IncreaseBorder:
+                setNormalBackground(seekBar1);
+                setVisible(seekBar1);
+                setGone(seekBar2);
+                seekBar1.setProgress(0);
+                setBorn(seekBar1, 15);
+                setFilterType(FilterType.IncreaseBorder);
                 break;
             default:
                 break;
@@ -480,12 +488,15 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                     hist.equalizationLUT();
                     imageEditingCopy = hist.applyLUT(Bitmap[0]);
                     break;
+
                 case Colorize:
                     imageEditingCopy = (renderscript.colorize(Bitmap[0], progressBar1));
                     break;
+
                 case KeepHue:
                     imageEditingCopy = renderscript.keepHue(Bitmap[0], progressBar1, progressBar2);
                     break;
+
                 case Contrast:
                     hist = new HistogramManipulation(Bitmap[0], ChanelType.V);
                     hist.linearExtensionLUT(128 + progressBar1, 127 - progressBar1);
@@ -512,12 +523,9 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                     hist.shiftCycleLUT(progressBar1);
                     //imageEditingCopy = hist.applyLUT(imageEditing); //java version
                     imageEditingCopy = renderscript.applyLUT(Bitmap[0], hist);
-
                     break;
+
                 case Isohelie:
-                    //hist = new HistogramManipulation(Bitmap[0], ChanelType.V);
-                    //hist.isohelieLUT(progressBar1 + 2);
-                    //imageEditingCopy = hist.applyLUT(imageEditing); //java version
                     imageEditingCopy = renderscript.posterisation(Bitmap[0], progressBar1 + 2);
                     break;
 
@@ -529,6 +537,10 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
                 case Gaussian:
                     GaussianBlur maskGaussian = new GaussianBlur(progressBar1 * 2 + 1, 2.5);
                     imageEditingCopy = renderscript.convolution(Bitmap[0], maskGaussian);
+                    break;
+
+                case IncreaseBorder:
+                    imageEditingCopy = renderscript.increaseBorder(Bitmap[0], progressBar1 * 10);
                     break;
 
                 default:

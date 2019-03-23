@@ -22,6 +22,7 @@ public enum FilterType {
     Laplacien,
     SobelV,
     SobelH,
+    IncreaseBorder,
 
     // Extras
     FaceDetection,

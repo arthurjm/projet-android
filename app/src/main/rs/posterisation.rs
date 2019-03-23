@@ -12,7 +12,7 @@ uchar4 RS_KERNEL posterisation( uchar4 in , uint32_t x , uint32_t y ) {
     out.g = 0;
     out.b = 0;
 
-    // On cherche l'indice qui a sa veleur la plus proche de la veleur initiale (pour chaque canal indépendamment)
+    // On cherche l'indice qui a sa valeur la plus proche de la valeur initiale (pour chaque canal indépendamment)
     for (int i = 1; i < depth; i++) {
         if ( abs(in.r - tab[i]) < abs(in.r - tab[out.r]) ) {
             out.r = i;

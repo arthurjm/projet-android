@@ -7,16 +7,24 @@ int canal;
 uchar4 RS_KERNEL applyLUT(uchar4 in, uint32_t x, uint32_t y) {
 	uchar4 out = in;
 
+    // Canal Red (1 == Red)
 	if (canal == 1) {
 		out.r = rsGetElementAt_uchar(LUT, out.r);
 	}
+
+	// Canal Green (2 == Green)
 	if (canal == 2) {
 		out.g = rsGetElementAt_uchar(LUT, out.g);
 	}
+
+	// Canal Blue (3 == Blue)
 	if (canal == 3) {
 		out.b = rsGetElementAt_uchar(LUT, out.b);
 	}
+
+	// Canaux HSV
 	if (canal > 3) {
+	    // Passe le RGB en HSV
 		float r = in.r / 255.0;
 		float g = in.g / 255.0;
 		float b = in.b / 255.0;
@@ -27,18 +35,19 @@ uchar4 RS_KERNEL applyLUT(uchar4 in, uint32_t x, uint32_t y) {
 
 		float s, v;
 		int h;
+
 		//h
 		if (minRGB == maxRGB) {
 			h = 0;
 		}
 		if (maxRGB == r) {
-			h = fmod( (60 * (g - b)/delta + 360), 359);
+			h = fmod( (60 * (g - b)/delta + 360), 360);
 		}
 		if (maxRGB == g) {
-			h = fmod( (60 * (b - r)/delta + 120), 359);
+			h = fmod( (60 * (b - r)/delta + 120), 360);
 		}
 		if (maxRGB == b) {
-			h = fmod( (60 * (r - g)/delta + 240), 359);
+			h = fmod( (60 * (r - g)/delta + 240), 360);
 		}
 
 		// s
@@ -52,19 +61,25 @@ uchar4 RS_KERNEL applyLUT(uchar4 in, uint32_t x, uint32_t y) {
 		//v
 		v = maxRGB;
 
-		if (canal == 4) { // 4 == canal H
-			int index = h * 255/359;
-			h = rsGetElementAt_int(LUT, index) * 359/255;
+        // Canal H (4 == H)
+		if (canal == 4) {
+			int index = h * 255/360;
+			h = rsGetElementAt_int(LUT, index) * 360/255;
 		}
-		if (canal == 5) { // 5 == canal S
+
+		// Canal S (5 == S)
+		if (canal == 5) {
 			int index = (int) (s * 255);
 			s = rsGetElementAt_int(LUT, index) / 255.0;
 		}
-		if (canal == 6) { // 6 == canal V
+
+		// Canal V (6 == V)
+		if (canal == 6) {
 			int index = (int) (v * 255);
 			v = rsGetElementAt_int(LUT, index) / 255.0;
 		}
 
+        // Repasse le HSV en RGB
 		float f, l, m, n;
 		float h2 = h/60.0;
 

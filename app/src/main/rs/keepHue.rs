@@ -20,13 +20,13 @@ uchar4 RS_KERNEL keepHue ( uchar4 in ) {
 		h = 0;
 	}
 	if (maxRGB == r) {
-		h = fmod( (60 * (g - b)/delta + 360), 359);
+		h = fmod( (60 * (g - b)/delta + 360), 360);
 	}
 	if (maxRGB == g) {
-		h = fmod( (60 * (b - r)/delta + 120), 359);
+		h = fmod( (60 * (b - r)/delta + 120), 360);
 	}
 	if (maxRGB == b) {
-		h = fmod( (60 * (r - g)/delta + 240), 359);
+		h = fmod( (60 * (r - g)/delta + 240), 360);
 	}
 
 	if (min( fmod((h-hue+360), 360),  fmod((hue-h+360), 360) ) > precision) {
