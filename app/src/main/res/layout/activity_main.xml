@@ -24,33 +24,44 @@
 
     <Button
         android:id="@+id/gallery"
-        android:layout_width="128dp"
-        android:layout_height="76dp"
-        android:layout_marginStart="132dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
         android:layout_marginBottom="8dp"
-        android:text="Pick up photo in gallery"
-        android:textAllCaps="false"
-        android:textStyle="italic"
+        android:background="@drawable/gallery"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2"
-        app:layout_constraintVertical_bias="0.132" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/camera"
-        android:layout_width="128dp"
-        android:layout_height="76dp"
-        android:layout_marginStart="132dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
         android:layout_marginBottom="8dp"
-        android:text="Take a picture with the camera"
-        android:textAlignment="center"
-        android:textAllCaps="false"
-        android:textStyle="italic"
+        android:background="@drawable/camera"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gallery"
-        app:layout_constraintVertical_bias="0.241" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.74" />
+
+    <TextView
+        android:id="@+id/infoAboutUs"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="17dp"
+        android:text="Mathieu DUBAN, Arthur MONDON, Elias KHATI-LEFRANCOIS, LiangLiang PAN"
+        android:textAlignment="center"
+        android:textStyle="italic"
+        android:typeface="serif"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

@@ -44,7 +44,7 @@ import static com.package1.MainActivity.imgView;
 /**
  * @author Mathieu
  */
-public class PhotoRecycler extends AppCompatActivity {
+public class    PhotoRecycler extends AppCompatActivity {
 
     private List<MenuStruct> menuList = new ArrayList<>();
     public static RecyclerView menuRecyclerView;
@@ -57,7 +57,7 @@ public class PhotoRecycler extends AppCompatActivity {
      *
      * @see FilterStruct
      */
-    public static List<FilterStruct> photoList = new ArrayList<>();
+    public static List<FilterStruct> colorList = new ArrayList<>();
     public static List<FilterStruct> extraList = new ArrayList<>();
     public static List<FilterStruct> maskList = new ArrayList<>();
     public static List<FilterStruct> contrastList = new ArrayList<>();
@@ -128,29 +128,25 @@ public class PhotoRecycler extends AppCompatActivity {
      * To initiate buttons seekbars and  context in layout
      */
     public void initiate() {
-
         context = getApplicationContext();
 
         // Filter
         renderscript = new RS(context);
-
         faceDetection = new FaceDetection(context);
 
         // Button
         back = findViewById(R.id.back);
         back.setVisibility(View.GONE);
 
-
         // RecyclerView
         photoRecyclerView = findViewById(R.id.idRecyclerViewHorizontalList);
 
-        photoAdapter = new RecyclerViewHorizontalListAdapter(photoList, context, RecyclerType.Nothing);
+        photoAdapter = new RecyclerViewHorizontalListAdapter(colorList, context, RecyclerType.Nothing);
         LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         photoRecyclerView.setLayoutManager(horizontalLayoutManager);
         photoRecyclerView.setAdapter(photoAdapter);
 
         // Menu RecyclerView
-
         menuRecyclerView = findViewById(R.id.idMenuViewHorizontalList);
 
         menuAdapter = new MenuRecyclerAdapter(menuList, context);
@@ -160,7 +156,6 @@ public class PhotoRecycler extends AppCompatActivity {
 
         photoRecyclerView.setVisibility(View.GONE);
         menuRecyclerView.setVisibility(View.VISIBLE);
-
 
         // Image
         imgView = findViewById(R.id.imageResult);
@@ -179,7 +174,6 @@ public class PhotoRecycler extends AppCompatActivity {
         seekBar2 = findViewById(R.id.seekBarDemi);
         seekBar2.setVisibility(View.GONE);
 
-
         addListener();
         menuList();
 
@@ -189,9 +183,7 @@ public class PhotoRecycler extends AppCompatActivity {
      * To link the corresponding action with each button
      */
     public void addListener() {
-
-        Button reset = findViewById(R.id.back);
-        reset.setOnClickListener(new View.OnClickListener() {
+        back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 seekBar1.setVisibility(View.GONE);
@@ -237,20 +229,20 @@ public class PhotoRecycler extends AppCompatActivity {
     public static void changeList(RecyclerType rt) {
         switch (rt) {
             case Color:
-                colorList();
                 back.setVisibility(View.VISIBLE);
+                colorList();
                 break;
             case Contrast:
-                saturationList();
                 back.setVisibility(View.VISIBLE);
+                saturationList();
                 break;
             case Mask:
-                maskList();
                 back.setVisibility(View.VISIBLE);
+                maskList();
                 break;
             case Extras:
-                extrasList();
                 back.setVisibility(View.VISIBLE);
+                extrasList();
                 break;
             default:
                 break;
@@ -291,9 +283,8 @@ public class PhotoRecycler extends AppCompatActivity {
      */
     public static void colorList() {
 
-        photoAdapter = new RecyclerViewHorizontalListAdapter(photoList, context, RecyclerType.Color);
+        photoAdapter = new RecyclerViewHorizontalListAdapter(colorList, context, RecyclerType.Color);
         photoRecyclerView.setAdapter(photoAdapter);
-
         actualMiniImage = image.copy(Bitmap.Config.ARGB_8888, true);
         // On redimensionne l'image
         Bitmap rediImageEditing = Bitmap.createScaledBitmap(image, 100, (int) ((image.getHeight() * 100) / image.getWidth()), true);
@@ -304,22 +295,22 @@ public class PhotoRecycler extends AppCompatActivity {
         // ToGrey
         rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
         fs = new FilterStruct("Grey", renderscript.toGrey(rediCopy), FilterType.Grey);
-        photoList.add(fs);
+        colorList.add(fs);
 
         // Colorize
         rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
         fs = new FilterStruct("Colorize", renderscript.colorize(rediCopy, 180), FilterType.Colorize);
-        photoList.add(fs);
+        colorList.add(fs);
 
         // KeepColor
         rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
         fs = new FilterStruct("KeepHue", renderscript.keepHue(rediCopy, 180, 60), FilterType.KeepHue);
-        photoList.add(fs);
+        colorList.add(fs);
 
         // Invert
         rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
         fs = new FilterStruct("Invert", renderscript.invert(rediCopy), FilterType.Invert);
-        photoList.add(fs);
+        colorList.add(fs);
 
         photoAdapter.notifyDataSetChanged();
 
@@ -329,6 +320,7 @@ public class PhotoRecycler extends AppCompatActivity {
 
         photoAdapter = new RecyclerViewHorizontalListAdapter(contrastList, context, RecyclerType.Contrast);
         photoRecyclerView.setAdapter(photoAdapter);
+        actualMiniImage = image.copy(Bitmap.Config.ARGB_8888, true);
 
         Bitmap rediImageEditing = Bitmap.createScaledBitmap(image, 100, (int) ((image.getHeight() * 100) / image.getWidth()), true);
         Bitmap rediCopy;
@@ -391,6 +383,7 @@ public class PhotoRecycler extends AppCompatActivity {
 
         photoAdapter = new RecyclerViewHorizontalListAdapter(maskList, context, RecyclerType.Mask);
         photoRecyclerView.setAdapter(photoAdapter);
+        actualMiniImage = image.copy(Bitmap.Config.ARGB_8888, true);
 
         // On redimensionne l'image
         Bitmap rediImageEditing = Bitmap.createScaledBitmap(image, 100, (int) ((image.getHeight() * 100) / image.getWidth()), true);
@@ -435,6 +428,7 @@ public class PhotoRecycler extends AppCompatActivity {
     public static void extrasList() {
         photoAdapter = new RecyclerViewHorizontalListAdapter(extraList, context, RecyclerType.Extras);
         photoRecyclerView.setAdapter(photoAdapter);
+        actualMiniImage = image.copy(Bitmap.Config.ARGB_8888, true);
 
         // On redimensionne l'image
         Bitmap rediImageEditing = Bitmap.createScaledBitmap(image, 100, (int) ((image.getHeight() * 100) / image.getWidth()), true);

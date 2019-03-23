@@ -18,11 +18,11 @@ import static com.package1.MainActivity.imageEditingCopy;
 import static com.package1.MainActivity.imgView;
 import static com.package1.affichage.PhotoRecycler.actualMiniImage;
 import static com.package1.affichage.PhotoRecycler.changeList;
+import static com.package1.affichage.PhotoRecycler.colorList;
 import static com.package1.affichage.PhotoRecycler.contrastList;
 import static com.package1.affichage.PhotoRecycler.extraList;
 import static com.package1.affichage.PhotoRecycler.maskList;
 import static com.package1.affichage.PhotoRecycler.menuRecyclerView;
-import static com.package1.affichage.PhotoRecycler.photoList;
 import static com.package1.affichage.PhotoRecycler.photoRecyclerView;
 
 public class MenuRecyclerAdapter extends RecyclerView.Adapter<MenuRecyclerAdapter.PhotoViewHolder> {
@@ -98,18 +98,18 @@ public class MenuRecyclerAdapter extends RecyclerView.Adapter<MenuRecyclerAdapte
         photoRecyclerView.setVisibility(View.VISIBLE);
         switch (type) {
             case Color:
-                if (photoList.isEmpty() == true) {
+                if (colorList.isEmpty() == true) {
                     changeList(RecyclerType.Color);
                 } else {
                     if (actualMiniImage != null && actualMiniImage != image) {
-                        photoList.clear();
+                        colorList.clear();
                         changeList(RecyclerType.Color);
                     }
                 }
                 break;
             case Contrast:
-                if (photoList.isEmpty() == true) {
-                    changeList(RecyclerType.Color);
+                if (contrastList.isEmpty() == true) {
+                    changeList(RecyclerType.Contrast);
                 } else {
                     if (actualMiniImage != null && actualMiniImage != image) {
                         contrastList.clear();
@@ -118,8 +118,8 @@ public class MenuRecyclerAdapter extends RecyclerView.Adapter<MenuRecyclerAdapte
                 }
                 break;
             case Mask:
-                if (photoList.isEmpty() == true) {
-                    changeList(RecyclerType.Color);
+                if (maskList.isEmpty() == true) {
+                    changeList(RecyclerType.Mask);
                 } else {
                     if (actualMiniImage != null && actualMiniImage != image) {
                         maskList.clear();
@@ -128,8 +128,8 @@ public class MenuRecyclerAdapter extends RecyclerView.Adapter<MenuRecyclerAdapte
                 }
                 break;
             case Extras:
-                if (photoList.isEmpty() == true) {
-                    changeList(RecyclerType.Color);
+                if (extraList.isEmpty() == true) {
+                    changeList(RecyclerType.Extras);
                 } else {
                     if (actualMiniImage != null && actualMiniImage != image) {
                         extraList.clear();

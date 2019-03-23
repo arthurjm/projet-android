@@ -10,7 +10,7 @@
 
     <LinearLayout
         android:id="@+id/Filter"
-        android:layout_width="316dp"
+        android:layout_width="295dp"
         android:layout_height="138dp"
         android:layout_marginStart="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/Menu"
@@ -105,34 +105,25 @@
 
     <Button
         android:id="@+id/save"
-        android:alpha="0.80"
-        android:layout_width="wrap_content"
+        android:layout_width="38dp"
         android:layout_height="38dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="92dp"
-        android:fontFamily="sans-serif-black"
-        android:text="@string/save"
-        android:textAlignment="center"
-        android:textAllCaps="false"
-        android:textStyle="italic"
-        android:typeface="monospace"
+        android:alpha="0.80"
+        android:background="@drawable/save"
         app:layout_constraintBottom_toTopOf="@+id/Menu"
         app:layout_constraintEnd_toStartOf="@+id/undo"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toEndOf="@+id/apply" />
 
     <Button
         android:id="@+id/back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="44dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="36dp"
         android:alpha="0.80"
-        android:fontFamily="sans-serif-black"
-        android:text="@string/back"
-        android:textAlignment="center"
-        android:textAllCaps="false"
-        android:textStyle="italic"
-        android:typeface="monospace"
+        android:background="@drawable/undo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
