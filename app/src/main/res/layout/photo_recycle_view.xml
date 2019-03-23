@@ -10,7 +10,7 @@
 
     <LinearLayout
         android:id="@+id/Filter"
-        android:layout_width="295dp"
+        android:layout_width="288dp"
         android:layout_height="138dp"
         android:layout_marginStart="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/Menu"

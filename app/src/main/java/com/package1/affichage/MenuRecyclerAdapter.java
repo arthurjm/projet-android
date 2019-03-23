@@ -100,24 +100,16 @@ public class MenuRecyclerAdapter extends RecyclerView.Adapter<MenuRecyclerAdapte
         back.setVisibility(View.VISIBLE);
         switch (type) {
             case Color:
-                if (colorList.isEmpty() == true) {
-                    changeList(RecyclerType.Color);
-                }
+                changeList(RecyclerType.Color);
                 break;
             case Contrast:
-                if (contrastList.isEmpty() == true) {
-                    changeList(RecyclerType.Contrast);
-                }
+                changeList(RecyclerType.Contrast);
                 break;
             case Mask:
-                if (maskList.isEmpty() == true) {
-                    changeList(RecyclerType.Mask);
-                }
+                changeList(RecyclerType.Mask);
                 break;
             case Extras:
-                if (extraList.isEmpty() == true) {
-                    changeList(RecyclerType.Extras);
-                }
+                changeList(RecyclerType.Extras);
                 break;
             default:
                 break;
