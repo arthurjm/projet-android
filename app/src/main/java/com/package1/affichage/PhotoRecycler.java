@@ -229,19 +229,15 @@ public class    PhotoRecycler extends AppCompatActivity {
     public static void changeList(RecyclerType rt) {
         switch (rt) {
             case Color:
-                back.setVisibility(View.VISIBLE);
                 colorList();
                 break;
             case Contrast:
-                back.setVisibility(View.VISIBLE);
                 saturationList();
                 break;
             case Mask:
-                back.setVisibility(View.VISIBLE);
                 maskList();
                 break;
             case Extras:
-                back.setVisibility(View.VISIBLE);
                 extrasList();
                 break;
             default:

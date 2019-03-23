@@ -17,6 +17,7 @@ import static com.package1.MainActivity.image;
 import static com.package1.MainActivity.imageEditingCopy;
 import static com.package1.MainActivity.imgView;
 import static com.package1.affichage.PhotoRecycler.actualMiniImage;
+import static com.package1.affichage.PhotoRecycler.back;
 import static com.package1.affichage.PhotoRecycler.changeList;
 import static com.package1.affichage.PhotoRecycler.colorList;
 import static com.package1.affichage.PhotoRecycler.contrastList;
@@ -96,45 +97,26 @@ public class MenuRecyclerAdapter extends RecyclerView.Adapter<MenuRecyclerAdapte
         imgView.setImageBitmap(imageEditingCopy);
         menuRecyclerView.setVisibility(View.GONE);
         photoRecyclerView.setVisibility(View.VISIBLE);
+        back.setVisibility(View.VISIBLE);
         switch (type) {
             case Color:
                 if (colorList.isEmpty() == true) {
                     changeList(RecyclerType.Color);
-                } else {
-                    if (actualMiniImage != null && actualMiniImage != image) {
-                        colorList.clear();
-                        changeList(RecyclerType.Color);
-                    }
                 }
                 break;
             case Contrast:
                 if (contrastList.isEmpty() == true) {
                     changeList(RecyclerType.Contrast);
-                } else {
-                    if (actualMiniImage != null && actualMiniImage != image) {
-                        contrastList.clear();
-                        changeList(RecyclerType.Contrast);
-                    }
                 }
                 break;
             case Mask:
                 if (maskList.isEmpty() == true) {
                     changeList(RecyclerType.Mask);
-                } else {
-                    if (actualMiniImage != null && actualMiniImage != image) {
-                        maskList.clear();
-                        changeList(RecyclerType.Mask);
-                    }
                 }
                 break;
             case Extras:
                 if (extraList.isEmpty() == true) {
                     changeList(RecyclerType.Extras);
-                } else {
-                    if (actualMiniImage != null && actualMiniImage != image) {
-                        extraList.clear();
-                        changeList(RecyclerType.Extras);
-                    }
                 }
                 break;
             default:

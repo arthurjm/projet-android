@@ -28,6 +28,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import static com.package1.affichage.PhotoRecycler.colorList;
+import static com.package1.affichage.PhotoRecycler.contrastList;
+import static com.package1.affichage.PhotoRecycler.extraList;
+import static com.package1.affichage.PhotoRecycler.maskList;
+
 
 public class MainActivity extends AppCompatActivity {
     /**
@@ -264,15 +269,8 @@ public class MainActivity extends AppCompatActivity {
         return rotatedBitmap;
     }
 
-
     public void filterPage(){
         startActivity(new Intent(this, PhotoRecycler.class));
-    }
-    /**
-     * @param view
-     */
-    public void infoPage(View view) {
-        startActivity(new Intent(this, Info.class));
     }
 
     /**
@@ -308,6 +306,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.i("CV", "onResume()");
+
+
+        colorList.clear();
+        extraList.clear();
+        contrastList.clear();
+        maskList.clear();
     }
 
     /**
