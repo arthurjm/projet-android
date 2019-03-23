@@ -1,5 +1,6 @@
 package com.package1.affichage;
 
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -28,6 +29,12 @@ import com.package1.Mask.LaplacienMask;
 import com.package1.Mask.SobelMask;
 import com.package1.R;
 import com.package1.RS;
+import com.package1.affichage.Adapter.FilterAdapter;
+import com.package1.affichage.Adapter.MenuAdapter;
+import com.package1.affichage.Struct.FilterStruct;
+import com.package1.affichage.Struct.MenuStruct;
+import com.package1.affichage.Type.FilterType;
+import com.package1.affichage.Type.RecyclerType;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -48,7 +55,7 @@ public class PhotoRecycler extends AppCompatActivity {
 
     private List<MenuStruct> menuList = new ArrayList<>();
     public static RecyclerView menuRecyclerView;
-    private MenuRecyclerAdapter menuAdapter;
+    private MenuAdapter menuAdapter;
 
     public static Bitmap actualMiniImage;
 
@@ -69,9 +76,9 @@ public class PhotoRecycler extends AppCompatActivity {
      */
     public static RecyclerView photoRecyclerView;
     /**
-     * @see RecyclerViewHorizontalListAdapter
+     * @see FilterAdapter
      */
-    public static RecyclerViewHorizontalListAdapter photoAdapter;
+    public static FilterAdapter photoAdapter;
     /**
      * SeekBar of layout
      *
@@ -141,7 +148,7 @@ public class PhotoRecycler extends AppCompatActivity {
         // RecyclerView
         photoRecyclerView = findViewById(R.id.idRecyclerViewHorizontalList);
 
-        photoAdapter = new RecyclerViewHorizontalListAdapter(colorList, context, RecyclerType.Nothing);
+        photoAdapter = new FilterAdapter(colorList, context, RecyclerType.Nothing);
         LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         photoRecyclerView.setLayoutManager(horizontalLayoutManager);
         photoRecyclerView.setAdapter(photoAdapter);
@@ -149,7 +156,7 @@ public class PhotoRecycler extends AppCompatActivity {
         // Menu RecyclerView
         menuRecyclerView = findViewById(R.id.idMenuViewHorizontalList);
 
-        menuAdapter = new MenuRecyclerAdapter(menuList, context);
+        menuAdapter = new MenuAdapter(menuList, context);
         LinearLayoutManager horizontalLayoutManager2 = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         menuRecyclerView.setLayoutManager(horizontalLayoutManager2);
         menuRecyclerView.setAdapter(menuAdapter);
@@ -279,7 +286,7 @@ public class PhotoRecycler extends AppCompatActivity {
      */
     public static void colorList() {
 
-        photoAdapter = new RecyclerViewHorizontalListAdapter(colorList, context, RecyclerType.Color);
+        photoAdapter = new FilterAdapter(colorList, context, RecyclerType.Color);
         photoRecyclerView.setAdapter(photoAdapter);
         actualMiniImage = image.copy(Bitmap.Config.ARGB_8888, true);
 
@@ -316,7 +323,7 @@ public class PhotoRecycler extends AppCompatActivity {
 
     public static void saturationList() {
 
-        photoAdapter = new RecyclerViewHorizontalListAdapter(contrastList, context, RecyclerType.Contrast);
+        photoAdapter = new FilterAdapter(contrastList, context, RecyclerType.Contrast);
         photoRecyclerView.setAdapter(photoAdapter);
         actualMiniImage = image.copy(Bitmap.Config.ARGB_8888, true);
 
@@ -381,7 +388,7 @@ public class PhotoRecycler extends AppCompatActivity {
 
     public static void maskList() {
 
-        photoAdapter = new RecyclerViewHorizontalListAdapter(maskList, context, RecyclerType.Mask);
+        photoAdapter = new FilterAdapter(maskList, context, RecyclerType.Mask);
         photoRecyclerView.setAdapter(photoAdapter);
         actualMiniImage = image.copy(Bitmap.Config.ARGB_8888, true);
 
@@ -432,7 +439,7 @@ public class PhotoRecycler extends AppCompatActivity {
     }
 
     public static void extrasList() {
-        photoAdapter = new RecyclerViewHorizontalListAdapter(extraList, context, RecyclerType.Extras);
+        photoAdapter = new FilterAdapter(extraList, context, RecyclerType.Extras);
         photoRecyclerView.setAdapter(photoAdapter);
         actualMiniImage = image.copy(Bitmap.Config.ARGB_8888, true);
 

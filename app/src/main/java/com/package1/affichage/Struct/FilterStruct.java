@@ -1,8 +1,13 @@
-package com.package1.affichage;
+package com.package1.affichage.Struct;
 
 import android.graphics.Bitmap;
 
-public class MenuStruct {
+import com.package1.affichage.Type.FilterType;
+
+/**
+ * @author Mathieu
+ */
+public class FilterStruct {
 
     /**
      * Filter name
@@ -20,24 +25,20 @@ public class MenuStruct {
      * Type of filter
      * @see FilterType
      */
-    public RecyclerType type;
+    public FilterType type;
 
     /**
      * Constructeur
      * @param filterName
      * @param image
      */
-    public MenuStruct(String filterName, Bitmap image, RecyclerType type) {
+    public FilterStruct(String filterName, Bitmap image, FilterType type) {
         this.filterName = filterName;
         this.image = image;
         this.type = type;
     }
 
-    public RecyclerType getRecyclerType(){ return type;}
-
-    public void setReyclerType(RecyclerType type){
-        this.type = type;
-    }
+    public FilterType getFilterType(){ return type;}
 
     public String getFilterName() {
         return filterName;
@@ -52,5 +53,4 @@ public class MenuStruct {
     public void setImage(Bitmap image){
         this.image = image;
     }
-
 }

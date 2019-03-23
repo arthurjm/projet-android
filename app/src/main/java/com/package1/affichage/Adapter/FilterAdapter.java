@@ -1,16 +1,13 @@
-package com.package1.affichage;
+package com.package1.affichage.Adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -24,6 +21,10 @@ import com.package1.Mask.LaplacienMask;
 import com.package1.Mask.SobelMask;
 import com.package1.R;
 import com.package1.RS;
+import com.package1.affichage.Struct.FilterStruct;
+import com.package1.affichage.Type.FilterType;
+import com.package1.affichage.PhotoRecycler;
+import com.package1.affichage.Type.RecyclerType;
 
 import java.util.List;
 
@@ -39,7 +40,7 @@ import static com.package1.affichage.PhotoRecycler.seekBar2;
 /**
  * @author Mathieu
  */
-public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<RecyclerViewHorizontalListAdapter.PhotoViewHolder> {
+public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.PhotoViewHolder> {
 
     /**
      * List of FilterStruct
@@ -80,7 +81,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
      * @param horizontalPhotoList
      * @param context
      */
-    public RecyclerViewHorizontalListAdapter(List<FilterStruct> horizontalPhotoList, Context context, RecyclerType rt) {
+    public FilterAdapter(List<FilterStruct> horizontalPhotoList, Context context, RecyclerType rt) {
         this.horizontalPhotoList = horizontalPhotoList;
         this.context = context;
         this.rt = rt;
@@ -97,7 +98,7 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
     @Override
     public PhotoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //inflate the layout file
-        View photoProductView = LayoutInflater.from(parent.getContext()).inflate(R.layout.horizontal_list_photo, parent, false);
+        View photoProductView = LayoutInflater.from(parent.getContext()).inflate(R.layout.pattern_recycler, parent, false);
         return new PhotoViewHolder(photoProductView);
 
     }

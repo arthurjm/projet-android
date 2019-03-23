@@ -1,4 +1,4 @@
-package com.package1.affichage;
+package com.package1.affichage.Adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -10,23 +10,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.package1.R;
+import com.package1.affichage.Struct.FilterStruct;
+import com.package1.affichage.Struct.MenuStruct;
+import com.package1.affichage.Type.RecyclerType;
 
 import java.util.List;
 
-import static com.package1.MainActivity.image;
 import static com.package1.MainActivity.imageEditingCopy;
 import static com.package1.MainActivity.imgView;
-import static com.package1.affichage.PhotoRecycler.actualMiniImage;
 import static com.package1.affichage.PhotoRecycler.back;
 import static com.package1.affichage.PhotoRecycler.changeList;
-import static com.package1.affichage.PhotoRecycler.colorList;
-import static com.package1.affichage.PhotoRecycler.contrastList;
-import static com.package1.affichage.PhotoRecycler.extraList;
-import static com.package1.affichage.PhotoRecycler.maskList;
 import static com.package1.affichage.PhotoRecycler.menuRecyclerView;
 import static com.package1.affichage.PhotoRecycler.photoRecyclerView;
 
-public class MenuRecyclerAdapter extends RecyclerView.Adapter<MenuRecyclerAdapter.PhotoViewHolder> {
+public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.PhotoViewHolder> {
 
     /**
      * List of FilterStruct
@@ -48,7 +45,7 @@ public class MenuRecyclerAdapter extends RecyclerView.Adapter<MenuRecyclerAdapte
      * @param horizontalPhotoList
      * @param context
      */
-    public MenuRecyclerAdapter(List<MenuStruct> horizontalPhotoList, Context context) {
+    public MenuAdapter(List<MenuStruct> horizontalPhotoList, Context context) {
         this.menuList = horizontalPhotoList;
         this.context = context;
     }
@@ -63,7 +60,7 @@ public class MenuRecyclerAdapter extends RecyclerView.Adapter<MenuRecyclerAdapte
     @Override
     public PhotoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //inflate the layout file
-        View photoProductView = LayoutInflater.from(parent.getContext()).inflate(R.layout.horizontal_list_photo, parent, false);
+        View photoProductView = LayoutInflater.from(parent.getContext()).inflate(R.layout.pattern_recycler, parent, false);
         return new PhotoViewHolder(photoProductView);
 
     }
