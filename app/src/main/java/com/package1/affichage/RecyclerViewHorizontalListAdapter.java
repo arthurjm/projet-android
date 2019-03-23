@@ -515,10 +515,10 @@ public class RecyclerViewHorizontalListAdapter extends RecyclerView.Adapter<Recy
 
                     break;
                 case Isohelie:
-                    hist = new HistogramManipulation(Bitmap[0], ChanelType.V);
-                    hist.isohelieLUT(progressBar1 + 2);
+                    //hist = new HistogramManipulation(Bitmap[0], ChanelType.V);
+                    //hist.isohelieLUT(progressBar1 + 2);
                     //imageEditingCopy = hist.applyLUT(imageEditing); //java version
-                    imageEditingCopy = renderscript.applyLUT(Bitmap[0], hist);
+                    imageEditingCopy = renderscript.posterisation(Bitmap[0], progressBar1 + 2);
                     break;
 
                 case Blur:

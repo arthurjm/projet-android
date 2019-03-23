@@ -13,6 +13,7 @@ import com.android.rssample.ScriptC_convolution;
 import com.android.rssample.ScriptC_grey;
 import com.android.rssample.ScriptC_invert;
 import com.android.rssample.ScriptC_keepHue;
+import com.android.rssample.ScriptC_posterisation;
 import com.package1.Mask.Mask;
 
 /**
@@ -112,6 +113,27 @@ public class RS {
         ScriptC_invert script = new ScriptC_invert(rs);
 
         script.forEach_invert(input, output);
+        script.destroy();
+
+        output.copyTo(res);
+        return res;
+    }
+
+    /**
+     * Réduit le nombre de valeurs possibles d'une image
+     * Peut aussi être appelé Isohélie
+     * @param bmp L'image à traiter
+     * @param depth Le nombre de valeurs possibles
+     * @return L'image traitée
+     */
+    public Bitmap posterisation(Bitmap bmp, int depth) {
+        setInputOutput(bmp);
+        Bitmap res = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), bmp.getConfig());
+
+        ScriptC_posterisation script = new ScriptC_posterisation(rs);
+
+        script.set_depth(depth);
+        script.invoke_initTest(input, output);
         script.destroy();
 
         output.copyTo(res);
