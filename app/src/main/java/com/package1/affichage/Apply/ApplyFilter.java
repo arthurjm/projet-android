@@ -32,10 +32,9 @@ import static com.package1.affichage.PhotoEditing.seekBar2;
  * @author Mathieu
  * In this class, we can find all functions that we use to modify the actual image
  * We have some variables :
- *  filterType -> we use it to when we need to use seekBar, and we check in which case we we are in MyTask to apply the adequate function
- *  recyclerType -> we use it to check in which type of FilterRecyclerView we are
- *  progressBar1 / progressBar2 -> actual value of seekBars
- *
+ * filterType -> we use it to when we need to use seekBar, and we check in which case we we are in MyTask to apply the adequate function
+ * recyclerType -> we use it to check in which type of FilterRecyclerView we are
+ * progressBar1 / progressBar2 -> actual value of seekBars
  */
 public class ApplyFilter {
 
@@ -46,6 +45,7 @@ public class ApplyFilter {
 
     /**
      * Constructor
+     *
      * @param ctx
      * @param recyclerType
      */
@@ -134,6 +134,7 @@ public class ApplyFilter {
 
     /**
      * To check in which case we are
+     *
      * @param type
      */
     public void useFunction(FilterType type) {
@@ -385,64 +386,52 @@ public class ApplyFilter {
                     hist.equalizationLUT();
                     imageEditingCopy = hist.applyLUT(Bitmap[0]);
                     break;
-
                 case Colorize:
                     imageEditingCopy = (renderscript.colorize(Bitmap[0], progressBar1));
                     break;
-
                 case KeepHue:
                     imageEditingCopy = renderscript.keepHue(Bitmap[0], progressBar1, progressBar2);
                     break;
-
                 case Contrast:
                     hist = new HistogramManipulation(Bitmap[0], ChanelType.V);
                     hist.linearExtensionLUT(128 + progressBar1, 127 - progressBar1);
                     //imageEditingCopy = hist.applyLUT(imageEditing); //java version
                     imageEditingCopy = renderscript.applyLUT(Bitmap[0], hist);
                     break;
-
                 case ShiftLight:
                     hist = new HistogramManipulation(Bitmap[0], ChanelType.V);
                     hist.shiftLUT(progressBar1 - 100);
                     //imageEditingCopy = hist.applyLUT(imageEditing); //java version
                     imageEditingCopy = renderscript.applyLUT(Bitmap[0], hist);
                     break;
-
                 case ShiftSaturation:
                     hist = new HistogramManipulation(Bitmap[0], ChanelType.S);
                     hist.shiftLUT(progressBar1 - 100);
                     //imageEditingCopy = hist.applyLUT(imageEditing); //java version
                     imageEditingCopy = renderscript.applyLUT(Bitmap[0], hist);
                     break;
-
                 case ShiftColor:
                     hist = new HistogramManipulation(Bitmap[0], ChanelType.H);
                     hist.shiftCycleLUT(progressBar1);
                     //imageEditingCopy = hist.applyLUT(imageEditing); //java version
                     imageEditingCopy = renderscript.applyLUT(Bitmap[0], hist);
                     break;
-
                 case Isohelie:
                     imageEditingCopy = renderscript.posterisation(Bitmap[0], progressBar1 + 2);
                     break;
-
                 case Blur:
                     BlurMask mask = new BlurMask(progressBar1 + 1);
                     imageEditingCopy = renderscript.convolution(Bitmap[0], mask);
                     break;
-
                 case Gaussian:
                     GaussianBlur maskGaussian = new GaussianBlur(progressBar1 * 2 + 1, 2.5);
                     imageEditingCopy = renderscript.convolution(Bitmap[0], maskGaussian);
                     break;
-
                 case IncreaseBorder:
                     imageEditingCopy = renderscript.increaseBorder(Bitmap[0], progressBar1 * 10);
                     break;
-
                 default:
                     break;
-
             }
             return imageEditingCopy;
         }
