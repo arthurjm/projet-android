@@ -6,29 +6,34 @@ import com.package1.affichage.Type.FilterType;
 
 /**
  * @author Mathieu
+ * Structure of a FilterRecyclerView
  */
 public class FilterStruct {
 
     /**
      * Filter name
+     *
      * @see FilterStruct#getFilterName()
      * @see FilterStruct#setFilterName(String)
      */
     public String filterName;
     /**
      * Image with filter
+     *
      * @see FilterStruct#getImage()
      * @see FilterStruct#setImage(Bitmap)
      */
     public Bitmap image;
     /**
      * Type of filter
+     *
      * @see FilterType
      */
     public FilterType type;
 
     /**
      * Constructeur
+     *
      * @param filterName
      * @param image
      */
@@ -38,7 +43,9 @@ public class FilterStruct {
         this.type = type;
     }
 
-    public FilterType getFilterType(){ return type;}
+    public FilterType getFilterType() {
+        return type;
+    }
 
     public String getFilterName() {
         return filterName;
@@ -48,9 +55,11 @@ public class FilterStruct {
         this.filterName = productName;
     }
 
-    public Bitmap getImage(){return image; }
+    public Bitmap getImage() {
+        return image;
+    }
 
-    public void setImage(Bitmap image){
+    public void setImage(Bitmap image) {
         this.image = image;
     }
 }

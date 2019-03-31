@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".affichage.PhotoRecycler"
+        <activity android:name=".affichage.PhotoEditing"
             android:screenOrientation="portrait"
             android:label="Recycler"
             android:parentActivityName=".MainActivity">

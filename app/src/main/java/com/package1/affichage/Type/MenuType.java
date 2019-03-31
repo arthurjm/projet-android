@@ -1,6 +1,10 @@
 package com.package1.affichage.Type;
 
-public enum RecyclerType {
+/**
+ * @author Mathieu
+ * Different type in a MenuRecyclerView
+ */
+public enum MenuType {
     Color,
     Contrast,
     Mask,

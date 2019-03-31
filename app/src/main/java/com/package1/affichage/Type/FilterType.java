@@ -1,5 +1,9 @@
 package com.package1.affichage.Type;
 
+/**
+ * @author Mathieu
+ * Different type in a FilterRecyclerView
+ */
 public enum FilterType {
 
     // Color
@@ -8,7 +12,7 @@ public enum FilterType {
     KeepHue,
     Invert,
 
-    // Saturation
+    // Contrast
     Contrast,
     ShiftLight,
     ShiftSaturation,
@@ -26,5 +30,5 @@ public enum FilterType {
 
     // Extras
     FaceDetection,
-    Rotate;
+    Rotate
 }

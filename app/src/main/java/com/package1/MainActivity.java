@@ -18,18 +18,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import com.package1.affichage.PhotoRecycler;
+import com.package1.affichage.PhotoEditing;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import static com.package1.affichage.PhotoRecycler.colorList;
-import static com.package1.affichage.PhotoRecycler.contrastList;
-import static com.package1.affichage.PhotoRecycler.extraList;
-import static com.package1.affichage.PhotoRecycler.maskList;
-
 
 public class MainActivity extends AppCompatActivity {
     /**
@@ -48,13 +42,7 @@ public class MainActivity extends AppCompatActivity {
      * The image displayed on the screen
      */
     public static ImageView imgView;
-    /**
-     *
-     */
     private Uri filePath;
-    /**
-     *
-     */
     private String imagepath = null;
     private String photoPath;
     /**
@@ -62,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private int PICK_IMAGE_REQUEST = 1;
     private static final int TAKE_PHOTO = 1;
+
     /**
      * Access to gallery
      */
@@ -70,12 +59,6 @@ public class MainActivity extends AppCompatActivity {
      * Access to camera
      */
     private Button camera;
-    /**
-     * Not permanent
-     * Access to apply filter
-     */
-    private Button apply;
-
     public Context context;
 
 
@@ -86,8 +69,6 @@ public class MainActivity extends AppCompatActivity {
 
         gallery = findViewById(R.id.gallery);
         camera = findViewById(R.id.camera);
-        apply = findViewById(R.id.apply);
-
         context = getApplicationContext();
 
     }
@@ -142,22 +123,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        photoPath = image.getAbsolutePath();
-        return image;
-    }
-
     public void loadPhoto() {
 
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -169,8 +134,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * @param requestCode the same code in the foction "startActivityForResult" to make sure the datas from which Activity
-     * @param resultCode  the code returned by the methode "setResult()" of Activity
+     * @param requestCode the same code in the function "startActivityForResult" to make sure the datas from which Activity
+     * @param resultCode  the code returned by the method "setResult()" of Activity
      * @param data        a variable of type data
      */
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -195,9 +160,7 @@ public class MainActivity extends AppCompatActivity {
 
             try {
                 if (filePath != null) {
-
                     image = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-                    //image = rotateBitmap(filePath.toString());
                     filterPage();
                 }
             } catch (IOException e) {
@@ -225,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
      * To rotate the image
      *
      * @param photoFilePath
-     * @return a vaibale of type Bitmap
+     * @return a Bitmap
      */
     public Bitmap rotateBitmap(String photoFilePath) {
 
@@ -263,8 +226,8 @@ public class MainActivity extends AppCompatActivity {
         return rotatedBitmap;
     }
 
-    public void filterPage(){
-        startActivity(new Intent(this, PhotoRecycler.class));
+    public void filterPage() {
+        startActivity(new Intent(this, PhotoEditing.class));
     }
 
     /**
@@ -300,12 +263,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.i("CV", "onResume()");
-
-
-        colorList.clear();
-        extraList.clear();
-        contrastList.clear();
-        maskList.clear();
     }
 
     /**
