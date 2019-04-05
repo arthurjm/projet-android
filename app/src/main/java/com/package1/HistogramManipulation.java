@@ -2,6 +2,7 @@ package com.package1;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.util.Log;
 
 import static com.package1.Histogram.NumberofValues;
 
@@ -15,26 +16,32 @@ public class HistogramManipulation {
     Histogram histogram;
     int R, G, B;
 
-    /**
+
+
+    public HistogramManipulation(Bitmap bitmap, ChanelType chanel,RS rs) {
+        histogram = new Histogram(rs.createHistogram(bitmap, chanel), chanel,bitmap.getHeight()*bitmap.getWidth());
+    }
+
+    //Here starts function and constructors using only java, which are not used here for the renderscript version is more efficient.
+    /*
      * Constructor taking a bitmap and making the histogram associated with the selected chanel
      *
      * @param bitmap Bitmap from which we will get the histogram
      * @param chanel The selected chanel
-     */
+
     public HistogramManipulation(Bitmap bitmap, ChanelType chanel) {
         int[] tab = new int[bitmap.getWidth() * bitmap.getHeight()];
         tab = getTab(bitmap, chanel);
         histogram = new Histogram(tab, chanel);
-    }
-
-    /**
+    }*/
+    /*
      * Function used in order to get an array that contains the values on which we want an histogram on.
      * This function allows to get the values on the right format depending on the origin (which chanel they are from).
      *
      * @param bitmap The bitmap form which the values are extracted.
      * @param ct     The chanel (from "ChanelType") on which we wish to get the histogram.
      * @return The array with the values of the chanel selected, taken from the bitmap at the right format needed to get an histogram on.
-     */
+
     private int[] getTab(Bitmap bitmap, ChanelType ct) {
         int[] tab = new int[bitmap.getWidth() * bitmap.getHeight()];
         bitmap.getPixels(tab, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
@@ -63,7 +70,8 @@ public class HistogramManipulation {
             }
         }
         return tab;
-    }
+    }*/
+    //Here ends the java-only functions and constructors.
 
     public Histogram getHistogram() {
         return histogram;
@@ -80,22 +88,22 @@ public class HistogramManipulation {
      * Make a linear extension of the values of the histogram with specific values for the minimum and maximum.
      * Can be used to increase or decrease contrast for example.
      *
-     * @param MaxValue the new maximum value
-     * @param MinValue the new minimum value
+     * @param maxValue the new maximum value
+     * @param minValue the new minimum value
      */
-    public void linearExtensionLUT(int MaxValue, int MinValue) {
-        if (MaxValue >= NumberofValues) {
-            MaxValue = NumberofValues - 1;
+    public void linearExtensionLUT(int maxValue, int minValue) {
+        if (maxValue >= NumberofValues) {
+            maxValue = NumberofValues - 1;
         }
-        if (MaxValue == MinValue) {
-            MinValue--;
-        } else if (MaxValue < MinValue) {
-            int temp = MaxValue;
-            MaxValue = MinValue;
-            MinValue = temp;
+        if (maxValue == minValue) {
+            minValue--;
+        } else if (maxValue < minValue) {
+            int temp = maxValue;
+            maxValue = minValue;
+            minValue = temp;
         }
         for (int i = 0; i < NumberofValues; i++) {
-            LUT[i] = MinValue + ((MaxValue - MinValue) * (i - histogram.getMin())) / (histogram.getMax() - histogram.getMin());
+            LUT[i] = minValue + ((maxValue - minValue) * (i - histogram.getMin())) / (histogram.getMax() - histogram.getMin());
             if (LUT[i] > 255) {
                 LUT[i] = 255;
             } else if (LUT[i] < 0) {
@@ -170,6 +178,8 @@ public class HistogramManipulation {
     /**
      * Function used to "equalize" the histogram.
      * Starting with the value 0 and going up.
+     * This function does not use an "accumulative histogram" but evaluate the LUT's values step by step.
+     * The advantage is that we can not have an integer exceeding his limits, but there is more operations overall.
      */
     public void equalizationLUT() {
         int average = histogram.getCount()/NumberofValues;

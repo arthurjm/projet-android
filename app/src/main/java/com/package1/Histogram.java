@@ -1,5 +1,7 @@
 package com.package1;
 
+import android.util.Log;
+
 /**
  * Class permettant de créer des histogrammes à partir de tableaux de valeurs numériques
  */
@@ -18,26 +20,49 @@ Histogram {
     /**
      *
      */
-    private int min, max, count, average;
+    private int min, max, count;
     /**
      *
      */
     private ChanelType chanel;
 
     /**
-     *
+     * This constructor is used with the renderscript version of the creation of the histogram that return the array already
+     * in the good format. Altought, we need to extract the min and max values.
+     * @param tab
+     *      The array which correspond to the histogram
+     * @param chanel
+     */
+    public Histogram(int[] tab, ChanelType chanel, int count) {
+        this.chanel = chanel;
+        histogramValue=tab;
+        this.count=count;
+        min=NumberofValues;
+        max=-1;
+        for(int i = 0; i < NumberofValues;i++){
+            if(histogramValue[i]!=0 && i<min){
+                min=i;
+            }
+            if(histogramValue[i]!=0 && i>max){
+                max=i;
+            }
+        }
+    }
+
+    //Start Java version of the constructor and initialization functions unused with the renderscript version
+     /*
      * @param tab
      * @param newChanel
-     */
+
     public Histogram(int[] tab, ChanelType newChanel) {
         chanel = newChanel;
         setHistogram(tab);
     }
 
-    /**
+
      *
      * @param tab
-     */
+     *
     public void setHistogram(int[] tab) {
         int tempTotalValue = 0;
         int valueTemp;
@@ -57,7 +82,9 @@ Histogram {
             }
         }
         average = tempTotalValue / count;
-    }
+    }*/
+    //End of the java unused functions
+
 
     /**
      * Getter of "min"
@@ -81,6 +108,10 @@ Histogram {
         return count;
     }
 
+    public void setCount(int count) {
+        this.count = count;
+    }
+
     /**
      * Getter of "chanel"
      *
@@ -90,14 +121,6 @@ Histogram {
         return chanel;
     }
 
-    /**
-     * Getter of "average"
-     *
-     * @return the value of "average"
-     */
-    public int getAverage() {
-        return average;
-    }
 
     /**
      * Getter of the value of the histogram at the chosen index
@@ -110,6 +133,6 @@ Histogram {
 
     @Override
     public String toString() {
-        return "histogram of : " + chanel + "\tmin : " + min + "\tmax : " + max + "\taverage : " + average + "\tcount : " + count;
+        return "histogram of : " + chanel + "\tmin : " + min + "\tmax : " + max  + "\tcount : " + count;
     }
 }

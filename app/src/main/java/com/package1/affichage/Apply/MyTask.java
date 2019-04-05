@@ -39,7 +39,7 @@ public class MyTask extends AsyncTask<Bitmap, Void, Bitmap> {
     protected Bitmap doInBackground(Bitmap... Bitmap) {
         switch (filterType) {
             case EquaLight:
-                hist = new HistogramManipulation(Bitmap[0], ChanelType.V);
+                hist = new HistogramManipulation(Bitmap[0], ChanelType.V,renderscript);
                 hist.equalizationLUT();
                 imageEditingCopy = hist.applyLUT(Bitmap[0]);
                 break;
@@ -53,28 +53,28 @@ public class MyTask extends AsyncTask<Bitmap, Void, Bitmap> {
                 break;
 
             case Contrast:
-                hist = new HistogramManipulation(Bitmap[0], ChanelType.V);
+                hist = new HistogramManipulation(Bitmap[0], ChanelType.V,renderscript);
                 hist.linearExtensionLUT(128 + progressBar1, 127 - progressBar1);
                 //imageEditingCopy = hist.applyLUT(imageEditing); //java version
                 imageEditingCopy = renderscript.applyLUT(Bitmap[0], hist);
                 break;
 
             case ShiftLight:
-                hist = new HistogramManipulation(Bitmap[0], ChanelType.V);
+                hist = new HistogramManipulation(Bitmap[0], ChanelType.V,renderscript);
                 hist.shiftLUT(progressBar1 - 100);
                 //imageEditingCopy = hist.applyLUT(imageEditing); //java version
                 imageEditingCopy = renderscript.applyLUT(Bitmap[0], hist);
                 break;
 
             case ShiftSaturation:
-                hist = new HistogramManipulation(Bitmap[0], ChanelType.S);
+                hist = new HistogramManipulation(Bitmap[0], ChanelType.S,renderscript);
                 hist.shiftLUT(progressBar1 - 100);
                 //imageEditingCopy = hist.applyLUT(imageEditing); //java version
                 imageEditingCopy = renderscript.applyLUT(Bitmap[0], hist);
                 break;
 
             case ShiftColor:
-                hist = new HistogramManipulation(Bitmap[0], ChanelType.H);
+                hist = new HistogramManipulation(Bitmap[0], ChanelType.H,renderscript);
                 hist.shiftCycleLUT(progressBar1);
                 //imageEditingCopy = hist.applyLUT(imageEditing); //java version
                 imageEditingCopy = renderscript.applyLUT(Bitmap[0], hist);
