@@ -3,7 +3,9 @@ package com.package1.affichage.Apply;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
 import com.package1.ChanelType;
 import com.package1.FaceDetection;
@@ -75,6 +77,7 @@ public class ApplyMenu {
         extraList = new ArrayList<>();
         maskList = new ArrayList<>();
         contrastList = new ArrayList<>();
+
     }
 
     /**
