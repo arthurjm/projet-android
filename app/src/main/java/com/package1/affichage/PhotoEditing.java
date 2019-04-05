@@ -1,7 +1,9 @@
 package com.package1.affichage;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
@@ -9,6 +11,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -232,12 +236,14 @@ public class PhotoEditing extends AppCompatActivity {
      * @param bmp
      */
     private void saveImageToGallery(Bitmap bmp) {
-        File dir = new File(Environment.getExternalStorageDirectory(), "image");
+        File dir = new File(Environment.getExternalStorageDirectory(), "Projet");
         if (!dir.exists()) {
             dir.mkdir();
         }
+        System.out.println(dir);
         final String fileName = System.currentTimeMillis() + "";
         File file = new File(dir, fileName);
+
         try {
             FileOutputStream out = new FileOutputStream(file);
             bmp.compress(Bitmap.CompressFormat.JPEG, 100, out);
@@ -251,17 +257,31 @@ public class PhotoEditing extends AppCompatActivity {
         }
         //add file to gallery
         try {
+
             MediaStore.Images.Media.insertImage(getContentResolver(), file.getAbsolutePath(), fileName, null);
             Toast.makeText(context, "save", Toast.LENGTH_SHORT).show();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+        /*if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file" + fileName)));
         } else {
             MediaScannerConnection.scanFile(this, new String[]{fileName}, null, null);
+        }*/
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requestAlertWindowPermission();
+            }
         }
     }
+
+    private static final int REQUEST_CODE = 1;
+    private void requestAlertWindowPermission() {
+        ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_CODE);
+    }
+
+
 
     @Override
     /**

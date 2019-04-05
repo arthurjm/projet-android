@@ -1,5 +1,6 @@
 package com.package1.affichage.Apply;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
@@ -10,9 +11,11 @@ import android.widget.Toast;
 
 import com.package1.ChanelType;
 import com.package1.HistogramManipulation;
+import com.package1.MainActivity;
 import com.package1.Mask.BlurMask;
 import com.package1.Mask.GaussianBlur;
 import com.package1.Mask.LaplacienMask;
+import com.package1.Mask.Mask;
 import com.package1.Mask.SobelMask;
 import com.package1.R;
 import com.package1.RS;
@@ -353,6 +356,7 @@ public class ApplyFilter {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 new ApplyFilter.MyTask().execute(imageEditing);
+
             }
         });
 
@@ -376,9 +380,11 @@ public class ApplyFilter {
 
 
     private class MyTask extends AsyncTask<Bitmap, Void, Bitmap> {
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+
             Toast.makeText(ctx, "function start", Toast.LENGTH_SHORT).show();
         }
 
@@ -443,7 +449,9 @@ public class ApplyFilter {
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
             imgView.setImageBitmap(bitmap);
+
             Toast.makeText(ctx, "function end", Toast.LENGTH_SHORT).show();
         }
     }
+
 }
