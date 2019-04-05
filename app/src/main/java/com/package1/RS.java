@@ -17,6 +17,7 @@ import com.android.rssample.ScriptC_increaseBorder;
 import com.android.rssample.ScriptC_invert;
 import com.android.rssample.ScriptC_keepHue;
 import com.android.rssample.ScriptC_posterisation;
+import com.android.rssample.ScriptC_sobel;
 import com.package1.Mask.LaplacienMask;
 import com.package1.Mask.Mask;
 import com.package1.Mask.SobelMask;
@@ -173,6 +174,24 @@ public class RS {
         script.set_weight(mask.getWeight());
 
         script.forEach_convolution(input, output);
+
+        script.destroy();
+
+        output.copyTo(res);
+        return res;
+    }
+
+    public Bitmap sobel(Bitmap bmp) {
+        setInputOutput(bmp);
+        Bitmap res = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), bmp.getConfig());
+
+        ScriptC_sobel script = new ScriptC_sobel(rs);
+
+        script.set_input(input);
+        script.set_width(bmp.getWidth());
+        script.set_height(bmp.getHeight());
+
+        script.forEach_sobel(input, output);
 
         script.destroy();
 
