@@ -272,8 +272,7 @@ public class PhotoEditing extends AppCompatActivity {
             dir.mkdir();
         }
         System.out.println(dir);
-        // final String fileName = System.currentTimeMillis() + "";
-        final String fileName = "testMATHIEU";
+        final String fileName = System.currentTimeMillis() + "";
         File file = new File(dir, fileName);
 
         try {
@@ -294,11 +293,6 @@ public class PhotoEditing extends AppCompatActivity {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        /*if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-            sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file" + fileName)));
-        } else {
-            MediaScannerConnection.scanFile(this, new String[]{fileName}, null, null);
-        }*/
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     != PackageManager.PERMISSION_GRANTED) {
