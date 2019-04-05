@@ -287,6 +287,10 @@ public class ApplyFilter {
                 SobelMask sobelMaskHorizontal = new SobelMask(false);
                 imageEditingCopy = renderscript.convolution(imageEditing, sobelMaskHorizontal);
                 break;
+            case Sobel:
+                setGone(seekBar1, seekBar2);
+                imageEditingCopy = renderscript.sobel(imageEditing);
+                break;
             case IncreaseBorder:
                 setNormalBackground(seekBar1);
                 setVisible(seekBar1);

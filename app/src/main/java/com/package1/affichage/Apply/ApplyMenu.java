@@ -304,6 +304,11 @@ public class ApplyMenu {
             fs = new FilterStruct("Sobel H", renderscript.convolution(rediCopy, sobelMaskHorizontal), FilterType.SobelH);
             maskList.add(fs);
 
+            // Sobel
+            rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+            fs = new FilterStruct("Sobel", renderscript.sobel(rediCopy), FilterType.Sobel);
+            maskList.add(fs);
+
             // Increase Borders
             rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
             fs = new FilterStruct("Increase Border", renderscript.increaseBorder(rediCopy, 25), FilterType.IncreaseBorder);

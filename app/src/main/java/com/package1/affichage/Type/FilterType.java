@@ -26,6 +26,7 @@ public enum FilterType {
     Laplacien,
     SobelV,
     SobelH,
+    Sobel,
     IncreaseBorder,
 
     // Extras
