@@ -16,12 +16,24 @@ import static com.package1.MainActivity.imgView;
 import static com.package1.affichage.PhotoEditing.hist;
 import static com.package1.affichage.PhotoEditing.renderscript;
 
+/**
+ * Fonction "AsyncTask" enables proper and easy use of the UI thread
+ * doInBackGround enables apply the function that we choose in background
+ * and return the image edited when it finishes
+ */
 public class MyTask extends AsyncTask<Bitmap, Void, Bitmap> {
 
     public Context ctx;
     public int progressBar1, progressBar2;
     public FilterType filterType;
 
+    /**
+     * 
+     * @param ctx
+     * @param progressBar1
+     * @param progressBar2
+     * @param filterType
+     */
     public MyTask(Context ctx, int progressBar1, int progressBar2, FilterType filterType){
         this.ctx = ctx;
         this.progressBar1 = progressBar1;
