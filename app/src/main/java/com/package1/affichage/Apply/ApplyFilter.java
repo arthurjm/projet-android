@@ -1,21 +1,23 @@
 package com.package1.affichage.Apply;
 
-import android.app.ProgressDialog;
+import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.os.AsyncTask;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.package1.ChanelType;
 import com.package1.HistogramManipulation;
-import com.package1.MainActivity;
 import com.package1.Mask.BlurMask;
 import com.package1.Mask.GaussianBlur;
 import com.package1.Mask.LaplacienMask;
-import com.package1.Mask.Mask;
 import com.package1.Mask.SobelMask;
 import com.package1.R;
 import com.package1.RS;
@@ -25,8 +27,14 @@ import com.package1.affichage.Type.MenuType;
 import static com.package1.MainActivity.imageEditing;
 import static com.package1.MainActivity.imageEditingCopy;
 import static com.package1.MainActivity.imgView;
+import static com.package1.affichage.PhotoEditing.applyMenu;
+import static com.package1.affichage.PhotoEditing.back;
+import static com.package1.affichage.PhotoEditing.dayMode;
 import static com.package1.affichage.PhotoEditing.faceDetection;
+import static com.package1.affichage.PhotoEditing.filterRecyclerView;
 import static com.package1.affichage.PhotoEditing.hist;
+import static com.package1.affichage.PhotoEditing.menuRecyclerView;
+import static com.package1.affichage.PhotoEditing.nightMode;
 import static com.package1.affichage.PhotoEditing.renderscript;
 import static com.package1.affichage.PhotoEditing.seekBar1;
 import static com.package1.affichage.PhotoEditing.seekBar2;
@@ -39,10 +47,10 @@ import static com.package1.affichage.PhotoEditing.seekBar2;
  * recyclerType -> we use it to check in which type of FilterRecyclerView we are
  * progressBar1 / progressBar2 -> actual value of seekBars
  */
-public class ApplyFilter {
+public class ApplyFilter extends AppCompatActivity {
 
     public FilterType filterType;
-    public MenuType recyclerType;
+    public MenuType menuType;
     public Context ctx;
     public int progressBar1, progressBar2;
 
@@ -50,11 +58,11 @@ public class ApplyFilter {
      * Constructor
      *
      * @param ctx
-     * @param recyclerType
+     * @param menuType
      */
-    public ApplyFilter(Context ctx, MenuType recyclerType) {
+    public ApplyFilter(Context ctx, MenuType menuType) {
         this.ctx = ctx;
-        this.recyclerType = recyclerType;
+        this.menuType = menuType;
     }
 
     public void setFilterType(FilterType filterType) {
@@ -146,7 +154,7 @@ public class ApplyFilter {
         imgView.setImageBitmap(imageEditingCopy);
 
         // Which functions we want to use with the adequate List
-        switch (recyclerType) {
+        switch (menuType) {
             case Color:
                 colorFunction(type);
                 break;
@@ -164,6 +172,7 @@ public class ApplyFilter {
         }
         imgView.setImageBitmap(imageEditingCopy);
     }
+
 
     /**
      * Different functions to set different elements in the layout and apply filters when we don't need to have seekbar's
@@ -318,6 +327,27 @@ public class ApplyFilter {
                 setGone(seekBar1, seekBar2);
                 imageEditingCopy = RotateBitmap(imageEditingCopy, 90);
                 break;
+            case NightMode:
+                setGone(seekBar1,seekBar2);
+                //PhotoEditing edit = (PhotoEditing)ctx;
+                //edit.nightMode();
+                applyMenu.menuList.clear();
+                applyMenu.menuList();
+                menuRecyclerView.setVisibility(View.VISIBLE);
+                filterRecyclerView.setVisibility(View.GONE);
+                back.setVisibility(View.GONE);
+                nightMode();
+                nightMode = true;
+                break;
+            case DayMode:
+                setGone(seekBar1, seekBar2);
+                dayMode();
+                applyMenu.menuList.clear();
+                applyMenu.menuList();
+                menuRecyclerView.setVisibility(View.VISIBLE);
+                filterRecyclerView.setVisibility(View.GONE);
+                back.setVisibility(View.GONE);
+                nightMode = false;
             default:
                 break;
 
@@ -397,7 +427,7 @@ public class ApplyFilter {
                     imageEditingCopy = hist.applyLUT(Bitmap[0]);
                     break;
                 case Colorize:
-                    imageEditingCopy = (renderscript.colorize(Bitmap[0], progressBar1));
+                    imageEditingCopy = renderscript.colorize(Bitmap[0], progressBar1);
                     break;
                 case KeepHue:
                     imageEditingCopy = renderscript.keepHue(Bitmap[0], progressBar1, progressBar2);

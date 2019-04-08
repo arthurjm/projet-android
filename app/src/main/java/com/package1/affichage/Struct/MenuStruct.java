@@ -30,7 +30,7 @@ public class MenuStruct {
      *
      * @see FilterType
      */
-    public MenuType type;
+    public MenuType menuType;
 
     /**
      * Constructor
@@ -38,14 +38,14 @@ public class MenuStruct {
      * @param filterName
      * @param image
      */
-    public MenuStruct(String filterName, Bitmap image, MenuType type) {
+    public MenuStruct(String filterName, Bitmap image, MenuType menuType) {
         this.filterName = filterName;
         this.image = image;
-        this.type = type;
+        this.menuType = menuType;
     }
 
     public MenuType getRecyclerType() {
-        return type;
+        return menuType;
     }
 
     public String getFilterName() {

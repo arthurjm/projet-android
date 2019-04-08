@@ -34,6 +34,7 @@ import static com.package1.affichage.PhotoEditing.menuRecyclerView;
 import static com.package1.affichage.PhotoEditing.filterAdapter;
 import static com.package1.affichage.PhotoEditing.filterRecyclerView;
 import static com.package1.affichage.PhotoEditing.actualMiniImage;
+import static com.package1.affichage.PhotoEditing.nightMode;
 
 /**
  * @author Mathieu
@@ -43,7 +44,7 @@ import static com.package1.affichage.PhotoEditing.actualMiniImage;
  * In contrastList we have different filter's that we use to modify the contrast/saturation of a picture
  * In maskList we have different filter's that we use to apply blur effects
  * In extraList we have different filter's like the rotation or the faceDetection
- *
+ * <p>
  * There is also some variables like renderscript or faceDetection. They are there to apply some effects
  */
 public class ApplyMenu {
@@ -60,6 +61,7 @@ public class ApplyMenu {
 
     /**
      * Constructor
+     *
      * @param ctx
      * @param renderScript
      * @param faceDetection
@@ -88,7 +90,6 @@ public class ApplyMenu {
         MenuStruct ms;
 
         Bitmap imgMenu = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.color);
-
         ms = new MenuStruct("Color", imgMenu, MenuType.Color);
         menuList.add(ms);
 
@@ -110,15 +111,15 @@ public class ApplyMenu {
     /**
      * To change the actual list in RecyclerView
      *
-     * @param rt
+     * @param menuType
      */
-    public void changeList(MenuType rt) {
-        switch (rt) {
+    public void changeList(MenuType menuType) {
+        switch (menuType) {
             case Color:
                 colorList();
                 break;
             case Contrast:
-                saturationList();
+                contrastList();
                 break;
             case Mask:
                 maskList();
@@ -133,15 +134,16 @@ public class ApplyMenu {
     }
 
     /**
-     * Use a function to modify the actual image
-     * @param type
+     * Use a function to modify the actual recyclerView
+     *
+     * @param menuType
      */
-    public void useFunction(MenuType type) {
+    public void modifyList(MenuType menuType) {
         imgView.setImageBitmap(imageEditingCopy);
         menuRecyclerView.setVisibility(View.GONE);
         filterRecyclerView.setVisibility(View.VISIBLE);
         back.setVisibility(View.VISIBLE);
-        switch (type) {
+        switch (menuType) {
             case Color:
                 changeList(MenuType.Color);
                 break;
@@ -199,7 +201,7 @@ public class ApplyMenu {
 
     }
 
-    public void saturationList() {
+    public void contrastList() {
 
         filterAdapter = new FilterAdapter(contrastList, ctx, MenuType.Contrast);
         filterRecyclerView.setAdapter(filterAdapter);
@@ -326,12 +328,12 @@ public class ApplyMenu {
         filterRecyclerView.setAdapter(filterAdapter);
         actualMiniImage = image.copy(Bitmap.Config.ARGB_8888, true);
 
+        FilterStruct fs;
+        Bitmap rediCopy;
+
         if (extraList.isEmpty() == true) {
             // On redimensionne l'image
             Bitmap rediImageEditing = Bitmap.createScaledBitmap(image, 100, (int) ((image.getHeight() * 100) / image.getWidth()), true);
-            Bitmap rediCopy;
-
-            FilterStruct fs;
 
             // FaceDetection
             rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
@@ -342,8 +344,32 @@ public class ApplyMenu {
             rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
             fs = new FilterStruct("Rotate", rediCopy, FilterType.Rotate);
             extraList.add(fs);
+
+            nightDayMode();
+
+        } else {
+            // Remove Night/Day mode to update it
+            extraList.remove(extraList.get(extraList.size() - 1));
+            nightDayMode();
         }
         filterAdapter.notifyDataSetChanged();
 
+    }
+
+    public void nightDayMode() {
+        Bitmap bmp;
+        FilterStruct fs;
+
+        if (nightMode == false) {
+            bmp = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.nightmode);
+            fs = new FilterStruct("NightMode", bmp, FilterType.NightMode);
+            extraList.add(fs);
+        }
+        // Return in normal case
+        else {
+            bmp = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.daymode);
+            fs = new FilterStruct("DayMode", bmp, FilterType.DayMode);
+            extraList.add(fs);
+        }
     }
 }
