@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Projet Android</string>
+    <string name="appName">Projet Android</string>
     <string name="action_settings">Settings</string>
     <string name="retour">Retour</string>
     <string name="load">Load</string>

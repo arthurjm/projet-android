@@ -23,6 +23,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -108,11 +109,15 @@ public class PhotoEditing extends AppCompatActivity {
     private int adaptedWidth;
     public static Button back;
 
+    public static boolean nightMode = false;
+
+    public static ConstraintLayout applyFilterLayout;
+
     @Override
     /**
      *
      */
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.photo_recycle_view);
 
@@ -120,12 +125,21 @@ public class PhotoEditing extends AppCompatActivity {
 
     }
 
+    public static void nightMode() {
+        applyFilterLayout.setBackgroundColor(Color.BLACK);
+    }
+
+    public static void dayMode(){
+        applyFilterLayout.setBackgroundColor(context.getColor(R.color.whiteNuance));
+    }
+
     /**
      * To initiate buttons seekbars and context in layout
      */
     public void initiate() {
 
-        context = getApplicationContext();
+        applyFilterLayout = findViewById(R.id.applyFilter);
+        context = this.getApplicationContext();
         renderscript = new RS(context);
         faceDetection = new FaceDetection(context);
         applyMenu = new ApplyMenu(context, renderscript, faceDetection, hist);
@@ -136,14 +150,12 @@ public class PhotoEditing extends AppCompatActivity {
 
         // RecyclerView
         filterRecyclerView = findViewById(R.id.idRecyclerViewHorizontalList);
-
         filterAdapter = new FilterAdapter(applyMenu.colorList, context, MenuType.Nothing);
         LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         filterRecyclerView.setLayoutManager(horizontalLayoutManager);
         filterRecyclerView.setAdapter(filterAdapter);
 
         menuRecyclerView = findViewById(R.id.idMenuViewHorizontalList);
-
         menuAdapter = new MenuAdapter(applyMenu.menuList, context);
         LinearLayoutManager horizontalLayoutManager2 = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         menuRecyclerView.setLayoutManager(horizontalLayoutManager2);
@@ -159,6 +171,7 @@ public class PhotoEditing extends AppCompatActivity {
         if (image.getWidth() < adaptedWidth) {
             adaptedWidth = image.getWidth();
         }
+
         imageEditing = Bitmap.createScaledBitmap(image, adaptedWidth, (int) ((image.getHeight() * adaptedWidth) / image.getWidth()), true);
         imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
 
@@ -231,7 +244,7 @@ public class PhotoEditing extends AppCompatActivity {
      */
     public void share(Bitmap bitmap) {
 
-        String bitmapPath = MediaStore.Images.Media.insertImage(getContentResolver(), bitmap,"title", null);
+        String bitmapPath = MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, "title", null);
         Uri uri = Uri.parse(bitmapPath);
         Intent share = new Intent(Intent.ACTION_SEND);
         share.putExtra(Intent.EXTRA_STREAM, uri);
@@ -324,7 +337,8 @@ public class PhotoEditing extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.i("CV", "onResume()");
-
+        // reset color at black
+        nightMode = false;
     }
 
     @Override

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/test"
+    android:id="@+id/applyFilter"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -110,7 +110,7 @@
         android:layout_width="38dp"
         android:layout_height="38dp"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="40dp"
         android:layout_marginBottom="92dp"
         android:alpha="0.80"
         android:background="@drawable/save"
@@ -130,18 +130,19 @@
 
     <Button
         android:id="@+id/share"
-        android:layout_width="72dp"
-        android:layout_height="39dp"
-        android:layout_marginStart="8dp"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="40dp"
         android:layout_marginBottom="92dp"
         android:alpha="0.80"
+        android:background="@drawable/share"
         android:fontFamily="sans-serif-black"
-        android:text="Share"
         android:textAlignment="center"
         android:textAllCaps="false"
         android:textStyle="italic"
         app:layout_constraintBottom_toTopOf="@+id/Menu"
         app:layout_constraintStart_toEndOf="@+id/apply" />
+
 
 
 </android.support.constraint.ConstraintLayout>

@@ -29,7 +29,7 @@ public class FilterStruct {
      *
      * @see FilterType
      */
-    public FilterType type;
+    public FilterType filterType;
 
     /**
      * Constructeur
@@ -37,14 +37,14 @@ public class FilterStruct {
      * @param filterName
      * @param image
      */
-    public FilterStruct(String filterName, Bitmap image, FilterType type) {
+    public FilterStruct(String filterName, Bitmap image, FilterType filterType) {
         this.filterName = filterName;
         this.image = image;
-        this.type = type;
+        this.filterType = filterType;
     }
 
     public FilterType getFilterType() {
-        return type;
+        return filterType;
     }
 
     public String getFilterName() {
