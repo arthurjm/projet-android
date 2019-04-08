@@ -252,7 +252,7 @@ public class RS {
         for (int i = 0; i < 256; i++) {
             outputHistogram[i] = 0;
         }
-        Allocation histogram = Allocation.createSized(rs, Element.U8(rs), 256);
+        Allocation histogram = Allocation.createSized(rs, Element.I32(rs), 256);
         histogram.copyFrom(histogram);
 
         int canal = 0;

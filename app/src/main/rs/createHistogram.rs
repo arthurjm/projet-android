@@ -2,7 +2,7 @@
 #pragma rs java_package_name (com.android.rssample )
 
 int canal;
-uint8_t *histogram;
+int32_t *histogram;
 
 uchar4 RS_KERNEL createHistogram( uchar4 in , uint32_t x , uint32_t y ) {
     uchar4 out = in ;
@@ -71,7 +71,7 @@ uchar4 RS_KERNEL createHistogram( uchar4 in , uint32_t x , uint32_t y ) {
 		    index = (int) v * 255;
 		}
     }
-    volatile uint8_t *addr = &histogram[index];
+    volatile int32_t *addr = &histogram[index];
     rsAtomicInc(addr);
     return out ;
 }
