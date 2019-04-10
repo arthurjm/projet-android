@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         camera = findViewById(R.id.camera);
         context = getApplicationContext();
 
+
     }
 
     /**
