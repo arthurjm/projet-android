@@ -16,6 +16,7 @@ import com.android.rssample.ScriptC_grey;
 import com.android.rssample.ScriptC_increaseBorder;
 import com.android.rssample.ScriptC_invert;
 import com.android.rssample.ScriptC_keepHue;
+import com.android.rssample.ScriptC_posterisation;
 import com.android.rssample.ScriptC_posterisationRGB;
 import com.android.rssample.ScriptC_sobel;
 import com.package1.Mask.LaplacienMask;
@@ -136,6 +137,20 @@ public class RS {
         setInputOutput(bmp);
         Bitmap res = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), bmp.getConfig());
 
+        ScriptC_posterisation script = new ScriptC_posterisation(rs);
+
+        script.set_depth(depth);
+        script.invoke_initPosterisation(input, output);
+        script.destroy();
+
+        output.copyTo(res);
+        return res;
+    }
+
+    public Bitmap posterisationRGB(Bitmap bmp, int depth) {
+        setInputOutput(bmp);
+        Bitmap res = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), bmp.getConfig());
+
         ScriptC_posterisationRGB script = new ScriptC_posterisationRGB(rs);
 
         script.set_depth(depth);
@@ -211,21 +226,9 @@ public class RS {
 
         ScriptC_increaseBorder script = new ScriptC_increaseBorder(rs);
 
-        Mask mask = new SobelMask(true);
-        Type.Builder maskType = new Type.Builder(rs, Element.I32(rs));
-        maskType.setX(mask.getWidth());
-        maskType.setY(mask.getHeight());
-        Allocation maskAllocation = Allocation.createTyped(rs, maskType.create());
-        maskAllocation.copyFrom(mask.getMask());
-
         script.set_input(input);
         script.set_width(bmp.getWidth());
         script.set_height(bmp.getHeight());
-
-        script.set_mask(maskAllocation);
-        script.set_maskWidth(mask.getWidth());
-        script.set_maskHeight(mask.getHeight());
-        script.set_weight(mask.getWeight());
         script.set_precision(precision);
 
         script.forEach_increaseBorder(input, output);

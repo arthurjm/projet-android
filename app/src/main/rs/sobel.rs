@@ -66,10 +66,5 @@ uchar4 RS_KERNEL sobel(uchar4 in, uint32_t x, uint32_t y) {
 
     temp = sqrt(A*A + B*B) * 1081.8 / 255.0;
 
-    //temp.a = 1;
-    //temp.r = 0;
-    //temp.g = 255.0;
-    //temp.b = 0;
-
     return rsPackColorTo8888(temp);
 }
