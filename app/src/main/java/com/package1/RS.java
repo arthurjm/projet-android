@@ -16,7 +16,7 @@ import com.android.rssample.ScriptC_grey;
 import com.android.rssample.ScriptC_increaseBorder;
 import com.android.rssample.ScriptC_invert;
 import com.android.rssample.ScriptC_keepHue;
-import com.android.rssample.ScriptC_posterisation;
+import com.android.rssample.ScriptC_posterisationRGB;
 import com.android.rssample.ScriptC_sobel;
 import com.package1.Mask.LaplacienMask;
 import com.package1.Mask.Mask;
@@ -136,10 +136,10 @@ public class RS {
         setInputOutput(bmp);
         Bitmap res = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), bmp.getConfig());
 
-        ScriptC_posterisation script = new ScriptC_posterisation(rs);
+        ScriptC_posterisationRGB script = new ScriptC_posterisationRGB(rs);
 
         script.set_depth(depth);
-        script.invoke_initPosterisation(input, output);
+        script.invoke_initPosterisationRGB(input, output);
         script.destroy();
 
         output.copyTo(res);
@@ -280,6 +280,7 @@ public class RS {
         script.forEach_createHistogram(input, output);
 
         script.destroy();
+        histogram.destroy();
 
         histogram.copyTo(outputHistogram);
         return outputHistogram;

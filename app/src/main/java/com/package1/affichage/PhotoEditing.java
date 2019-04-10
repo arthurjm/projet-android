@@ -5,20 +5,28 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
@@ -31,6 +39,7 @@ import com.package1.affichage.Adapter.MenuAdapter;
 import com.package1.affichage.Apply.ApplyMenu;
 import com.package1.affichage.Type.MenuType;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -100,11 +109,15 @@ public class PhotoEditing extends AppCompatActivity {
     private int adaptedWidth;
     public static Button back;
 
+    public static boolean nightMode = false;
+
+    public static ConstraintLayout applyFilterLayout;
+
     @Override
     /**
      *
      */
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.photo_recycle_view);
 
@@ -112,12 +125,21 @@ public class PhotoEditing extends AppCompatActivity {
 
     }
 
+    public static void nightMode() {
+        applyFilterLayout.setBackgroundColor(Color.BLACK);
+    }
+
+    public static void dayMode(){
+        applyFilterLayout.setBackgroundColor(context.getColor(R.color.whiteNuance));
+    }
+
     /**
      * To initiate buttons seekbars and context in layout
      */
     public void initiate() {
 
-        context = getApplicationContext();
+        applyFilterLayout = findViewById(R.id.applyFilter);
+        context = this.getApplicationContext();
         renderscript = new RS(context);
         faceDetection = new FaceDetection(context);
         applyMenu = new ApplyMenu(context, renderscript, faceDetection, hist);
@@ -128,14 +150,12 @@ public class PhotoEditing extends AppCompatActivity {
 
         // RecyclerView
         filterRecyclerView = findViewById(R.id.idRecyclerViewHorizontalList);
-
         filterAdapter = new FilterAdapter(applyMenu.colorList, context, MenuType.Nothing);
         LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         filterRecyclerView.setLayoutManager(horizontalLayoutManager);
         filterRecyclerView.setAdapter(filterAdapter);
 
         menuRecyclerView = findViewById(R.id.idMenuViewHorizontalList);
-
         menuAdapter = new MenuAdapter(applyMenu.menuList, context);
         LinearLayoutManager horizontalLayoutManager2 = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         menuRecyclerView.setLayoutManager(horizontalLayoutManager2);
@@ -151,6 +171,7 @@ public class PhotoEditing extends AppCompatActivity {
         if (image.getWidth() < adaptedWidth) {
             adaptedWidth = image.getWidth();
         }
+
         imageEditing = Bitmap.createScaledBitmap(image, adaptedWidth, (int) ((image.getHeight() * adaptedWidth) / image.getWidth()), true);
         imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
 
@@ -207,6 +228,29 @@ public class PhotoEditing extends AppCompatActivity {
                 imageEditing = imageEditingCopy.copy(Bitmap.Config.ARGB_8888, true);
             }
         });
+        Button share = findViewById(R.id.share);
+        share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                share(imageEditing);
+            }
+        });
+    }
+
+    /**
+     * to share the image
+     *
+     * @param bitmap
+     */
+    public void share(Bitmap bitmap) {
+
+        String bitmapPath = MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, "title", null);
+        Uri uri = Uri.parse(bitmapPath);
+        Intent share = new Intent(Intent.ACTION_SEND);
+        share.putExtra(Intent.EXTRA_STREAM, uri);
+        share.setType("image/*");
+        share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        context.startActivity(Intent.createChooser(share, "Share image File"));
 
     }
 
@@ -257,17 +301,11 @@ public class PhotoEditing extends AppCompatActivity {
         }
         //add file to gallery
         try {
-
             MediaStore.Images.Media.insertImage(getContentResolver(), file.getAbsolutePath(), fileName, null);
             Toast.makeText(context, "save", Toast.LENGTH_SHORT).show();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        /*if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-            sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file" + fileName)));
-        } else {
-            MediaScannerConnection.scanFile(this, new String[]{fileName}, null, null);
-        }*/
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     != PackageManager.PERMISSION_GRANTED) {
@@ -277,10 +315,10 @@ public class PhotoEditing extends AppCompatActivity {
     }
 
     private static final int REQUEST_CODE = 1;
-    private void requestAlertWindowPermission() {
-        ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_CODE);
-    }
 
+    private void requestAlertWindowPermission() {
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE);
+    }
 
 
     @Override
@@ -299,7 +337,8 @@ public class PhotoEditing extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.i("CV", "onResume()");
-
+        // reset color at black
+        nightMode = false;
     }
 
     @Override

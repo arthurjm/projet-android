@@ -8,7 +8,7 @@
     android:background="@color/white">
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/logoFac"
         android:layout_width="match_parent"
         android:layout_height="204dp"
         android:layout_alignParentLeft="true"
@@ -33,15 +33,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2"
+        app:layout_constraintTop_toBottomOf="@+id/logoFac"
         app:layout_constraintVertical_bias="0.14999998" />
 
     <Button
         android:id="@+id/camera"
-        android:layout_width="105dp"
+        android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/camera"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -98,5 +99,6 @@
         app:layout_constraintStart_toStartOf="@+id/camera"
         app:layout_constraintTop_toBottomOf="@+id/camera"
         app:layout_constraintVertical_bias="0.0" />
+
 
 </android.support.constraint.ConstraintLayout>
