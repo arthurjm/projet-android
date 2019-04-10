@@ -17,7 +17,7 @@ import static com.package1.affichage.PhotoEditing.hist;
 import static com.package1.affichage.PhotoEditing.renderscript;
 
 /**
- * Fonction "AsyncTask" enables proper and easy use of the UI thread
+ * Function "AsyncTask" enables proper and easy use of the UI thread
  * doInBackGround enables apply the function that we choose in background
  * and return the image edited when it finishes
  */
@@ -28,98 +28,89 @@ public class MyTask extends AsyncTask<Bitmap, Void, Bitmap> {
     public FilterType filterType;
 
     /**
-     * 
      * @param ctx
      * @param progressBar1
      * @param progressBar2
      * @param filterType
      */
-    public MyTask(Context ctx, int progressBar1, int progressBar2, FilterType filterType){
+    public MyTask(Context ctx, int progressBar1, int progressBar2, FilterType filterType) {
         this.ctx = ctx;
         this.progressBar1 = progressBar1;
         this.progressBar1 = progressBar2;
         this.filterType = filterType;
-
     }
+
+    public void setFilterType(FilterType filterType) {
+        this.filterType = filterType;
+    }
+
     @Override
-    protected void onPreExecute() {
+    public void onPreExecute() {
         super.onPreExecute();
-        Toast.makeText(ctx, "  fonction start", Toast.LENGTH_SHORT).show();
+        Toast.makeText(ctx, "function start", Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    protected Bitmap doInBackground(Bitmap... Bitmap) {
+    public Bitmap doInBackground(Bitmap... Bitmap) {
         switch (filterType) {
             case EquaLight:
                 hist = new HistogramManipulation(Bitmap[0], ChanelType.V);
                 hist.equalizationLUT();
                 imageEditingCopy = hist.applyLUT(Bitmap[0]);
                 break;
-
             case Colorize:
                 imageEditingCopy = (renderscript.colorize(Bitmap[0], progressBar1));
                 break;
-
             case KeepHue:
                 imageEditingCopy = renderscript.keepHue(Bitmap[0], progressBar1, progressBar2);
                 break;
-
             case Contrast:
                 hist = new HistogramManipulation(Bitmap[0], ChanelType.V);
                 hist.linearExtensionLUT(128 + progressBar1, 127 - progressBar1);
                 //imageEditingCopy = hist.applyLUT(imageEditing); //java version
                 imageEditingCopy = renderscript.applyLUT(Bitmap[0], hist);
                 break;
-
             case ShiftLight:
                 hist = new HistogramManipulation(Bitmap[0], ChanelType.V);
                 hist.shiftLUT(progressBar1 - 100);
                 //imageEditingCopy = hist.applyLUT(imageEditing); //java version
                 imageEditingCopy = renderscript.applyLUT(Bitmap[0], hist);
                 break;
-
             case ShiftSaturation:
                 hist = new HistogramManipulation(Bitmap[0], ChanelType.S);
                 hist.shiftLUT(progressBar1 - 100);
                 //imageEditingCopy = hist.applyLUT(imageEditing); //java version
                 imageEditingCopy = renderscript.applyLUT(Bitmap[0], hist);
                 break;
-
             case ShiftColor:
                 hist = new HistogramManipulation(Bitmap[0], ChanelType.H);
                 hist.shiftCycleLUT(progressBar1);
                 //imageEditingCopy = hist.applyLUT(imageEditing); //java version
                 imageEditingCopy = renderscript.applyLUT(Bitmap[0], hist);
                 break;
-
             case Isohelie:
                 imageEditingCopy = renderscript.posterisation(Bitmap[0], progressBar1 + 2);
                 break;
-
             case Blur:
                 BlurMask mask = new BlurMask(progressBar1 + 1);
                 imageEditingCopy = renderscript.convolution(Bitmap[0], mask);
                 break;
-
             case Gaussian:
                 GaussianBlur maskGaussian = new GaussianBlur(progressBar1 * 2 + 1, 2.5);
                 imageEditingCopy = renderscript.convolution(Bitmap[0], maskGaussian);
                 break;
-
             case IncreaseBorder:
                 imageEditingCopy = renderscript.increaseBorder(Bitmap[0], progressBar1 * 10);
                 break;
-
             default:
                 break;
-
         }
         return imageEditingCopy;
     }
 
-    protected void onPostExecute(Bitmap bitmap) {
+    public void onPostExecute(Bitmap bitmap) {
         super.onPostExecute(bitmap);
         imgView.setImageBitmap(bitmap);
-        Toast.makeText(ctx, "  fonction end", Toast.LENGTH_SHORT).show();
+        Toast.makeText(ctx, "function end", Toast.LENGTH_SHORT).show();
     }
 }

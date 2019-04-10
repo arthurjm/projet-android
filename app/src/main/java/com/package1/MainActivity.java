@@ -1,9 +1,7 @@
 package com.package1;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,21 +11,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.design.widget.NavigationView;
 import android.support.v4.content.FileProvider;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.Toolbar;
 
 import com.package1.affichage.PhotoEditing;
 
@@ -60,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
      * We set the code "PICK_IMAGE_REQUEST" as 1
      */
     private int PICK_IMAGE_REQUEST = 1;
-    private static final int TAKE_PHOTO = 1;
+    private int TAKE_PHOTO = 1;
 
     /**
      * Access to gallery

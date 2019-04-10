@@ -80,8 +80,7 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
         // Change the text's color depending the situation
         if (nightMode == true) {
             holder.txtview.setTextColor(Color.WHITE);
-        }
-        else{
+        } else {
             holder.txtview.setTextColor(Color.BLACK);
         }
 

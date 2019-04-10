@@ -3,9 +3,7 @@ package com.package1.affichage.Apply;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TextView;
 
 import com.package1.ChanelType;
 import com.package1.FaceDetection;
@@ -58,6 +56,8 @@ public class ApplyMenu {
     public RS renderscript;
     public FaceDetection faceDetection;
     public HistogramManipulation hist;
+    public Bitmap resizeImageEditing;
+    public Bitmap resizeCopy;
 
     /**
      * Constructor
@@ -79,6 +79,7 @@ public class ApplyMenu {
         extraList = new ArrayList<>();
         maskList = new ArrayList<>();
         contrastList = new ArrayList<>();
+        resizeImageEditing = Bitmap.createScaledBitmap(image, 100, (int) ((image.getHeight() * 100) / image.getWidth()), true);
 
     }
 
@@ -171,30 +172,27 @@ public class ApplyMenu {
         actualMiniImage = image.copy(Bitmap.Config.ARGB_8888, true);
 
         if (colorList.isEmpty() == true) {
-            // On redimensionne l'image
-            Bitmap rediImageEditing = Bitmap.createScaledBitmap(image, 100, (int) ((image.getHeight() * 100) / image.getWidth()), true);
-            Bitmap rediCopy;
 
             FilterStruct fs;
 
             // ToGrey
-            rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            fs = new FilterStruct("Grey", renderscript.toGrey(rediCopy), FilterType.Grey);
+            resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+            fs = new FilterStruct("Grey", renderscript.toGrey(resizeCopy), FilterType.Grey);
             colorList.add(fs);
 
             // Colorize
-            rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            fs = new FilterStruct("Colorize", renderscript.colorize(rediCopy, 180), FilterType.Colorize);
+            resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+            fs = new FilterStruct("Colorize", renderscript.colorize(resizeCopy, 180), FilterType.Colorize);
             colorList.add(fs);
 
             // KeepColor
-            rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            fs = new FilterStruct("KeepHue", renderscript.keepHue(rediCopy, 180, 60), FilterType.KeepHue);
+            resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+            fs = new FilterStruct("KeepHue", renderscript.keepHue(resizeCopy, 180, 60), FilterType.KeepHue);
             colorList.add(fs);
 
             // Invert
-            rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            fs = new FilterStruct("Invert", renderscript.invert(rediCopy), FilterType.Invert);
+            resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+            fs = new FilterStruct("Invert", renderscript.invert(resizeCopy), FilterType.Invert);
             colorList.add(fs);
         }
         filterAdapter.notifyDataSetChanged();
@@ -209,57 +207,54 @@ public class ApplyMenu {
 
         if (contrastList.isEmpty() == true) {
 
-            Bitmap rediImageEditing = Bitmap.createScaledBitmap(image, 100, (int) ((image.getHeight() * 100) / image.getWidth()), true);
-            Bitmap rediCopy;
-
             FilterStruct fs;
 
             // Constrast setting
-            rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            hist = new HistogramManipulation(rediCopy, ChanelType.V);
+            resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+            hist = new HistogramManipulation(resizeCopy, ChanelType.V);
             hist.linearExtensionLUT(198, 50);
-            //fs = new FilterStruct("contrast", hist.applyLUT(rediCopy));
-            fs = new FilterStruct("Contrast", renderscript.applyLUT(rediCopy, hist), FilterType.Contrast);
+            //fs = new FilterStruct("contrast", hist.applyLUT(resizeCopy));
+            fs = new FilterStruct("Contrast", renderscript.applyLUT(resizeCopy, hist), FilterType.Contrast);
             contrastList.add(fs);
 
             // ShiftLight
-            rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            hist = new HistogramManipulation(rediCopy, ChanelType.V);
+            resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+            hist = new HistogramManipulation(resizeCopy, ChanelType.V);
             hist.shiftLUT(45);
-            //fs = new FilterStruct("shiftLight", hist.applyLUT(rediCopy));
-            fs = new FilterStruct("ShiftLight", renderscript.applyLUT(rediCopy, hist), FilterType.ShiftLight);
+            //fs = new FilterStruct("shiftLight", hist.applyLUT(resizeCopy));
+            fs = new FilterStruct("ShiftLight", renderscript.applyLUT(resizeCopy, hist), FilterType.ShiftLight);
             contrastList.add(fs);
 
             // ShiftSaturation
-            rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            hist = new HistogramManipulation(rediCopy, ChanelType.S);
+            resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+            hist = new HistogramManipulation(resizeCopy, ChanelType.S);
             hist.shiftLUT(45);
-            //fs = new FilterStruct("shiftSaturation", hist.applyLUT(rediCopy));
-            fs = new FilterStruct("ShiftSaturation", renderscript.applyLUT(rediCopy, hist), FilterType.ShiftSaturation);
+            //fs = new FilterStruct("shiftSaturation", hist.applyLUT(resizeCopy));
+            fs = new FilterStruct("ShiftSaturation", renderscript.applyLUT(resizeCopy, hist), FilterType.ShiftSaturation);
             contrastList.add(fs);
 
             // ShiftColor
-            rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            hist = new HistogramManipulation(rediCopy, ChanelType.H);
+            resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+            hist = new HistogramManipulation(resizeCopy, ChanelType.H);
             hist.shiftCycleLUT(120);
-            //fs = new FilterStruct("shiftColor", hist.applyLUT(rediCopy));
-            fs = new FilterStruct("ShiftColor", renderscript.applyLUT(rediCopy, hist), FilterType.ShiftColor);
+            //fs = new FilterStruct("shiftColor", hist.applyLUT(resizeCopy));
+            fs = new FilterStruct("ShiftColor", renderscript.applyLUT(resizeCopy, hist), FilterType.ShiftColor);
             contrastList.add(fs);
 
             // Isohelie
-            rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            hist = new HistogramManipulation(rediCopy, ChanelType.V);
+            resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+            hist = new HistogramManipulation(resizeCopy, ChanelType.V);
             hist.isohelieLUT(4);
-            //fs = new FilterStruct("isohelie", hist.applyLUT(rediCopy));
-            fs = new FilterStruct("Isohelie", renderscript.applyLUT(rediCopy, hist), FilterType.Isohelie);
+            //fs = new FilterStruct("isohelie", hist.applyLUT(resizeCopy));
+            fs = new FilterStruct("Isohelie", renderscript.applyLUT(resizeCopy, hist), FilterType.Isohelie);
             contrastList.add(fs);
 
             // EqualizationLight
-            rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            hist = new HistogramManipulation(rediCopy, ChanelType.V);
+            resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+            hist = new HistogramManipulation(resizeCopy, ChanelType.V);
             hist.equalizationLUT();
-            //fs = new FilterStruct("equa light", hist.applyLUT(rediCopy));
-            fs = new FilterStruct("EquaLight", renderscript.applyLUT(rediCopy, hist), FilterType.EquaLight);
+            //fs = new FilterStruct("equa light", hist.applyLUT(resizeCopy));
+            fs = new FilterStruct("EquaLight", renderscript.applyLUT(resizeCopy, hist), FilterType.EquaLight);
             contrastList.add(fs);
         }
         filterAdapter.notifyDataSetChanged();
@@ -273,50 +268,47 @@ public class ApplyMenu {
         actualMiniImage = image.copy(Bitmap.Config.ARGB_8888, true);
 
         if (maskList.isEmpty() == true) {
-            // On redimensionne l'image
-            Bitmap rediImageEditing = Bitmap.createScaledBitmap(image, 100, (int) ((image.getHeight() * 100) / image.getWidth()), true);
-            Bitmap rediCopy;
 
             FilterStruct fs;
 
             // Blur
-            rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+            resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
             BlurMask mask = new BlurMask(9);
-            fs = new FilterStruct("Blur", renderscript.convolution(rediCopy, mask), FilterType.Blur);
+            fs = new FilterStruct("Blur", renderscript.convolution(resizeCopy, mask), FilterType.Blur);
             maskList.add(fs);
 
             // Gaussian
-            rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+            resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
             GaussianBlur maskGaussian = new GaussianBlur(5, 2.5);
-            fs = new FilterStruct("Gaussian", renderscript.convolution(rediCopy, maskGaussian), FilterType.Gaussian);
+            fs = new FilterStruct("Gaussian", renderscript.convolution(resizeCopy, maskGaussian), FilterType.Gaussian);
             maskList.add(fs);
 
             // Laplacien
-            rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+            resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
             LaplacienMask maskLaplacien = new LaplacienMask();
-            fs = new FilterStruct("Laplacien", renderscript.convolution(rediCopy, maskLaplacien), FilterType.Laplacien);
+            fs = new FilterStruct("Laplacien", renderscript.convolution(resizeCopy, maskLaplacien), FilterType.Laplacien);
             maskList.add(fs);
 
             // Sobel vertical
-            rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+            resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
             SobelMask sobelMaskVertical = new SobelMask(true);
-            fs = new FilterStruct("Sobel V", renderscript.convolution(rediCopy, sobelMaskVertical), FilterType.SobelV);
+            fs = new FilterStruct("Sobel V", renderscript.convolution(resizeCopy, sobelMaskVertical), FilterType.SobelV);
             maskList.add(fs);
 
             // Sobel horizontal
-            rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+            resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
             SobelMask sobelMaskHorizontal = new SobelMask(false);
-            fs = new FilterStruct("Sobel H", renderscript.convolution(rediCopy, sobelMaskHorizontal), FilterType.SobelH);
+            fs = new FilterStruct("Sobel H", renderscript.convolution(resizeCopy, sobelMaskHorizontal), FilterType.SobelH);
             maskList.add(fs);
 
             // Sobel
-            rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            fs = new FilterStruct("Sobel", renderscript.sobel(rediCopy), FilterType.Sobel);
+            resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+            fs = new FilterStruct("Sobel", renderscript.sobel(resizeCopy), FilterType.Sobel);
             maskList.add(fs);
 
             // Increase Borders
-            rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            fs = new FilterStruct("Increase Border", renderscript.increaseBorder(rediCopy, 25), FilterType.IncreaseBorder);
+            resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+            fs = new FilterStruct("Increase Border", renderscript.increaseBorder(resizeCopy, 25), FilterType.IncreaseBorder);
             maskList.add(fs);
         }
         filterAdapter.notifyDataSetChanged();
@@ -329,20 +321,15 @@ public class ApplyMenu {
         actualMiniImage = image.copy(Bitmap.Config.ARGB_8888, true);
 
         FilterStruct fs;
-        Bitmap rediCopy;
-
         if (extraList.isEmpty() == true) {
-            // On redimensionne l'image
-            Bitmap rediImageEditing = Bitmap.createScaledBitmap(image, 100, (int) ((image.getHeight() * 100) / image.getWidth()), true);
-
             // FaceDetection
-            rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            fs = new FilterStruct("Face Detection", faceDetection.putSunglass(rediCopy), FilterType.FaceDetection);
+            resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+            fs = new FilterStruct("Face Detection", faceDetection.putSunglass(resizeCopy), FilterType.FaceDetection);
             extraList.add(fs);
 
             // Rotate
-            rediCopy = rediImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            fs = new FilterStruct("Rotate", rediCopy, FilterType.Rotate);
+            resizeCopy = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.rotate);
+            fs = new FilterStruct("Rotate", resizeCopy, FilterType.Rotate);
             extraList.add(fs);
 
             nightDayMode();

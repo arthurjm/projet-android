@@ -3,10 +3,6 @@
     <string name="action_settings">Settings</string>
     <string name="retour">Retour</string>
     <string name="load">Load</string>
-    <string name="tograyv2">toGrayV2</string>
-    <string name="keepred">keepRed</string>
-    <string name="newpage">NewPage</string>
-    <string name="egalgrey">egalGrey</string>
     <string name="save">Sauvegarder</string>
     <string name="undo">Annuler</string>
     <string name="apply">Appliquer</string>

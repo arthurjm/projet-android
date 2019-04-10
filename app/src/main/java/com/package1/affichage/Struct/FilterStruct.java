@@ -32,7 +32,7 @@ public class FilterStruct {
     public FilterType filterType;
 
     /**
-     * Constructeur
+     * Constructor
      *
      * @param filterName
      * @param image

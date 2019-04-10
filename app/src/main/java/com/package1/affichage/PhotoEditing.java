@@ -5,11 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,15 +14,12 @@ import android.provider.MediaStore;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
@@ -39,7 +32,6 @@ import com.package1.affichage.Adapter.MenuAdapter;
 import com.package1.affichage.Apply.ApplyMenu;
 import com.package1.affichage.Type.MenuType;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -129,7 +121,7 @@ public class PhotoEditing extends AppCompatActivity {
         applyFilterLayout.setBackgroundColor(Color.BLACK);
     }
 
-    public static void dayMode(){
+    public static void dayMode() {
         applyFilterLayout.setBackgroundColor(context.getColor(R.color.whiteNuance));
     }
 
@@ -178,9 +170,9 @@ public class PhotoEditing extends AppCompatActivity {
         imgView.setImageBitmap(imageEditing);
 
         // SeekBar and visibility
-        seekBar1 = findViewById(R.id.seekBarFull);
+        seekBar1 = findViewById(R.id.seekBarRGB);
         seekBar1.setVisibility(View.GONE);
-        seekBar2 = findViewById(R.id.seekBarDemi);
+        seekBar2 = findViewById(R.id.seekBarNormal);
         seekBar2.setVisibility(View.GONE);
 
         addListener();

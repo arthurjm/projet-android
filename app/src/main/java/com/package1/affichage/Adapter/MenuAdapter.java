@@ -65,8 +65,8 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
     }
 
     /**
-     *
      * Modify the actual case in the recyclerView
+     *
      * @param holder
      * @param position
      */
@@ -78,8 +78,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
         // Change the text's color depending the situation
         if (nightMode == true) {
             holder.txtview.setTextColor(Color.WHITE);
-        }
-        else{
+        } else {
             holder.txtview.setTextColor(Color.BLACK);
         }
 

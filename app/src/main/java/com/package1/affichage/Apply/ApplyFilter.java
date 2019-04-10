@@ -1,16 +1,13 @@
 package com.package1.affichage.Apply;
 
-import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.package1.ChanelType;
@@ -29,6 +26,7 @@ import static com.package1.MainActivity.imageEditingCopy;
 import static com.package1.MainActivity.imgView;
 import static com.package1.affichage.PhotoEditing.applyMenu;
 import static com.package1.affichage.PhotoEditing.back;
+import static com.package1.affichage.PhotoEditing.context;
 import static com.package1.affichage.PhotoEditing.dayMode;
 import static com.package1.affichage.PhotoEditing.faceDetection;
 import static com.package1.affichage.PhotoEditing.filterRecyclerView;
@@ -254,10 +252,6 @@ public class ApplyFilter extends AppCompatActivity {
             case EquaLight:
                 setGone(seekBar1, seekBar2);
                 setFilterType(FilterType.EquaLight);
-                /*hist = new HistogramManipulation(imageEditing, ChanelType.V);
-                hist.equalizationLUT();
-                imageEditingCopy = hist.applyLUT(imageEditing);
-                imageEditingCopy = renderscript.applyLUT(imageEditing, hist);*/
                 new ApplyFilter.MyTask().execute(imageEditing);
                 break;
             default:
@@ -326,11 +320,11 @@ public class ApplyFilter extends AppCompatActivity {
             case Rotate:
                 setGone(seekBar1, seekBar2);
                 imageEditingCopy = RotateBitmap(imageEditingCopy, 90);
+                imageEditing = imageEditingCopy.copy(Bitmap.Config.ARGB_8888, true);
                 break;
             case NightMode:
-                setGone(seekBar1,seekBar2);
-                //PhotoEditing edit = (PhotoEditing)ctx;
-                //edit.nightMode();
+                setGone(seekBar1, seekBar2);
+                //seekBar2.getThumb().setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
                 applyMenu.menuList.clear();
                 applyMenu.menuList();
                 menuRecyclerView.setVisibility(View.VISIBLE);
@@ -386,7 +380,6 @@ public class ApplyFilter extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 new ApplyFilter.MyTask().execute(imageEditing);
-
             }
         });
 
@@ -408,9 +401,16 @@ public class ApplyFilter extends AppCompatActivity {
         });
     }
 
-
+    /**
+     * Fonction "AsyncTask" enables proper and easy use of the UI thread
+     * doInBackGround enables apply the function that we choose in background
+     * and return the image edited when it finishes
+     */
     private class MyTask extends AsyncTask<Bitmap, Void, Bitmap> {
 
+        /**
+         * show the message "function start" when the function is chosen
+         */
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -418,6 +418,12 @@ public class ApplyFilter extends AppCompatActivity {
             Toast.makeText(ctx, "function start", Toast.LENGTH_SHORT).show();
         }
 
+        /**
+         * match the function that we choose and apply on the image
+         *
+         * @param Bitmap the image that we process
+         * @return
+         */
         @Override
         protected Bitmap doInBackground(Bitmap... Bitmap) {
             switch (filterType) {
@@ -476,6 +482,11 @@ public class ApplyFilter extends AppCompatActivity {
             return imageEditingCopy;
         }
 
+        /**
+         * return the image processed and show the message "function end"
+         *
+         * @param bitmap the image processed
+         */
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
             imgView.setImageBitmap(bitmap);
@@ -483,5 +494,4 @@ public class ApplyFilter extends AppCompatActivity {
             Toast.makeText(ctx, "function end", Toast.LENGTH_SHORT).show();
         }
     }
-
 }

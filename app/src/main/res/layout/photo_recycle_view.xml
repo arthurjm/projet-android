@@ -52,7 +52,7 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <SeekBar
-        android:id="@+id/seekBarFull"
+        android:id="@+id/seekBarRGB"
         android:layout_width="313dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
@@ -63,13 +63,13 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <SeekBar
-        android:id="@+id/seekBarDemi"
+        android:id="@+id/seekBarNormal"
         android:layout_width="313dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/seekBarFull"
+        app:layout_constraintBottom_toTopOf="@+id/seekBarRGB"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
