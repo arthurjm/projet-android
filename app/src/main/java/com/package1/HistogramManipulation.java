@@ -110,7 +110,6 @@ public class HistogramManipulation {
                 LUT[i] = 0;
             }
         }
-        Log.e("TAG","min : "+histogram.getMin()+"\tmax : "+histogram.getMax());
     }
 
     /**
