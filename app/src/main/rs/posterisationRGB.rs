@@ -35,7 +35,7 @@ uchar4 RS_KERNEL posterisationRGB( uchar4 in , uint32_t x , uint32_t y ) {
 
 void initPosterisationRGB(rs_allocation inputImage, rs_allocation outputImage) {
     // Initialise le tableau de valeurs possibles (s'execute qu'une fois au lancement)
-    int delta = 255 / depth - 1;
+    int delta = (int)((float)255 / (float)(depth - 1));
     for (int i = 0; i < depth; i++) {
         tab[i] = i * delta;
     }

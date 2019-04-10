@@ -159,7 +159,9 @@ public class PhotoEditing extends AppCompatActivity {
 
         // Image
         imgView = findViewById(R.id.imageResult);
-        adaptedWidth = 1500;
+        //allow to change the limit on the picture's resolution, if the picture's width is bigger than the limit,
+        // it will stay at the limit value instead, the picture's height will be changed accordingly
+        adaptedWidth = 2000;
         if (image.getWidth() < adaptedWidth) {
             adaptedWidth = image.getWidth();
         }

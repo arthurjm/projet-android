@@ -41,10 +41,10 @@ uchar4 RS_KERNEL createHistogram( uchar4 in , uint32_t x , uint32_t y ) {
 			h = fmod( (60 * (g - b)/delta + 360), 360);
 		}
 		if (maxRGB == g) {
-			h = fmod( (60 * (b - r)/delta + 120), 360);
+			h = fmod( (60 * (b - r)/delta + 480), 360);
 		}
 		if (maxRGB == b) {
-			h = fmod( (60 * (r - g)/delta + 240), 360);
+			h = fmod( (60 * (r - g)/delta + 600), 360);
 		}
 
 		// s

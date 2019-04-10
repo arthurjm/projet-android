@@ -179,7 +179,8 @@ public class HistogramManipulation {
      * Function used to "equalize" the histogram.
      * Starting with the value 0 and going up.
      * This function does not use an "accumulative histogram" but evaluate the LUT's values step by step.
-     * The advantage is that we can not have an integer exceeding his limits, but there is more operations overall.
+     * The advantage is that we can not have an integer exceeding his limits, but there is more operations overall,
+     * although the application time stay practically the same.
      */
     public void equalizationLUT() {
         int average = histogram.getCount()/NumberofValues;
@@ -201,6 +202,7 @@ public class HistogramManipulation {
     /**
      * Function used to "equalize" the histogram.
      * Starting with the value maximum and going down.
+     * Unused in this version of the application.
      */
     public void equalizationAlternateLUT() {
         int average = histogram.getCount()/NumberofValues;
@@ -219,12 +221,13 @@ public class HistogramManipulation {
         }
     }
 
-    /**
+    /* Here start the application of the LUT with java, unused with the renderscript version
+    **
      * Function that apply the LUT stored to the bitmap in parameter
      *
      * @param original The bitmap on which the LUT is applied
      * @return The new Bitmap corresponding at "original" with the changed of the LUT applied
-     */
+     *
     public Bitmap applyLUT(Bitmap original) {
         ChanelType ct = histogram.getChanel();
         int[] tab = new int[original.getWidth() * original.getHeight()];
@@ -259,4 +262,5 @@ public class HistogramManipulation {
         res.setPixels(tab, 0, original.getWidth(), 0, 0, original.getWidth(), original.getHeight());
         return res;
     }
+    */
 }

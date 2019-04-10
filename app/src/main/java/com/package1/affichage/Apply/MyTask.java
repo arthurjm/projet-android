@@ -56,7 +56,7 @@ public class MyTask extends AsyncTask<Bitmap, Void, Bitmap> {
             case EquaLight:
                 hist = new HistogramManipulation(Bitmap[0], ChanelType.V,renderscript);
                 hist.equalizationLUT();
-                imageEditingCopy = hist.applyLUT(Bitmap[0]);
+                imageEditingCopy = renderscript.applyLUT(Bitmap[0],hist);
                 break;
             case Colorize:
                 imageEditingCopy = (renderscript.colorize(Bitmap[0], progressBar1));

@@ -35,7 +35,7 @@ Histogram {
      */
     public Histogram(int[] tab, ChanelType chanel, int count) {
         this.chanel = chanel;
-        histogramValue=tab;
+      //  histogramValue=tab;
         this.count=count;
         min=NumberofValues;
         max=-1;
@@ -46,6 +46,7 @@ Histogram {
             if(histogramValue[i]!=0 && i>max){
                 max=i;
             }
+            histogramValue[i]=tab[i];
         }
     }
 
