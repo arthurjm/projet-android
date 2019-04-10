@@ -62,9 +62,9 @@ public class ApplyFilter {
     }
 
     /**
-     * Permet de mettre a Gone la view d'une seekBar
+     *To make a seekbar invisible
      *
-     * @param sb
+     * @param sb the seekbar that we handle
      * @see View#GONE
      */
     public void setGone(SeekBar sb) {
@@ -72,10 +72,10 @@ public class ApplyFilter {
     }
 
     /**
-     * Permet de mettre a Gone la view de deux seekBar
+     * To make two seekbars invisible
      *
-     * @param sb
-     * @param sb1
+     * @param sb the seekbar that we handle
+     * @param sb1 the seekbar that we handle
      */
     public void setGone(SeekBar sb, SeekBar sb1) {
         setGone(sb);
@@ -83,9 +83,9 @@ public class ApplyFilter {
     }
 
     /**
-     * Permet de mettre a Visible la view d'une seekBar
+     * To make the seekbar visible
      *
-     * @param sb
+     * @param sb the seekbar that we handle
      * @see View#VISIBLE
      */
     public void setVisible(SeekBar sb) {
@@ -93,10 +93,10 @@ public class ApplyFilter {
     }
 
     /**
-     * Permet de mettre a Visible la view de deux seekbar
+     * To make two seekbars visible
      *
-     * @param sb
-     * @param sb1
+     * @param sb the seekbar that we handle
+     * @param sb1 the seekbar that we handle
      * @see View#VISIBLE
      */
     public void setVisible(SeekBar sb, SeekBar sb1) {
@@ -105,10 +105,10 @@ public class ApplyFilter {
     }
 
     /**
-     * Permet de choisir la valeur max d'une seekBar
+     * To set the max value of a seekbar
      *
-     * @param sb
-     * @param max
+     * @param sb the seekbar that we handle
+     * @param max tha max value
      * @see SeekBar#setMax(int)
      */
     public void setBorn(SeekBar sb, int max) {
@@ -116,9 +116,9 @@ public class ApplyFilter {
     }
 
     /**
-     * Permet de mettre l'arriere plan d'une seekBar en RGB
+     * To make the background of a seekbar
      *
-     * @param sb
+     * @param sb the seekbar that we handle
      * @see SeekBar#setBackgroundResource(int)
      */
     public void setRGBBackground(SeekBar sb) {
@@ -126,9 +126,9 @@ public class ApplyFilter {
     }
 
     /**
-     * Permet de mettre l'arriere plan d'un seekBar à normal
+     * To make a normal background for a seekbar
      *
-     * @param sb
+     * @param sb the seekbar that we handle
      * @see SeekBar#setBackgroundResource(int)
      */
     public void setNormalBackground(SeekBar sb) {
@@ -200,6 +200,10 @@ public class ApplyFilter {
         }
     }
 
+    /**
+     * match the function and set the seekbar visible that we need
+     * @param type
+     */
     public void saturationFunction(FilterType type) {
         switch (type) {
             case Contrast:
@@ -257,6 +261,10 @@ public class ApplyFilter {
         }
     }
 
+    /**
+     * match the function and set the seekbar visible that we need
+      * @param type
+     */
     public void maskFunction(FilterType type) {
         switch (type) {
             case Blur:
@@ -308,6 +316,10 @@ public class ApplyFilter {
         }
     }
 
+    /**
+     * Some functions extra like facedetecction and  rotate the image
+     * @param type
+     */
     public void extraFunction(FilterType type) {
         switch (type) {
             case FaceDetection:
@@ -325,10 +337,10 @@ public class ApplyFilter {
     }
 
     /**
-     * Rotate a bitmap
+     * Rotate a bitmap by the angle
      *
-     * @param source
-     * @param angle
+     * @param source the image that we process
+     * @param angle the angle that we rotate the image by
      * @return bitmap flip with angle
      */
     public Bitmap RotateBitmap(Bitmap source, float angle) {
@@ -338,7 +350,7 @@ public class ApplyFilter {
     }
 
     /**
-     * Add actions
+     * Add the listener for two seekbars
      */
     private void addListener() {
 
@@ -378,9 +390,16 @@ public class ApplyFilter {
         });
     }
 
-
+    /**
+     * Fonction "AsyncTask" enables proper and easy use of the UI thread
+     * doInBackGround enables apply the function that we choose in background
+     * and return the image edited when it finishes
+     */
     private class MyTask extends AsyncTask<Bitmap, Void, Bitmap> {
 
+        /**
+         * show the message "function start" when the function is chosen
+         */
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -388,6 +407,11 @@ public class ApplyFilter {
             Toast.makeText(ctx, "function start", Toast.LENGTH_SHORT).show();
         }
 
+        /**
+         * match the function that we choose and apply on the image
+         * @param Bitmap the image that we process
+         * @return
+         */
         @Override
         protected Bitmap doInBackground(Bitmap... Bitmap) {
             switch (filterType) {
@@ -446,6 +470,10 @@ public class ApplyFilter {
             return imageEditingCopy;
         }
 
+        /**
+         * return the image processed and show the message "function end"
+         * @param bitmap the image processed
+         */
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
             imgView.setImageBitmap(bitmap);
