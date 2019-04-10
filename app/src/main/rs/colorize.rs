@@ -26,42 +26,43 @@ uchar4 RS_KERNEL colorize ( uchar4 in ) {
 	//v
 	v = maxRGB;
 
-	int h2;
+    // Repasser du HSV en RGB
+	int h;
 	float f, l, m, n;
-	float h = hue/60.0;
-	h2 = fmod(h, 6);
+	float h2 = hue/60.0;
 
-	f = h - h2;
+	h = hue/60;
+	f = h2 - h;
 	l = v * (1 - s);
 	m = v * (1 - f * s);
 	n = v * (1 - (1 - f) * s);
 
-	if (h2 == 0) {
+	if (h == 0) {
 		out.r = v * 255;
 		out.g = n * 255;
 		out.b = l * 255;
 	}
-	if (h2 == 1) {
+	if (h == 1) {
 		out.r = m * 255;
 		out.g = v * 255;
 		out.b = l * 255;
 	}
-	if (h2 == 2) {
+	if (h == 2) {
 		out.r = l * 255;
 		out.g = v * 255;
 		out.b = n * 255;
 	}
-	if (h2 == 3) {
+	if (h == 3) {
 		out.r = l * 255;
 		out.g = m * 255;
 		out.b = v * 255;
 	}
-	if (h2 == 4) {
+	if (h == 4) {
 		out.r = n * 255;
 		out.g = l * 255;
 		out.b = v * 255;
 	}
-	if (h2 == 5) {
+	if (h == 5) {
 		out.r = v * 255;
 		out.g = l * 255;
 		out.b = m * 255;

@@ -79,7 +79,7 @@ uchar4 RS_KERNEL applyLUT(uchar4 in, uint32_t x, uint32_t y) {
 			v = rsGetElementAt_int(LUT, index) / 255.0;
 		}
 
-        // Repasse le HSV en RGB
+        // Repasser du HSV en RGB
 		float f, l, m, n;
 		float h2 = h/60.0;
 
