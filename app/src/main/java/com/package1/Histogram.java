@@ -40,13 +40,14 @@ Histogram {
         min=NumberofValues;
         max=-1;
         for(int i = 0; i < NumberofValues;i++){
+            histogramValue[i]=tab[i];
             if(histogramValue[i]!=0 && i<min){
                 min=i;
             }
             if(histogramValue[i]!=0 && i>max){
                 max=i;
             }
-            histogramValue[i]=tab[i];
+
         }
     }
 
