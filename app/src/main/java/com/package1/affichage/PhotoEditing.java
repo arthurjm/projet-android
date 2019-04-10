@@ -298,20 +298,7 @@ public class PhotoEditing extends AppCompatActivity {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    != PackageManager.PERMISSION_GRANTED) {
-                requestAlertWindowPermission();
-            }
-        }
     }
-
-    private static final int REQUEST_CODE = 1;
-
-    private void requestAlertWindowPermission() {
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE);
-    }
-
 
     @Override
     /**
