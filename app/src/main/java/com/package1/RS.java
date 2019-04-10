@@ -253,7 +253,7 @@ public class RS {
             outputHistogram[i] = 0;
         }
         Allocation histogram = Allocation.createSized(rs, Element.I32(rs), 256);
-        histogram.copyFrom(histogram);
+        histogram.copyFrom(outputHistogram);
 
         int canal = 0;
         if (channel == ChanelType.R) {
@@ -279,10 +279,11 @@ public class RS {
         script.set_canal(canal);
         script.forEach_createHistogram(input, output);
 
-        script.destroy();
-        histogram.destroy();
-
         histogram.copyTo(outputHistogram);
+
+        histogram.destroy();
+        script.destroy();
+
         return outputHistogram;
     }
 

@@ -60,15 +60,15 @@ uchar4 RS_KERNEL createHistogram( uchar4 in , uint32_t x , uint32_t y ) {
 
         // Canal H (4 == H)
 		if (canal == 4) {
-		    index = (int) h * 255/360;
+		    index = (int) (h * 255.0/360.0);
 		}
 		// Canal S (5 == S)
 		if (canal == 5) {
-		    index = (int) s * 255;
+		    index = (int) (s * 255.0);
 		}
 		// Canal V (6 == V)
 		if (canal == 6) {
-		    index = (int) v * 255;
+		    index = (int) (v * 255.0);
 		}
     }
     volatile int32_t *addr = &histogram[index];
