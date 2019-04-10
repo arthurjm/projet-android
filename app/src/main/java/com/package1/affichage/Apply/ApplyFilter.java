@@ -68,7 +68,7 @@ public class ApplyFilter extends AppCompatActivity {
     }
 
     /**
-     * Permet de mettre a Gone la view d'une seekBar
+     * To set the view to gone
      *
      * @param sb
      * @see View#GONE
@@ -78,7 +78,7 @@ public class ApplyFilter extends AppCompatActivity {
     }
 
     /**
-     * Permet de mettre a Gone la view de deux seekBar
+     * To set the view to gone
      *
      * @param sb
      * @param sb1
@@ -89,7 +89,7 @@ public class ApplyFilter extends AppCompatActivity {
     }
 
     /**
-     * Permet de mettre a Visible la view d'une seekBar
+     * To set the view to visible
      *
      * @param sb
      * @see View#VISIBLE
@@ -99,7 +99,7 @@ public class ApplyFilter extends AppCompatActivity {
     }
 
     /**
-     * Permet de mettre a Visible la view de deux seekbar
+     * To set the view to visible
      *
      * @param sb
      * @param sb1
@@ -111,7 +111,7 @@ public class ApplyFilter extends AppCompatActivity {
     }
 
     /**
-     * Permet de choisir la valeur max d'une seekBar
+     * To set the max value
      *
      * @param sb
      * @param max
@@ -122,7 +122,7 @@ public class ApplyFilter extends AppCompatActivity {
     }
 
     /**
-     * Permet de mettre l'arriere plan d'une seekBar en RGB
+     * To set the background at RGB
      *
      * @param sb
      * @see SeekBar#setBackgroundResource(int)
@@ -132,7 +132,7 @@ public class ApplyFilter extends AppCompatActivity {
     }
 
     /**
-     * Permet de mettre l'arriere plan d'un seekBar à normal
+     * To set the background at normal
      *
      * @param sb
      * @see SeekBar#setBackgroundResource(int)
