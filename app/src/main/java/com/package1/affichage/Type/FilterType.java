@@ -26,9 +26,12 @@ public enum FilterType {
     Laplacien,
     SobelV,
     SobelH,
+    Sobel,
     IncreaseBorder,
 
     // Extras
     FaceDetection,
-    Rotate
+    Rotate,
+    NightMode,
+    DayMode
 }

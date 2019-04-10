@@ -8,22 +8,17 @@ uchar4 RS_KERNEL posterisation( uchar4 in , uint32_t x , uint32_t y ) {
     uchar4 out = in ;
 
     // On initialise avec l'indice de la premiere case du tableau (pour chaque canal indépendamment)
-    out.r = 0;
-    out.g = 0;
-    out.b = 0;
+	float r = in.r / 255.0;
+	float g = in.g / 255.0;
+	float b = in.b / 255.0;
 
-    // On cherche l'indice qui a sa valeur la plus proche de la valeur initiale (pour chaque canal indépendamment)
-    for (int i = 1; i < depth; i++) {
-        if ( abs(in.r - tab[i]) < abs(in.r - tab[out.r]) ) {
-            out.r = i;
-        }
-        if ( abs(in.g - tab[i]) < abs(in.g - tab[out.g]) ) {
-            out.g = i;
-        }
-        if ( abs(in.b - tab[i]) < abs(in.b - tab[out.b]) ) {
-            out.b = i;
-        }
-    }
+	float maxRGB = max(r, max(g, b));
+	float minRGB = min(min(r, g), b);
+
+	//v
+	float v = maxRGB;
+
+
 
     // Une fois l'indice trouvé on récupère la valeur du tableau
     out.r = tab[out.r];

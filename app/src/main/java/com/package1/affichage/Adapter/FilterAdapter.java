@@ -1,6 +1,7 @@
 package com.package1.affichage.Adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,8 @@ import com.package1.affichage.Type.MenuType;
 
 import java.util.List;
 
+import static com.package1.affichage.PhotoEditing.nightMode;
+
 /**
  * @author Mathieu
  * Adapter of FilterAdapter
@@ -27,26 +30,25 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
      *
      * @see FilterStruct
      */
-    private List<FilterStruct> horizontalPhotoList;
+    private List<FilterStruct> FilterList;
     /**
      * a variable of type Context
      *
      * @see Context
      */
-    private Context context;
+    public Context ctx;
     public ApplyFilter applyFilter;
 
     /**
      * Constructor
      *
-     * @param horizontalPhotoList
+     * @param FilterList
      * @param context
      */
-    public FilterAdapter(List<FilterStruct> horizontalPhotoList, Context context, MenuType rt) {
-        this.horizontalPhotoList = horizontalPhotoList;
-        this.context = context;
-        this.applyFilter = new ApplyFilter(context, rt);
-
+    public FilterAdapter(List<FilterStruct> FilterList, Context context, MenuType menuType) {
+        this.FilterList = FilterList;
+        this.ctx = context;
+        this.applyFilter = new ApplyFilter(context, menuType);
     }
 
     /**
@@ -73,16 +75,22 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
     @Override
     public void onBindViewHolder(final FilterViewHolder holder, final int position) {
 
-        holder.imageView.setImageBitmap(horizontalPhotoList.get(position).getImage());
-        holder.txtview.setText(horizontalPhotoList.get(position).getFilterName());
+        holder.imageView.setImageBitmap(FilterList.get(position).getImage());
+        holder.txtview.setText(FilterList.get(position).getFilterName());
+        // Change the text's color depending the situation
+        if (nightMode == true) {
+            holder.txtview.setTextColor(Color.WHITE);
+        } else {
+            holder.txtview.setTextColor(Color.BLACK);
+        }
 
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // use adequate function with the select image
-                applyFilter.useFunction(horizontalPhotoList.get(position).getFilterType());
-                String productName = horizontalPhotoList.get(position).getFilterName().toString();
-                Toast.makeText(context, productName + " is selected", Toast.LENGTH_SHORT).show();
+                applyFilter.useFunction(FilterList.get(position).getFilterType());
+                String productName = FilterList.get(position).getFilterName().toString();
+                Toast.makeText(ctx, productName + " is selected", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -90,7 +98,7 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
 
     @Override
     public int getItemCount() {
-        return horizontalPhotoList.size();
+        return FilterList.size();
     }
 
     public class FilterViewHolder extends RecyclerView.ViewHolder {

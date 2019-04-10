@@ -1,16 +1,21 @@
 package com.package1;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -49,7 +54,8 @@ public class MainActivity extends AppCompatActivity {
      * We set the code "PICK_IMAGE_REQUEST" as 1
      */
     private int PICK_IMAGE_REQUEST = 1;
-    private static final int TAKE_PHOTO = 1;
+    private int TAKE_PHOTO = 1;
+    private int REQUEST_CODE = 1;
 
     /**
      * Access to gallery
@@ -61,6 +67,32 @@ public class MainActivity extends AppCompatActivity {
     private Button camera;
     public Context context;
 
+    /**
+     * @param savedInstanceState
+     */
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        Log.i("CV", "onCreate()");
+
+        initiate();
+        addListenerOnButton();
+        permission();
+
+    }
+
+    /**
+     * To check permissions
+     */
+    public void permission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requestAlertWindowPermission();
+            }
+        }
+    }
 
     /**
      * To set each button on the screen
@@ -72,6 +104,11 @@ public class MainActivity extends AppCompatActivity {
         context = getApplicationContext();
 
     }
+
+    private void requestAlertWindowPermission() {
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE);
+    }
+
 
     /**
      * To link the corresponding action with each button
@@ -120,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
+
         }
     }
 
@@ -132,6 +170,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
 
     /**
      * @param requestCode the same code in the function "startActivityForResult" to make sure the datas from which Activity
@@ -161,6 +200,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 if (filePath != null) {
                     image = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                    image = rotateBitmap(imagepath);
                     filterPage();
                 }
             } catch (IOException e) {
@@ -230,22 +270,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this, PhotoEditing.class));
     }
 
-    /**
-     * @param savedInstanceState
-     */
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Log.i("CV", "onCreate()");
-
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inMutable = true;
-
-        initiate();
-        addListenerOnButton();
-
-    }
 
     /**
      *

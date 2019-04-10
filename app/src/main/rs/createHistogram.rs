@@ -23,9 +23,9 @@ uchar4 RS_KERNEL createHistogram( uchar4 in , uint32_t x , uint32_t y ) {
 	}
 	// Canaux HSV
 	if (canal > 3) {
-		float r = (float)in.r / 255.0;
-		float g = (float)in.g / 255.0;
-		float b = (float)in.b / 255.0;
+		float r = in.r / 255.0;
+		float g = in.g / 255.0;
+		float b = in.b / 255.0;
 
 		float maxRGB = max(r, max(g, b));
 		float minRGB = min(min(r, g), b);
@@ -41,10 +41,10 @@ uchar4 RS_KERNEL createHistogram( uchar4 in , uint32_t x , uint32_t y ) {
 			h = fmod( (60 * (g - b)/delta + 360), 360);
 		}
 		if (maxRGB == g) {
-			h = fmod( (60 * (b - r)/delta + 480), 360);
+			h = fmod( (60 * (b - r)/delta + 120), 360);
 		}
 		if (maxRGB == b) {
-			h = fmod( (60 * (r - g)/delta + 600), 360);
+			h = fmod( (60 * (r - g)/delta + 240), 360);
 		}
 
 		// s
@@ -60,15 +60,15 @@ uchar4 RS_KERNEL createHistogram( uchar4 in , uint32_t x , uint32_t y ) {
 
         // Canal H (4 == H)
 		if (canal == 4) {
-		    index = (int) ((h * 255)/360);
+		    index = (int) (h * 255.0/360.0);
 		}
 		// Canal S (5 == S)
 		if (canal == 5) {
-		    index = (int) (s * 255);
+		    index = (int) (s * 255.0);
 		}
 		// Canal V (6 == V)
 		if (canal == 6) {
-		    index = (int) (v * 255);
+		    index = (int) (v * 255.0);
 		}
     }
     volatile int32_t *addr = &histogram[index];

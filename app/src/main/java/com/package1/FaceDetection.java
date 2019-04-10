@@ -16,6 +16,9 @@ import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
 import com.google.android.gms.vision.face.Landmark;
 
+/**
+ * To detect and trick a face
+ */
 public class FaceDetection {
     private Bitmap sunglass;
     private Bitmap hat;
@@ -23,6 +26,10 @@ public class FaceDetection {
     private FaceDetector faceDetector;
     private Canvas canvas;
 
+    /**
+     * a constructor of the facedetection
+     * @param ctx
+     */
     public FaceDetection(Context ctx) {
         sunglass = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.sunglass);
         hat = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.hat);
@@ -35,6 +42,11 @@ public class FaceDetection {
                 .build();
     }
 
+    /**
+     *To detect and trick the face
+     * @param bmp
+     * @return the image with the face tricked
+     */
     public Bitmap putSunglass(Bitmap bmp) {
         Bitmap tmpBmp = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), Bitmap.Config.RGB_565);
         canvas = new Canvas(tmpBmp);
@@ -53,6 +65,10 @@ public class FaceDetection {
         return tmpBmp;
     }
 
+    /**
+     * To detect the face in the picture
+     * @param face
+     */
     private void directLandmarks(Face face) {
         for (Landmark landmark:face.getLandmarks()) {
             int cx = (int) (landmark.getPosition().x);
@@ -62,6 +78,13 @@ public class FaceDetection {
         }
     }
 
+    /**
+     *To trick the face with sunglass hat and beard
+     * @param type
+     * @param cx
+     * @param cy
+     * @param face
+     */
     private void drawOnImageView(int type, int cx, int cy, Face face) {
         if (type == Landmark.NOSE_BASE) {
             Paint rectPaint = new Paint();

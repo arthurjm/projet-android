@@ -2,8 +2,10 @@ package com.package1.affichage.Apply;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.AsyncTask;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.SeekBar;
 import android.widget.Toast;
@@ -22,8 +24,15 @@ import com.package1.affichage.Type.MenuType;
 import static com.package1.MainActivity.imageEditing;
 import static com.package1.MainActivity.imageEditingCopy;
 import static com.package1.MainActivity.imgView;
+import static com.package1.affichage.PhotoEditing.applyMenu;
+import static com.package1.affichage.PhotoEditing.back;
+import static com.package1.affichage.PhotoEditing.context;
+import static com.package1.affichage.PhotoEditing.dayMode;
 import static com.package1.affichage.PhotoEditing.faceDetection;
+import static com.package1.affichage.PhotoEditing.filterRecyclerView;
 import static com.package1.affichage.PhotoEditing.hist;
+import static com.package1.affichage.PhotoEditing.menuRecyclerView;
+import static com.package1.affichage.PhotoEditing.nightMode;
 import static com.package1.affichage.PhotoEditing.renderscript;
 import static com.package1.affichage.PhotoEditing.seekBar1;
 import static com.package1.affichage.PhotoEditing.seekBar2;
@@ -36,10 +45,10 @@ import static com.package1.affichage.PhotoEditing.seekBar2;
  * recyclerType -> we use it to check in which type of FilterRecyclerView we are
  * progressBar1 / progressBar2 -> actual value of seekBars
  */
-public class ApplyFilter {
+public class ApplyFilter extends AppCompatActivity {
 
     public FilterType filterType;
-    public MenuType recyclerType;
+    public MenuType menuType;
     public Context ctx;
     public int progressBar1, progressBar2;
 
@@ -47,11 +56,11 @@ public class ApplyFilter {
      * Constructor
      *
      * @param ctx
-     * @param recyclerType
+     * @param menuType
      */
-    public ApplyFilter(Context ctx, MenuType recyclerType) {
+    public ApplyFilter(Context ctx, MenuType menuType) {
         this.ctx = ctx;
-        this.recyclerType = recyclerType;
+        this.menuType = menuType;
     }
 
     public void setFilterType(FilterType filterType) {
@@ -59,7 +68,7 @@ public class ApplyFilter {
     }
 
     /**
-     * Permet de mettre a Gone la view d'une seekBar
+     * To set the view to gone
      *
      * @param sb
      * @see View#GONE
@@ -69,7 +78,7 @@ public class ApplyFilter {
     }
 
     /**
-     * Permet de mettre a Gone la view de deux seekBar
+     * To set the view to gone
      *
      * @param sb
      * @param sb1
@@ -80,7 +89,7 @@ public class ApplyFilter {
     }
 
     /**
-     * Permet de mettre a Visible la view d'une seekBar
+     * To set the view to visible
      *
      * @param sb
      * @see View#VISIBLE
@@ -90,7 +99,7 @@ public class ApplyFilter {
     }
 
     /**
-     * Permet de mettre a Visible la view de deux seekbar
+     * To set the view to visible
      *
      * @param sb
      * @param sb1
@@ -102,7 +111,7 @@ public class ApplyFilter {
     }
 
     /**
-     * Permet de choisir la valeur max d'une seekBar
+     * To set the max value
      *
      * @param sb
      * @param max
@@ -113,7 +122,7 @@ public class ApplyFilter {
     }
 
     /**
-     * Permet de mettre l'arriere plan d'une seekBar en RGB
+     * To set the background at RGB
      *
      * @param sb
      * @see SeekBar#setBackgroundResource(int)
@@ -123,7 +132,7 @@ public class ApplyFilter {
     }
 
     /**
-     * Permet de mettre l'arriere plan d'un seekBar à normal
+     * To set the background at normal
      *
      * @param sb
      * @see SeekBar#setBackgroundResource(int)
@@ -143,7 +152,7 @@ public class ApplyFilter {
         imgView.setImageBitmap(imageEditingCopy);
 
         // Which functions we want to use with the adequate List
-        switch (recyclerType) {
+        switch (menuType) {
             case Color:
                 colorFunction(type);
                 break;
@@ -161,6 +170,7 @@ public class ApplyFilter {
         }
         imgView.setImageBitmap(imageEditingCopy);
     }
+
 
     /**
      * Different functions to set different elements in the layout and apply filters when we don't need to have seekbar's
@@ -242,10 +252,6 @@ public class ApplyFilter {
             case EquaLight:
                 setGone(seekBar1, seekBar2);
                 setFilterType(FilterType.EquaLight);
-                /*hist = new HistogramManipulation(imageEditing, ChanelType.V);
-                hist.equalizationLUT();
-                imageEditingCopy = hist.applyLUT(imageEditing);
-                imageEditingCopy = renderscript.applyLUT(imageEditing, hist);*/
                 new ApplyFilter.MyTask().execute(imageEditing);
                 break;
             default:
@@ -287,6 +293,10 @@ public class ApplyFilter {
                 SobelMask sobelMaskHorizontal = new SobelMask(false);
                 imageEditingCopy = renderscript.convolution(imageEditing, sobelMaskHorizontal);
                 break;
+            case Sobel:
+                setGone(seekBar1, seekBar2);
+                imageEditingCopy = renderscript.sobel(imageEditing);
+                break;
             case IncreaseBorder:
                 setNormalBackground(seekBar1);
                 setVisible(seekBar1);
@@ -310,7 +320,28 @@ public class ApplyFilter {
             case Rotate:
                 setGone(seekBar1, seekBar2);
                 imageEditingCopy = RotateBitmap(imageEditingCopy, 90);
+                imageEditing = imageEditingCopy.copy(Bitmap.Config.ARGB_8888, true);
                 break;
+            case NightMode:
+                setGone(seekBar1, seekBar2);
+                //seekBar2.getThumb().setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
+                applyMenu.menuList.clear();
+                applyMenu.menuList();
+                menuRecyclerView.setVisibility(View.VISIBLE);
+                filterRecyclerView.setVisibility(View.GONE);
+                back.setVisibility(View.GONE);
+                nightMode();
+                nightMode = true;
+                break;
+            case DayMode:
+                setGone(seekBar1, seekBar2);
+                dayMode();
+                applyMenu.menuList.clear();
+                applyMenu.menuList();
+                menuRecyclerView.setVisibility(View.VISIBLE);
+                filterRecyclerView.setVisibility(View.GONE);
+                back.setVisibility(View.GONE);
+                nightMode = false;
             default:
                 break;
 
@@ -370,14 +401,29 @@ public class ApplyFilter {
         });
     }
 
-
+    /**
+     * Fonction "AsyncTask" enables proper and easy use of the UI thread
+     * doInBackGround enables apply the function that we choose in background
+     * and return the image edited when it finishes
+     */
     private class MyTask extends AsyncTask<Bitmap, Void, Bitmap> {
+
+        /**
+         * show the message "function start" when the function is chosen
+         */
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+
             Toast.makeText(ctx, "function start", Toast.LENGTH_SHORT).show();
         }
 
+        /**
+         * match the function that we choose and apply on the image
+         *
+         * @param Bitmap the image that we process
+         * @return
+         */
         @Override
         protected Bitmap doInBackground(Bitmap... Bitmap) {
             switch (filterType) {
@@ -387,7 +433,7 @@ public class ApplyFilter {
                     imageEditingCopy = hist.applyLUT(Bitmap[0]);
                     break;
                 case Colorize:
-                    imageEditingCopy = (renderscript.colorize(Bitmap[0], progressBar1));
+                    imageEditingCopy = renderscript.colorize(Bitmap[0], progressBar1);
                     break;
                 case KeepHue:
                     imageEditingCopy = renderscript.keepHue(Bitmap[0], progressBar1, progressBar2);
@@ -436,9 +482,15 @@ public class ApplyFilter {
             return imageEditingCopy;
         }
 
+        /**
+         * return the image processed and show the message "function end"
+         *
+         * @param bitmap the image processed
+         */
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
             imgView.setImageBitmap(bitmap);
+
             Toast.makeText(ctx, "function end", Toast.LENGTH_SHORT).show();
         }
     }

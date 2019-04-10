@@ -1,14 +1,19 @@
 package com.package1.affichage;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.media.MediaScannerConnection;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -96,11 +101,15 @@ public class PhotoEditing extends AppCompatActivity {
     private int adaptedWidth;
     public static Button back;
 
+    public static boolean nightMode = false;
+
+    public static ConstraintLayout applyFilterLayout;
+
     @Override
     /**
      *
      */
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.photo_recycle_view);
 
@@ -108,12 +117,21 @@ public class PhotoEditing extends AppCompatActivity {
 
     }
 
+    public static void nightMode() {
+        applyFilterLayout.setBackgroundColor(Color.BLACK);
+    }
+
+    public static void dayMode() {
+        applyFilterLayout.setBackgroundColor(context.getColor(R.color.whiteNuance));
+    }
+
     /**
      * To initiate buttons seekbars and context in layout
      */
     public void initiate() {
 
-        context = getApplicationContext();
+        applyFilterLayout = findViewById(R.id.applyFilter);
+        context = this.getApplicationContext();
         renderscript = new RS(context);
         faceDetection = new FaceDetection(context);
         applyMenu = new ApplyMenu(context, renderscript, faceDetection, hist);
@@ -124,14 +142,12 @@ public class PhotoEditing extends AppCompatActivity {
 
         // RecyclerView
         filterRecyclerView = findViewById(R.id.idRecyclerViewHorizontalList);
-
         filterAdapter = new FilterAdapter(applyMenu.colorList, context, MenuType.Nothing);
         LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         filterRecyclerView.setLayoutManager(horizontalLayoutManager);
         filterRecyclerView.setAdapter(filterAdapter);
 
         menuRecyclerView = findViewById(R.id.idMenuViewHorizontalList);
-
         menuAdapter = new MenuAdapter(applyMenu.menuList, context);
         LinearLayoutManager horizontalLayoutManager2 = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         menuRecyclerView.setLayoutManager(horizontalLayoutManager2);
@@ -147,15 +163,16 @@ public class PhotoEditing extends AppCompatActivity {
         if (image.getWidth() < adaptedWidth) {
             adaptedWidth = image.getWidth();
         }
+
         imageEditing = Bitmap.createScaledBitmap(image, adaptedWidth, (int) ((image.getHeight() * adaptedWidth) / image.getWidth()), true);
         imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
 
         imgView.setImageBitmap(imageEditing);
 
         // SeekBar and visibility
-        seekBar1 = findViewById(R.id.seekBarFull);
+        seekBar1 = findViewById(R.id.seekBarRGB);
         seekBar1.setVisibility(View.GONE);
-        seekBar2 = findViewById(R.id.seekBarDemi);
+        seekBar2 = findViewById(R.id.seekBarNormal);
         seekBar2.setVisibility(View.GONE);
 
         addListener();
@@ -203,6 +220,29 @@ public class PhotoEditing extends AppCompatActivity {
                 imageEditing = imageEditingCopy.copy(Bitmap.Config.ARGB_8888, true);
             }
         });
+        Button share = findViewById(R.id.share);
+        share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                share(imageEditing);
+            }
+        });
+    }
+
+    /**
+     * to share the image
+     *
+     * @param bitmap
+     */
+    public void share(Bitmap bitmap) {
+
+        String bitmapPath = MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, "title", null);
+        Uri uri = Uri.parse(bitmapPath);
+        Intent share = new Intent(Intent.ACTION_SEND);
+        share.putExtra(Intent.EXTRA_STREAM, uri);
+        share.setType("image/*");
+        share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        context.startActivity(Intent.createChooser(share, "Share image File"));
 
     }
 
@@ -232,12 +272,14 @@ public class PhotoEditing extends AppCompatActivity {
      * @param bmp
      */
     private void saveImageToGallery(Bitmap bmp) {
-        File dir = new File(Environment.getExternalStorageDirectory(), "image");
+        File dir = new File(Environment.getExternalStorageDirectory(), "Projet");
         if (!dir.exists()) {
             dir.mkdir();
         }
+        System.out.println(dir);
         final String fileName = System.currentTimeMillis() + "";
         File file = new File(dir, fileName);
+
         try {
             FileOutputStream out = new FileOutputStream(file);
             bmp.compress(Bitmap.CompressFormat.JPEG, 100, out);
@@ -255,11 +297,6 @@ public class PhotoEditing extends AppCompatActivity {
             Toast.makeText(context, "save", Toast.LENGTH_SHORT).show();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-            sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file" + fileName)));
-        } else {
-            MediaScannerConnection.scanFile(this, new String[]{fileName}, null, null);
         }
     }
 
@@ -279,7 +316,8 @@ public class PhotoEditing extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.i("CV", "onResume()");
-
+        // reset color at black
+        nightMode = false;
     }
 
     @Override
