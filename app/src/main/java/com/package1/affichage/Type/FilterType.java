@@ -11,12 +11,13 @@ public enum FilterType {
     Colorize,
     KeepHue,
     Invert,
+    ShiftColor,
+    IsoHelieRGB,
 
     // Contrast
     Contrast,
     ShiftLight,
     ShiftSaturation,
-    ShiftColor,
     Isohelie,
     EquaLight,
 

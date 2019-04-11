@@ -169,6 +169,7 @@ public class ApplyFilter extends AppCompatActivity {
      * Different functions to set the views of seekBars, their max and min values, their background following the current filter
      * And if we don't need to have a seekBar, we apply the filter
      * If we need to use one or many seekBars, we set the local variable FilterType
+     *
      * @see FilterType
      */
     public void colorFunction(FilterType type) {
@@ -198,6 +199,21 @@ public class ApplyFilter extends AppCompatActivity {
                 setGone(seekBar1, seekBar2);
                 imageEditingCopy = renderscript.invert(imageEditing);
                 break;
+            case ShiftColor:
+                setVisible(seekBar1);
+                setGone(seekBar2);
+                setBorn(seekBar1, 255);
+                setRGBBackground(seekBar1);
+                seekBar1.setProgress(0);
+                setFilterType(FilterType.ShiftColor);
+                break;
+            case IsoHelieRGB:
+                setVisible(seekBar1);
+                setGone(seekBar2);
+                setBorn(seekBar1, 50);
+                setNormalBackground(seekBar1);
+                seekBar1.setProgress(2);
+                setFilterType(FilterType.IsoHelieRGB);
             default:
                 break;
         }
@@ -229,18 +245,10 @@ public class ApplyFilter extends AppCompatActivity {
                 seekBar1.setProgress(0);
                 setFilterType(FilterType.ShiftSaturation);
                 break;
-            case ShiftColor:
-                setVisible(seekBar1);
-                setGone(seekBar2);
-                setBorn(seekBar1, 255);
-                setRGBBackground(seekBar1);
-                seekBar1.setProgress(0);
-                setFilterType(FilterType.ShiftColor);
-                break;
             case Isohelie:
                 setVisible(seekBar1);
                 setGone(seekBar2);
-                setBorn(seekBar1, 8);
+                setBorn(seekBar1, 12);
                 setNormalBackground(seekBar1);
                 seekBar1.setProgress(2);
                 setFilterType(FilterType.Isohelie);
@@ -337,11 +345,14 @@ public class ApplyFilter extends AppCompatActivity {
                 break;
             case Cartoon:
                 setGone(seekBar1, seekBar2);
-              //  imageEditingCopy = renderscript.posterisation(Bitmap[0], progressBar1 + 2);
-              //  imageEditingCopy = renderscript.increaseBorder(Bitmap[0], progressBar1 * 10);
-
+                imageEditingCopy = renderscript.posterisation(imageEditing, 10);
+                imageEditingCopy = renderscript.increaseBorder(imageEditingCopy, 150);
                 break;
             case Draw:
+                setGone(seekBar1, seekBar2);
+                imageEditingCopy = renderscript.toGrey(imageEditing);
+                imageEditingCopy = renderscript.sobel(imageEditingCopy);
+                imageEditingCopy = renderscript.invert(imageEditingCopy);
                 break;
             default:
                 break;
@@ -355,7 +366,7 @@ public class ApplyFilter extends AppCompatActivity {
      * @param source bitmap we want to change
      * @return the bitmap modify
      */
-    public Bitmap flipH(Bitmap source){
+    public Bitmap flipH(Bitmap source) {
         Matrix matrix = new Matrix();
         matrix.preScale(1.0f, -1.0f);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
@@ -367,12 +378,13 @@ public class ApplyFilter extends AppCompatActivity {
      * @param source bitmap we want to change
      * @return the bitmap modify
      */
-    public Bitmap flipV(Bitmap source){
+    public Bitmap flipV(Bitmap source) {
         Matrix matrix = new Matrix();
         matrix.preScale(-1.0f, 1.0f);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
 
     }
+
     /**
      * Rotate a bitmap
      *
@@ -458,10 +470,13 @@ public class ApplyFilter extends AppCompatActivity {
         @Override
         protected Bitmap doInBackground(Bitmap... Bitmap) {
             switch (filterType) {
+                case IsoHelieRGB :
+                    imageEditingCopy = renderscript.posterisationRGB(Bitmap[0], progressBar1);
+                    break;
                 case EquaLight:
-                    hist = new HistogramManipulation(Bitmap[0], ChanelType.V,renderscript);
+                    hist = new HistogramManipulation(Bitmap[0], ChanelType.V, renderscript);
                     hist.equalizationLUT();
-                    imageEditingCopy = renderscript.applyLUT(Bitmap[0],hist);
+                    imageEditingCopy = renderscript.applyLUT(Bitmap[0], hist);
                     break;
                 case Colorize:
                     imageEditingCopy = renderscript.colorize(Bitmap[0], progressBar1);
@@ -470,25 +485,25 @@ public class ApplyFilter extends AppCompatActivity {
                     imageEditingCopy = renderscript.keepHue(Bitmap[0], progressBar1, progressBar2);
                     break;
                 case Contrast:
-                    hist = new HistogramManipulation(Bitmap[0], ChanelType.V,renderscript);
+                    hist = new HistogramManipulation(Bitmap[0], ChanelType.V, renderscript);
                     hist.linearExtensionLUT(128 + progressBar1, 127 - progressBar1);
                     //imageEditingCopy = hist.applyLUT(imageEditing); //java version
                     imageEditingCopy = renderscript.applyLUT(Bitmap[0], hist);
                     break;
                 case ShiftLight:
-                    hist = new HistogramManipulation(Bitmap[0], ChanelType.V,renderscript);
+                    hist = new HistogramManipulation(Bitmap[0], ChanelType.V, renderscript);
                     hist.shiftLUT(progressBar1 - 100);
                     //imageEditingCopy = hist.applyLUT(imageEditing); //java version
                     imageEditingCopy = renderscript.applyLUT(Bitmap[0], hist);
                     break;
                 case ShiftSaturation:
-                    hist = new HistogramManipulation(Bitmap[0], ChanelType.S,renderscript);
+                    hist = new HistogramManipulation(Bitmap[0], ChanelType.S, renderscript);
                     hist.shiftLUT(progressBar1 - 100);
                     //imageEditingCopy = hist.applyLUT(imageEditing); //java version
                     imageEditingCopy = renderscript.applyLUT(Bitmap[0], hist);
                     break;
                 case ShiftColor:
-                    hist = new HistogramManipulation(Bitmap[0], ChanelType.H,renderscript);
+                    hist = new HistogramManipulation(Bitmap[0], ChanelType.H, renderscript);
                     hist.shiftCycleLUT(progressBar1);
                     //imageEditingCopy = hist.applyLUT(imageEditing); //java version
                     imageEditingCopy = renderscript.applyLUT(Bitmap[0], hist);

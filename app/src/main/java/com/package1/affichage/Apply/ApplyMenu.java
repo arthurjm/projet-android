@@ -22,8 +22,10 @@ import com.package1.affichage.Type.MenuType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Filter;
 
 import static com.package1.MainActivity.image;
+import static com.package1.MainActivity.imageEditing;
 import static com.package1.MainActivity.imageEditingCopy;
 import static com.package1.MainActivity.imgView;
 import static com.package1.affichage.PhotoEditing.back;
@@ -33,6 +35,7 @@ import static com.package1.affichage.PhotoEditing.filterAdapter;
 import static com.package1.affichage.PhotoEditing.filterRecyclerView;
 import static com.package1.affichage.PhotoEditing.actualMiniImage;
 import static com.package1.affichage.PhotoEditing.nightMode;
+import static com.package1.affichage.PhotoEditing.renderscript;
 
 /**
  * @author Mathieu
@@ -193,6 +196,19 @@ public class ApplyMenu {
             resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
             fs = new FilterStruct("Invert", renderscript.invert(resizeCopy), FilterType.Invert);
             colorList.add(fs);
+
+            // ShiftColor
+            resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+            hist = new HistogramManipulation(resizeCopy, ChanelType.H, renderscript);
+            hist.shiftCycleLUT(120);
+            //fs = new FilterStruct("shiftColor", hist.applyLUT(resizeCopy));
+            fs = new FilterStruct("ShiftColor", renderscript.applyLUT(resizeCopy, hist), FilterType.ShiftColor);
+            contrastList.add(fs);
+
+            // IsohelieRGB
+            resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+            fs = new FilterStruct("IsohelieRGB", renderscript.posterisationRGB(resizeCopy, 25), FilterType.IsoHelieRGB);
+            colorList.add(fs);
         }
         filterAdapter.notifyDataSetChanged();
 
@@ -232,21 +248,9 @@ public class ApplyMenu {
             fs = new FilterStruct("ShiftSaturation", renderscript.applyLUT(resizeCopy, hist), FilterType.ShiftSaturation);
             contrastList.add(fs);
 
-            // ShiftColor
-            resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            hist = new HistogramManipulation(resizeCopy, ChanelType.H, renderscript);
-            hist.shiftCycleLUT(120);
-            //fs = new FilterStruct("shiftColor", hist.applyLUT(resizeCopy));
-            fs = new FilterStruct("ShiftColor", renderscript.applyLUT(resizeCopy, hist), FilterType.ShiftColor);
-            contrastList.add(fs);
-
-
             // Isohelie
             resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            hist = new HistogramManipulation(resizeCopy, ChanelType.V, renderscript);
-            hist.isohelieLUT(4);
-            //fs = new FilterStruct("isohelie", hist.applyLUT(resizeCopy));
-            fs = new FilterStruct("Isohelie", renderscript.applyLUT(resizeCopy, hist), FilterType.Isohelie);
+            fs = new FilterStruct("Isohelie", renderscript.posterisation(resizeCopy, 6), FilterType.Isohelie);
             contrastList.add(fs);
 
             // EqualizationLight
@@ -327,6 +331,21 @@ public class ApplyMenu {
             fs = new FilterStruct("Face Detection", faceDetection.drawOnImage(resizeCopy), FilterType.FaceDetection);
             extraList.add(fs);
 
+            // Cartoon
+            resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+            resizeCopy = renderscript.posterisation(resizeCopy, 10);
+            resizeCopy = renderscript.increaseBorder(resizeCopy, 150);
+            fs = new FilterStruct("Cartoon", resizeCopy, FilterType.Cartoon);
+            extraList.add(fs);
+
+            // Draw
+            resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
+            resizeCopy = renderscript.toGrey(resizeCopy);
+            resizeCopy = renderscript.sobel(resizeCopy);
+            resizeCopy = renderscript.invert(resizeCopy);
+            fs = new FilterStruct("Draw", resizeCopy, FilterType.Draw);
+            extraList.add(fs);
+
             // Rotate
             resizeCopy = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.rotate);
             fs = new FilterStruct("Rotate", resizeCopy, FilterType.Rotate);
@@ -342,15 +361,6 @@ public class ApplyMenu {
             fs = new FilterStruct("FlipV", resizeCopy, FilterType.FlipVertical);
             extraList.add(fs);
 
-            // Cartoon
-            resizeCopy = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.flip_v);
-            fs = new FilterStruct("Cartoon", resizeCopy, FilterType.Cartoon);
-            extraList.add(fs);
-
-            // Draw
-            resizeCopy = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.flip_v);
-            fs = new FilterStruct("Draw", resizeCopy, FilterType.Draw);
-            extraList.add(fs);
 
             nightDayMode();
 
