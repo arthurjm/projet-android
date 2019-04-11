@@ -107,11 +107,11 @@ public class PhotoEditing extends AppCompatActivity {
      *
      * @see PhotoEditing#nightMode
      */
-    public static void dayMode(Context ctx) {
+    public static void dayMode() {
         menuRecyclerView.setVisibility(View.VISIBLE);
         filterRecyclerView.setVisibility(View.GONE);
         back.setVisibility(View.GONE);
-        applyFilterLayout.setBackgroundColor(ctx.getColor(R.color.whiteNuance));
+        applyFilterLayout.setBackgroundColor(Integer.parseInt("E3E2E3",16));
         applyMenu.menuList.clear();
         applyMenu.menuList();
         nightMode = false;

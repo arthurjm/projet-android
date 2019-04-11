@@ -334,7 +334,7 @@ public class ApplyFilter extends AppCompatActivity {
                 break;
             case DayMode:
                 setGone(seekBar1, seekBar2);
-                dayMode(ctx);
+                dayMode();
             case FlipHorizontal:
                 setGone(seekBar1, seekBar2);
                 imageEditingCopy = flipH(imageEditingCopy);
