@@ -311,7 +311,7 @@ public class ApplyFilter extends AppCompatActivity {
         switch (type) {
             case FaceDetection:
                 setGone(seekBar1, seekBar2);
-                imageEditingCopy = faceDetection.putSunglass(imageEditing);
+                imageEditingCopy = faceDetection.drawOnImage(imageEditing);
                 break;
             case Rotate:
                 setGone(seekBar1, seekBar2);
