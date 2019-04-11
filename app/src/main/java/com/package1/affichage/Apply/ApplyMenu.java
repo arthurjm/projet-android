@@ -211,7 +211,7 @@ public class ApplyMenu {
 
             // Constrast setting
             resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            hist = new HistogramManipulation(resizeCopy, ChanelType.V,renderscript);
+            hist = new HistogramManipulation(resizeCopy, ChanelType.V, renderscript);
             hist.linearExtensionLUT(198, 50);
             //fs = new FilterStruct("contrast", hist.applyLUT(resizeCopy));
             fs = new FilterStruct("Contrast", renderscript.applyLUT(resizeCopy, hist), FilterType.Contrast);
@@ -219,7 +219,7 @@ public class ApplyMenu {
 
             // ShiftLight
             resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            hist = new HistogramManipulation(resizeCopy, ChanelType.V,renderscript);
+            hist = new HistogramManipulation(resizeCopy, ChanelType.V, renderscript);
             hist.shiftLUT(45);
             //fs = new FilterStruct("shiftLight", hist.applyLUT(resizeCopy));
             fs = new FilterStruct("ShiftLight", renderscript.applyLUT(resizeCopy, hist), FilterType.ShiftLight);
@@ -227,23 +227,25 @@ public class ApplyMenu {
 
             // ShiftSaturation
             resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            hist = new HistogramManipulation(resizeCopy, ChanelType.S,renderscript);
+            hist = new HistogramManipulation(resizeCopy, ChanelType.S, renderscript);
             hist.shiftLUT(45);
             //fs = new FilterStruct("shiftSaturation", hist.applyLUT(resizeCopy));
             fs = new FilterStruct("ShiftSaturation", renderscript.applyLUT(resizeCopy, hist), FilterType.ShiftSaturation);
             contrastList.add(fs);
 
+
             // ShiftColor
             resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            hist = new HistogramManipulation(resizeCopy, ChanelType.H,renderscript);
+            hist = new HistogramManipulation(resizeCopy, ChanelType.H, renderscript);
             hist.shiftCycleLUT(120);
             //fs = new FilterStruct("shiftColor", hist.applyLUT(resizeCopy));
             fs = new FilterStruct("ShiftColor", renderscript.applyLUT(resizeCopy, hist), FilterType.ShiftColor);
             contrastList.add(fs);
 
+
             // Isohelie
             resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            hist = new HistogramManipulation(resizeCopy, ChanelType.V,renderscript);
+            hist = new HistogramManipulation(resizeCopy, ChanelType.V, renderscript);
             hist.isohelieLUT(4);
             //fs = new FilterStruct("isohelie", hist.applyLUT(resizeCopy));
             fs = new FilterStruct("Isohelie", renderscript.applyLUT(resizeCopy, hist), FilterType.Isohelie);
@@ -251,7 +253,7 @@ public class ApplyMenu {
 
             // EqualizationLight
             resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            hist = new HistogramManipulation(resizeCopy, ChanelType.V,renderscript);
+            hist = new HistogramManipulation(resizeCopy, ChanelType.V, renderscript);
             hist.equalizationLUT();
             //fs = new FilterStruct("equa light", hist.applyLUT(resizeCopy));
             fs = new FilterStruct("EquaLight", renderscript.applyLUT(resizeCopy, hist), FilterType.EquaLight);

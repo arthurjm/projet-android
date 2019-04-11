@@ -89,8 +89,6 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
             public void onClick(View v) {
                 // use adequate function with the select image
                 applyFilter.useFunction(FilterList.get(position).getFilterType());
-                String productName = FilterList.get(position).getFilterName().toString();
-                Toast.makeText(ctx, productName + " is selected", Toast.LENGTH_SHORT).show();
             }
         });
 

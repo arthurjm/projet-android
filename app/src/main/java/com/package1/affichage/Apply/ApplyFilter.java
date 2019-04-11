@@ -414,8 +414,6 @@ public class ApplyFilter extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
-            Toast.makeText(ctx, "function start", Toast.LENGTH_SHORT).show();
         }
 
         /**
@@ -490,8 +488,6 @@ public class ApplyFilter extends AppCompatActivity {
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
             imgView.setImageBitmap(bitmap);
-
-            Toast.makeText(ctx, "function end", Toast.LENGTH_SHORT).show();
         }
     }
 }

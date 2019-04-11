@@ -87,8 +87,6 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
             public void onClick(View v) {
                 // use adequate function with the select image
                 applyMenu.modifyList(menuList.get(position).getRecyclerType());
-                String productName = menuList.get(position).getFilterName().toString();
-                Toast.makeText(context, productName + " is selected", Toast.LENGTH_SHORT).show();
             }
         });
 
