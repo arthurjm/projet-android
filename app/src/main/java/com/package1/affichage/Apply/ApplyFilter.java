@@ -335,7 +335,6 @@ public class ApplyFilter extends AppCompatActivity {
                 imageEditingCopy = flipV(imageEditingCopy);
                 imageEditing = imageEditingCopy.copy(Bitmap.Config.ARGB_8888, true);
                 break;
-
             default:
                 break;
 
