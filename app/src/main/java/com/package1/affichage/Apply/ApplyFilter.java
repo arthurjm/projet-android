@@ -345,8 +345,9 @@ public class ApplyFilter extends AppCompatActivity {
                 break;
             case Cartoon:
                 setGone(seekBar1, seekBar2);
-                imageEditingCopy = renderscript.posterisation(imageEditing, 10);
-                imageEditingCopy = renderscript.increaseBorder(imageEditingCopy, 150);
+                imageEditingCopy = renderscript.posterisation(imageEditing, 5);
+                imageEditingCopy = renderscript.increaseBorder(imageEditingCopy, 140);
+                imageEditingCopy = renderscript.increaseBorder(imageEditingCopy, 80);//applied a second time to get bigger borders.
                 break;
             case Draw:
                 setGone(seekBar1, seekBar2);
