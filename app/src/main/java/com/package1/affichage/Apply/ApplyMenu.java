@@ -203,7 +203,7 @@ public class ApplyMenu {
             hist.shiftCycleLUT(120);
             //fs = new FilterStruct("shiftColor", hist.applyLUT(resizeCopy));
             fs = new FilterStruct("ShiftColor", renderscript.applyLUT(resizeCopy, hist), FilterType.ShiftColor);
-            contrastList.add(fs);
+            colorList.add(fs);
 
             // IsohelieRGB
             resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
@@ -361,10 +361,10 @@ public class ApplyMenu {
             fs = new FilterStruct("FlipV", resizeCopy, FilterType.FlipVertical);
             extraList.add(fs);
 
-
             nightDayMode();
 
         } else {
+
             // Remove Night/Day mode to update it
             extraList.remove(extraList.get(extraList.size() - 1));
             nightDayMode();
