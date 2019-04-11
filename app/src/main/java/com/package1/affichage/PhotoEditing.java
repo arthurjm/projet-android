@@ -1,24 +1,19 @@
 package com.package1.affichage;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.webkit.PermissionRequest;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -37,7 +32,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.List;
 
 import static com.package1.MainActivity.image;
 import static com.package1.MainActivity.imageEditing;
@@ -52,29 +46,28 @@ import static com.package1.MainActivity.imgView;
 public class PhotoEditing extends AppCompatActivity {
 
 
-    public static RecyclerView menuRecyclerView;
-    public static MenuAdapter menuAdapter;
-    public static RecyclerView filterRecyclerView;
-    public static FilterAdapter filterAdapter;
+    public RecyclerView menuRecyclerView;
+    public MenuAdapter menuAdapter;
+    public RecyclerView filterRecyclerView;
+    public FilterAdapter filterAdapter;
 
-    public static ConstraintLayout applyFilterLayout;
+    public ConstraintLayout applyFilterLayout;
 
-    public static Bitmap actualMiniImage;
-    public static ApplyMenu applyMenu;
-    public static SeekBar seekBar1;
-    public static SeekBar seekBar2;
+    public Bitmap actualMiniImage;
+    public ApplyMenu applyMenu;
+    public SeekBar seekBar1;
+    public SeekBar seekBar2;
 
-    public static RS renderscript;
-    public static FaceDetection faceDetection;
+    public RS renderscript;
+    public FaceDetection faceDetection;
     public static HistogramManipulation hist;
 
-    public static Button back;
-    public static boolean nightMode = false;
+    public Button back;
+    public boolean nightMode = false;
 
     private Context context;
     private int adaptedWidth;
-    private AnimationDrawable animationDrawable;
-    public static ImageView animationIV;
+    public ImageView animationIV;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,12 +84,12 @@ public class PhotoEditing extends AppCompatActivity {
      *
      * @see PhotoEditing#nightMode
      */
-    public static void nightMode() {
+    public void nightMode() {
         menuRecyclerView.setVisibility(View.VISIBLE);
         filterRecyclerView.setVisibility(View.GONE);
         back.setVisibility(View.GONE);
         applyFilterLayout.setBackgroundColor(Color.BLACK);
-        applyMenu.menuList.clear();
+        applyMenu.getMenuList().clear();
         applyMenu.menuList();
         nightMode = true;
     }
@@ -107,12 +100,12 @@ public class PhotoEditing extends AppCompatActivity {
      *
      * @see PhotoEditing#nightMode
      */
-    public static void dayMode() {
+    public void dayMode() {
         menuRecyclerView.setVisibility(View.VISIBLE);
         filterRecyclerView.setVisibility(View.GONE);
         back.setVisibility(View.GONE);
-        applyFilterLayout.setBackgroundColor(Integer.parseInt("E3E2E3",16));
-        applyMenu.menuList.clear();
+        applyFilterLayout.setBackgroundColor(Integer.parseInt("E3E2E3", 16));
+        applyMenu.getMenuList().clear();
         applyMenu.menuList();
         nightMode = false;
     }
@@ -123,13 +116,13 @@ public class PhotoEditing extends AppCompatActivity {
     public void initiateRecyclerView() {
         // RecyclerView
         filterRecyclerView = findViewById(R.id.idRecyclerViewHorizontalList);
-        filterAdapter = new FilterAdapter(applyMenu.colorList, context, MenuType.Nothing);
+        filterAdapter = new FilterAdapter(applyMenu.getColorList(), this, MenuType.Nothing);
         LinearLayoutManager filterManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         filterRecyclerView.setLayoutManager(filterManager);
         filterRecyclerView.setAdapter(filterAdapter);
 
         menuRecyclerView = findViewById(R.id.idMenuViewHorizontalList);
-        menuAdapter = new MenuAdapter(applyMenu.menuList);
+        menuAdapter = new MenuAdapter(applyMenu.getMenuList(), this);
         LinearLayoutManager menuManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         menuRecyclerView.setLayoutManager(menuManager);
         menuRecyclerView.setAdapter(menuAdapter);
@@ -147,7 +140,7 @@ public class PhotoEditing extends AppCompatActivity {
         context = this.getApplicationContext();
         renderscript = new RS(context);
         faceDetection = new FaceDetection(context);
-        applyMenu = new ApplyMenu(context, renderscript, faceDetection, hist);
+        applyMenu = new ApplyMenu(this, renderscript, faceDetection, hist);
         applyFilterLayout = findViewById(R.id.applyFilter);
 
         initiateRecyclerView();
@@ -160,7 +153,7 @@ public class PhotoEditing extends AppCompatActivity {
             adaptedWidth = image.getWidth();
         }
 
-        imageEditing = Bitmap.createScaledBitmap(image, adaptedWidth, (int) ((image.getHeight() * adaptedWidth) / image.getWidth()), true);
+        imageEditing = Bitmap.createScaledBitmap(image, adaptedWidth, ((image.getHeight() * adaptedWidth) / image.getWidth()), true);
         imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
         imgView.setImageBitmap(imageEditing);
 
@@ -209,7 +202,7 @@ public class PhotoEditing extends AppCompatActivity {
         undoBut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                imageEditing = Bitmap.createScaledBitmap(image, adaptedWidth, (int) ((image.getHeight() * adaptedWidth) / image.getWidth()), true);
+                imageEditing = Bitmap.createScaledBitmap(image, adaptedWidth, ((image.getHeight() * adaptedWidth) / image.getWidth()), true);
                 imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
                 undo(imageEditing);
             }
@@ -269,7 +262,6 @@ public class PhotoEditing extends AppCompatActivity {
             out.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            System.out.println(e);
         } catch (IOException e) {
             e.printStackTrace();
         }

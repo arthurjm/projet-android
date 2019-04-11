@@ -8,13 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.package1.R;
+import com.package1.affichage.PhotoEditing;
 import com.package1.affichage.Struct.FilterStruct;
 import com.package1.affichage.Struct.MenuStruct;
 
 import java.util.List;
-
-import static com.package1.affichage.PhotoEditing.applyMenu;
-import static com.package1.affichage.PhotoEditing.nightMode;
 
 /**
  * @author Mathieu
@@ -29,8 +27,11 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
      */
     private List<MenuStruct> menuList;
 
-    public MenuAdapter(List<MenuStruct> menuList) {
+    private PhotoEditing context;
+
+    public MenuAdapter(List<MenuStruct> menuList, PhotoEditing context) {
         this.menuList = menuList;
+        this.context = context;
     }
 
     /**
@@ -60,7 +61,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
         holder.imageView.setImageBitmap(menuList.get(position).getImage());
         holder.textView.setText(menuList.get(position).getFilterName());
         // Change the text's color depending the situation
-        if (nightMode == true) {
+        if (context.nightMode) {
             holder.textView.setTextColor(Color.WHITE);
         } else {
             holder.textView.setTextColor(Color.BLACK);
@@ -70,7 +71,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
             @Override
             public void onClick(View v) {
                 // use adequate function with the select image
-                applyMenu.modifyList(menuList.get(position).getRecyclerType());
+                context.applyMenu.modifyList(menuList.get(position).getRecyclerType());
             }
         });
 

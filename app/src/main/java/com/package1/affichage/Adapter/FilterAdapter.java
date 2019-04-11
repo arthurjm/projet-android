@@ -1,6 +1,5 @@
 package com.package1.affichage.Adapter;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,12 +10,12 @@ import android.widget.TextView;
 
 import com.package1.R;
 import com.package1.affichage.Apply.ApplyFilter;
+import com.package1.affichage.PhotoEditing;
 import com.package1.affichage.Struct.FilterStruct;
 import com.package1.affichage.Type.MenuType;
 
 import java.util.List;
 
-import static com.package1.affichage.PhotoEditing.nightMode;
 
 /**
  * @author Mathieu
@@ -33,15 +32,17 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
 
     private ApplyFilter applyFilter;
 
+    private PhotoEditing context;
     /**
      * Constructor
      *
      * @param FilterList
      * @param context
      */
-    public FilterAdapter(List<FilterStruct> FilterList, Context context, MenuType menuType) {
+    public FilterAdapter(List<FilterStruct> FilterList, PhotoEditing context, MenuType menuType) {
         this.FilterList = FilterList;
         this.applyFilter = new ApplyFilter(context, menuType);
+        this.context = context;
     }
 
     /**
@@ -71,7 +72,7 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
         holder.imageView.setImageBitmap(FilterList.get(position).getImage());
         holder.textView.setText(FilterList.get(position).getFilterName());
         // Change the text's color depending the situation
-        if (nightMode == true) {
+        if (context.nightMode) {
             holder.textView.setTextColor(Color.WHITE);
         } else {
             holder.textView.setTextColor(Color.BLACK);

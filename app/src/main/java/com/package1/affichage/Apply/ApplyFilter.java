@@ -17,20 +17,15 @@ import com.package1.Mask.LaplacienMask;
 import com.package1.Mask.SobelMask;
 import com.package1.R;
 import com.package1.RS;
+import com.package1.affichage.PhotoEditing;
 import com.package1.affichage.Type.FilterType;
 import com.package1.affichage.Type.MenuType;
 
 import static com.package1.MainActivity.imageEditing;
 import static com.package1.MainActivity.imageEditingCopy;
 import static com.package1.MainActivity.imgView;
-import static com.package1.affichage.PhotoEditing.dayMode;
-import static com.package1.affichage.PhotoEditing.faceDetection;
 import static com.package1.affichage.PhotoEditing.hist;
-import static com.package1.affichage.PhotoEditing.nightMode;
-import static com.package1.affichage.PhotoEditing.renderscript;
-import static com.package1.affichage.PhotoEditing.seekBar1;
-import static com.package1.affichage.PhotoEditing.seekBar2;
-import static com.package1.affichage.PhotoEditing.animationIV;
+
 /**
  * @author Mathieu
  * In this class, we can find all functions that we use to modify the actual image
@@ -43,18 +38,28 @@ public class ApplyFilter extends AppCompatActivity {
 
     public FilterType filterType;
     public MenuType menuType;
-    public Context ctx;
     public int progressBar1, progressBar2;
     private AnimationDrawable animationDrawable;
+
+    public PhotoEditing context;
+
+    public SeekBar seekBar1;
+    public SeekBar seekBar2;
+    public RS renderscript;
+
     /**
      * Constructor
      *
      * @param ctx
      * @param menuType
      */
-    public ApplyFilter(Context ctx, MenuType menuType) {
-        this.ctx = ctx;
+    public ApplyFilter(PhotoEditing ctx, MenuType menuType) {
         this.menuType = menuType;
+        context = ctx;
+
+        this.seekBar1 = context.seekBar1;
+        this.seekBar2 = context.seekBar2;
+        this.renderscript = context.renderscript;
     }
 
     public void setFilterType(FilterType filterType) {
@@ -141,7 +146,7 @@ public class ApplyFilter extends AppCompatActivity {
      * @param type the current filter
      */
     public void useFunction(FilterType type) {
-        renderscript = new RS(ctx);
+        renderscript = new RS(context);
         addListener();
         imgView.setImageBitmap(imageEditingCopy);
 
@@ -321,7 +326,7 @@ public class ApplyFilter extends AppCompatActivity {
         switch (type) {
             case FaceDetection:
                 setGone(seekBar1, seekBar2);
-                imageEditingCopy = faceDetection.drawOnImage(imageEditing);
+                imageEditingCopy = context.faceDetection.drawOnImage(imageEditing);
                 break;
             case Rotate:
                 setGone(seekBar1, seekBar2);
@@ -330,11 +335,11 @@ public class ApplyFilter extends AppCompatActivity {
                 break;
             case NightMode:
                 setGone(seekBar1, seekBar2);
-                nightMode();
+                context.nightMode();
                 break;
             case DayMode:
                 setGone(seekBar1, seekBar2);
-                dayMode();
+                context.dayMode();
             case FlipHorizontal:
                 setGone(seekBar1, seekBar2);
                 imageEditingCopy = flipH(imageEditingCopy);
@@ -464,8 +469,8 @@ public class ApplyFilter extends AppCompatActivity {
             super.onPreExecute();
             super.onPreExecute();
             imgView.setVisibility(View.GONE);
-            animationIV.setVisibility(View.VISIBLE);
-            animationDrawable = (AnimationDrawable) animationIV.getDrawable();
+            context.animationIV.setVisibility(View.VISIBLE);
+            animationDrawable = (AnimationDrawable) context.animationIV.getDrawable();
             animationDrawable.start();
 
         }
@@ -479,8 +484,8 @@ public class ApplyFilter extends AppCompatActivity {
         @Override
         protected Bitmap doInBackground(Bitmap... Bitmap) {
             switch (filterType) {
-                case IsoHelieRGB :
-                    imageEditingCopy = renderscript.posterisationRGB(Bitmap[0], progressBar1+2);
+                case IsoHelieRGB:
+                    imageEditingCopy = renderscript.posterisationRGB(Bitmap[0], progressBar1 + 2);
                     break;
                 case EquaLight:
                     hist = new HistogramManipulation(Bitmap[0], ChanelType.V, renderscript);
@@ -529,7 +534,7 @@ public class ApplyFilter extends AppCompatActivity {
                     imageEditingCopy = renderscript.convolution(Bitmap[0], maskGaussian);
                     break;
                 case IncreaseBorder:
-                    imageEditingCopy = renderscript.increaseBorder(Bitmap[0], (progressBar1+3) * 10);
+                    imageEditingCopy = renderscript.increaseBorder(Bitmap[0], (progressBar1 + 3) * 10);
                     break;
                 default:
                     break;
@@ -544,10 +549,9 @@ public class ApplyFilter extends AppCompatActivity {
          */
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
-            animationIV.setVisibility(View.GONE);
+            context.animationIV.setVisibility(View.GONE);
             imgView.setImageBitmap(bitmap);
             imgView.setVisibility(View.VISIBLE);
-
 
         }
     }
