@@ -210,7 +210,7 @@ public class ApplyFilter extends AppCompatActivity {
             case IsoHelieRGB:
                 setVisible(seekBar1);
                 setGone(seekBar2);
-                setBorn(seekBar1, 50);
+                setBorn(seekBar1, 8);
                 setNormalBackground(seekBar1);
                 seekBar1.setProgress(2);
                 setFilterType(FilterType.IsoHelieRGB);
@@ -306,7 +306,7 @@ public class ApplyFilter extends AppCompatActivity {
                 setVisible(seekBar1);
                 setGone(seekBar2);
                 seekBar1.setProgress(0);
-                setBorn(seekBar1, 15);
+                setBorn(seekBar1, 12);
                 setFilterType(FilterType.IncreaseBorder);
                 break;
             default:
@@ -471,7 +471,7 @@ public class ApplyFilter extends AppCompatActivity {
         protected Bitmap doInBackground(Bitmap... Bitmap) {
             switch (filterType) {
                 case IsoHelieRGB :
-                    imageEditingCopy = renderscript.posterisationRGB(Bitmap[0], progressBar1);
+                    imageEditingCopy = renderscript.posterisationRGB(Bitmap[0], progressBar1+2);
                     break;
                 case EquaLight:
                     hist = new HistogramManipulation(Bitmap[0], ChanelType.V, renderscript);
@@ -520,7 +520,7 @@ public class ApplyFilter extends AppCompatActivity {
                     imageEditingCopy = renderscript.convolution(Bitmap[0], maskGaussian);
                     break;
                 case IncreaseBorder:
-                    imageEditingCopy = renderscript.increaseBorder(Bitmap[0], progressBar1 * 10);
+                    imageEditingCopy = renderscript.increaseBorder(Bitmap[0], (progressBar1+3) * 10);
                     break;
                 default:
                     break;
