@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -19,6 +20,7 @@ import android.util.Log;
 import android.view.View;
 import android.webkit.PermissionRequest;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
@@ -71,6 +73,8 @@ public class PhotoEditing extends AppCompatActivity {
 
     private static Context context;
     private int adaptedWidth;
+    private AnimationDrawable animationDrawable;
+    public static ImageView animationIV;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -165,6 +169,9 @@ public class PhotoEditing extends AppCompatActivity {
         seekBar1.setVisibility(View.GONE);
         seekBar2 = findViewById(R.id.seekBarNormal);
         seekBar2.setVisibility(View.GONE);
+
+        animationIV = findViewById(R.id.animationIV);
+        animationIV.setVisibility(View.GONE);
 
         // Button
         back = findViewById(R.id.back);
