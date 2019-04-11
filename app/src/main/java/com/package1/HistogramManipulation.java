@@ -1,10 +1,8 @@
 package com.package1;
 
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.util.Log;
 
-import static com.package1.Histogram.NumberofValues;
+import static com.package1.MainActivity.NumberofValues;
 
 /**
  * This class will be used to build histogram of chosen chanel on a bitmap, and allow to change it with LUT.
@@ -16,10 +14,15 @@ public class HistogramManipulation {
     Histogram histogram;
     int R, G, B;
 
-
-
-    public HistogramManipulation(Bitmap bitmap, ChanelType chanel,RS rs) {
-        histogram = new Histogram(rs.createHistogram(bitmap, chanel), chanel,bitmap.getHeight()*bitmap.getWidth());
+    /**
+     * Constructor
+     *
+     * @param bitmap
+     * @param chanel
+     * @param rs
+     */
+    public HistogramManipulation(Bitmap bitmap, ChanelType chanel, RS rs) {
+        histogram = new Histogram(rs.createHistogram(bitmap, chanel), chanel, bitmap.getHeight() * bitmap.getWidth());
     }
 
     //Here starts function and constructors using only java, which are not used here for the renderscript version is more efficient.
@@ -156,10 +159,10 @@ public class HistogramManipulation {
      * @param depth the number of values that the stored values in the histogram will take
      */
     public void isohelieLUT(int depth) {
-        if(depth<2){
-            depth=2;
-        }else if(depth>NumberofValues/5){
-            depth=NumberofValues/5;
+        if (depth < 2) {
+            depth = 2;
+        } else if (depth > NumberofValues / 5) {
+            depth = NumberofValues / 5;
         }
         int tempDepth = 1;
         int nextValue = 0;
@@ -183,14 +186,14 @@ public class HistogramManipulation {
      * although the application time stay practically the same.
      */
     public void equalizationLUT() {
-        int average = histogram.getCount()/NumberofValues;
+        int average = histogram.getCount() / NumberofValues;
         int tempCount = 0;
         float nextValue = 0;
         for (int i = 0; i < NumberofValues; i++) {
             LUT[i] = (int) nextValue;
             tempCount += histogram.getHistogramValue(i);
             if ((tempCount / average) >= 1) {
-                nextValue += ((float)tempCount / average);
+                nextValue += ((float) tempCount / average);
                 if (nextValue > NumberofValues - 1) {
                     nextValue = NumberofValues - 1;
                 }
@@ -205,14 +208,14 @@ public class HistogramManipulation {
      * Unused in this version of the application.
      */
     public void equalizationAlternateLUT() {
-        int average = histogram.getCount()/NumberofValues;
+        int average = histogram.getCount() / NumberofValues;
         int tempCount = 0;
         float nextValue = NumberofValues - 1;
         for (int i = 0; i < NumberofValues; i++) {
             LUT[NumberofValues - 1 - i] = (int) nextValue;
             tempCount += histogram.getHistogramValue(NumberofValues - 1 - i);
             if ((tempCount / average) >= 1) {
-                nextValue -= ((float)tempCount / average);
+                nextValue -= ((float) tempCount / average);
                 if (nextValue < 0) {
                     nextValue = 0;
                 }

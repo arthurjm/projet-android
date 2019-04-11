@@ -22,7 +22,6 @@ public class ColorManipulation {
     private int A, R, G, B;
 
     /**
-     *
      * @param index
      * @param isA
      */
@@ -79,8 +78,9 @@ public class ColorManipulation {
 
     /**
      * To gray an image except the pixels which are close with the param color
+     *
      * @param original the original image
-     * @param color the color chosen
+     * @param color    the color chosen
      * @param seuilR
      * @param seuilG
      * @param seuilB
@@ -118,7 +118,8 @@ public class ColorManipulation {
 
     /**
      * To colorize an image
-     * @param original the original image
+     *
+     * @param original  the original image
      * @param chosenHue the color chosen
      * @return an image processed (colorized)
      */

@@ -16,20 +16,20 @@ public class FilterStruct {
      * @see FilterStruct#getFilterName()
      * @see FilterStruct#setFilterName(String)
      */
-    public String filterName;
+    private String filterName;
     /**
      * Image with filter
      *
      * @see FilterStruct#getImage()
      * @see FilterStruct#setImage(Bitmap)
      */
-    public Bitmap image;
+    private Bitmap image;
     /**
      * Type of filter
      *
      * @see FilterType
      */
-    public FilterType filterType;
+    private FilterType filterType;
 
     /**
      * Constructor

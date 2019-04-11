@@ -17,20 +17,20 @@ public class MenuStruct {
      * @see FilterStruct#getFilterName()
      * @see FilterStruct#setFilterName(String)
      */
-    public String filterName;
+    private String filterName;
     /**
      * Image with filter
      *
      * @see FilterStruct#getImage()
      * @see FilterStruct#setImage(Bitmap)
      */
-    public Bitmap image;
+    private Bitmap image;
     /**
      * Type of filter
      *
      * @see FilterType
      */
-    public MenuType menuType;
+    private MenuType menuType;
 
     /**
      * Constructor

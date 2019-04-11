@@ -41,6 +41,7 @@ public class RS {
 
     /**
      * Initialise les allocations avec l'image passée en paramètre
+     *
      * @param bmp
      */
     private void setInputOutput(Bitmap bmp) {
@@ -50,6 +51,7 @@ public class RS {
 
     /**
      * Change la teinte d'une image à une valeur définie (hue) comprise entre 0 et 359
+     *
      * @param bmp
      * @param hue
      * @return a new bitamp
@@ -70,6 +72,7 @@ public class RS {
 
     /**
      * Keep a giving hue to an image
+     *
      * @param bmp
      * @param hue
      * @param precision
@@ -92,6 +95,7 @@ public class RS {
 
     /**
      * Passe une image couleur en gris
+     *
      * @param bmp
      * @return
      */
@@ -110,6 +114,7 @@ public class RS {
 
     /**
      * Inverse les couleurs d'une image
+     *
      * @param bmp
      * @return
      */
@@ -129,7 +134,8 @@ public class RS {
     /**
      * Réduit le nombre de valeurs possibles d'une image
      * Peut aussi être appelé Isohélie
-     * @param bmp L'image à traiter
+     *
+     * @param bmp   L'image à traiter
      * @param depth Le nombre de valeurs possibles
      * @return L'image traitée
      */
@@ -163,6 +169,7 @@ public class RS {
 
     /**
      * Apply a convolution to an image
+     *
      * @param bmp
      * @param mask The object Mask to apply
      * @return
@@ -216,6 +223,7 @@ public class RS {
 
     /**
      * Increase borders adding black pixels
+     *
      * @param bmp
      * @param precision The precision we want to add black pixels
      * @return
@@ -241,6 +249,7 @@ public class RS {
 
     /**
      * Create an histogram on a specified canal
+     *
      * @param bmp
      * @param channel R or G or B or H or S or V
      * @return Histogram int tab
@@ -292,6 +301,7 @@ public class RS {
 
     /**
      * Applique une LUT passée en paramètre à une image passée en paramètre
+     *
      * @param bmp
      * @param HM
      * @return

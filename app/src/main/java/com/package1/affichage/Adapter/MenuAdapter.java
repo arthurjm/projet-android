@@ -1,6 +1,5 @@
 package com.package1.affichage.Adapter;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,8 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.package1.R;
 import com.package1.affichage.Struct.FilterStruct;
 import com.package1.affichage.Struct.MenuStruct;
@@ -31,22 +28,9 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
      * @see FilterStruct
      */
     private List<MenuStruct> menuList;
-    /**
-     * a variable of type Context
-     *
-     * @see Context
-     */
-    private Context context;
 
-    /**
-     * Constructor
-     *
-     * @param menuList
-     * @param context
-     */
-    public MenuAdapter(List<MenuStruct> menuList, Context context) {
+    public MenuAdapter(List<MenuStruct> menuList) {
         this.menuList = menuList;
-        this.context = context;
     }
 
     /**
@@ -74,12 +58,12 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
     public void onBindViewHolder(final MenuViewHolder holder, final int position) {
 
         holder.imageView.setImageBitmap(menuList.get(position).getImage());
-        holder.txtview.setText(menuList.get(position).getFilterName());
+        holder.textView.setText(menuList.get(position).getFilterName());
         // Change the text's color depending the situation
         if (nightMode == true) {
-            holder.txtview.setTextColor(Color.WHITE);
+            holder.textView.setTextColor(Color.WHITE);
         } else {
-            holder.txtview.setTextColor(Color.BLACK);
+            holder.textView.setTextColor(Color.BLACK);
         }
 
         holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -92,6 +76,10 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
 
     }
 
+    /**
+     * The size of the list
+     * @return
+     */
     @Override
     public int getItemCount() {
         return menuList.size();
@@ -100,12 +88,12 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
 
     public class MenuViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
-        TextView txtview;
+        TextView textView;
 
         public MenuViewHolder(View view) {
             super(view);
             imageView = view.findViewById(R.id.idProductImage);
-            txtview = view.findViewById(R.id.idProductName);
+            textView = view.findViewById(R.id.idProductName);
         }
     }
 }

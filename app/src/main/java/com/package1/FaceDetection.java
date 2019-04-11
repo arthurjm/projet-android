@@ -17,6 +17,7 @@ import com.google.android.gms.vision.face.FaceDetector;
 import com.google.android.gms.vision.face.Landmark;
 
 /**
+ * @author Arthur
  * To detect and trick a face
  */
 public class FaceDetection {
@@ -27,7 +28,8 @@ public class FaceDetection {
     private Canvas canvas;
 
     /**
-     * a constructor of the facedetection
+     * Constructor
+     *
      * @param ctx
      */
     public FaceDetection(Context ctx) {
@@ -43,7 +45,8 @@ public class FaceDetection {
     }
 
     /**
-     *To detect and trick the face
+     * To detect and trick the face
+     *
      * @param bmp
      * @return the image with the face tricked
      */
@@ -58,7 +61,7 @@ public class FaceDetection {
 
         for (int i = 0; i < sparseArray.size(); i++) {
             Face face = sparseArray.valueAt(i);
-            Log.i("FACE", "Nb visages " + i+1);
+            Log.i("FACE", "Nb visages " + i + 1);
             directLandmarks(face);
         }
 
@@ -67,10 +70,11 @@ public class FaceDetection {
 
     /**
      * To detect the face in the picture
+     *
      * @param face
      */
     private void directLandmarks(Face face) {
-        for (Landmark landmark:face.getLandmarks()) {
+        for (Landmark landmark : face.getLandmarks()) {
             int cx = (int) (landmark.getPosition().x);
             int cy = (int) (landmark.getPosition().y);
 
@@ -79,7 +83,8 @@ public class FaceDetection {
     }
 
     /**
-     *To trick the face with sunglass hat and beard
+     * To trick the face with sunglass hat and beard
+     *
      * @param type
      * @param cx
      * @param cy
@@ -107,8 +112,8 @@ public class FaceDetection {
             Log.i("FACE", "Scale width:" + scaleWidth + " height:" + scaleHeight);
             //canvas.drawBitmap(sunglass, cx - (scaleWidth/2), cy - scaleHeight, null);
             canvas.drawBitmap(sunglass, null, rectF, null);
-            canvas.drawBitmap(hat, null, new RectF(x1, y1 - face.getHeight()/2, x2, y1 + face.getHeight()/2), null);
-            canvas.drawBitmap(beard, null, new RectF(x1, y2- face.getHeight()/2, x2, y2 + face.getHeight()/2), null);
+            canvas.drawBitmap(hat, null, new RectF(x1, y1 - face.getHeight() / 2, x2, y1 + face.getHeight() / 2), null);
+            canvas.drawBitmap(beard, null, new RectF(x1, y2 - face.getHeight() / 2, x2, y2 + face.getHeight() / 2), null);
         }
     }
 }

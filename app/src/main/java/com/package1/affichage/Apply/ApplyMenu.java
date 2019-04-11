@@ -38,11 +38,10 @@ import static com.package1.affichage.PhotoEditing.nightMode;
  * @author Mathieu
  * In this class, we can find all functions that we use to modify the menuRecyclerView
  * We have different list which contains filter's list
- * In colorList we have different filter's that we use to modify the basic color of a picture
- * In contrastList we have different filter's that we use to modify the contrast/saturation of a picture
- * In maskList we have different filter's that we use to apply blur effects
- * In extraList we have different filter's like the rotation or the faceDetection
- * <p>
+ * In colorList we have different filter's that we use to modify the basic color of a picture ...
+ * In contrastList we have different filter's that we use to modify the contrast/saturation of a picture ...
+ * In maskList we have different filter's that we use to apply blur effects ...
+ * In extraList we have different filter's like the rotation or the faceDetection ...
  * There is also some variables like renderscript or faceDetection. They are there to apply some effects
  */
 public class ApplyMenu {
@@ -84,7 +83,7 @@ public class ApplyMenu {
     }
 
     /**
-     * To create the menu
+     * To create the principal menu
      */
     public void menuList() {
 
@@ -233,7 +232,6 @@ public class ApplyMenu {
             fs = new FilterStruct("ShiftSaturation", renderscript.applyLUT(resizeCopy, hist), FilterType.ShiftSaturation);
             contrastList.add(fs);
 
-
             // ShiftColor
             resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
             hist = new HistogramManipulation(resizeCopy, ChanelType.H, renderscript);
@@ -345,6 +343,9 @@ public class ApplyMenu {
 
     }
 
+    /**
+     * To change the filterStruct, if we are in night or day Mode
+     */
     public void nightDayMode() {
         Bitmap bmp;
         FilterStruct fs;
