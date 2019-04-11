@@ -333,12 +333,12 @@ public class ApplyMenu {
             extraList.add(fs);
 
             // Flip Horizontal
-            resizeCopy = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.fliph);
+            resizeCopy = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.flip_h);
             fs = new FilterStruct("FlipH", resizeCopy, FilterType.FlipHorizontal);
             extraList.add(fs);
 
             // Flip vertical
-            resizeCopy = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.flipv);
+            resizeCopy = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.flip_v);
             fs = new FilterStruct("FlipV", resizeCopy, FilterType.FlipVertical);
             extraList.add(fs);
 
