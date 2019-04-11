@@ -325,12 +325,47 @@ public class ApplyFilter extends AppCompatActivity {
             case DayMode:
                 setGone(seekBar1, seekBar2);
                 dayMode();
+            case FlipHorizontal:
+                setGone(seekBar1, seekBar2);
+                imageEditingCopy = flipH(imageEditingCopy);
+                imageEditing = imageEditingCopy.copy(Bitmap.Config.ARGB_8888, true);
+                break;
+            case FlipVertical:
+                setGone(seekBar1, seekBar2);
+                imageEditingCopy = flipV(imageEditingCopy);
+                imageEditing = imageEditingCopy.copy(Bitmap.Config.ARGB_8888, true);
+                break;
+
             default:
                 break;
 
         }
     }
 
+    /**
+     * Flip an image in vertical
+     *
+     * @param source bitmap we want to change
+     * @return the bitmap modify
+     */
+    public Bitmap flipV(Bitmap source){
+        Matrix matrix = new Matrix();
+        matrix.preScale(1.0f, -1.0f);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+    }
+
+    /**
+     * Flip in image in horizontal
+     *
+     * @param source bitmap we want to change
+     * @return the bitmap modify
+     */
+    public Bitmap flipH(Bitmap source){
+        Matrix matrix = new Matrix();
+        matrix.preScale(-1.0f, 1.0f);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+
+    }
     /**
      * Rotate a bitmap
      *

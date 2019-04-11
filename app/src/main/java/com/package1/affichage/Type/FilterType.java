@@ -33,5 +33,7 @@ public enum FilterType {
     FaceDetection,
     Rotate,
     NightMode,
-    DayMode
+    DayMode,
+    FlipVertical,
+    FlipHorizontal
 }

@@ -332,6 +332,16 @@ public class ApplyMenu {
             fs = new FilterStruct("Rotate", resizeCopy, FilterType.Rotate);
             extraList.add(fs);
 
+            // Flip Horizontal
+            resizeCopy = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.rotate);
+            fs = new FilterStruct("FlipH", resizeCopy, FilterType.FlipHorizontal);
+            extraList.add(fs);
+
+            // Flip vertical
+            resizeCopy = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.rotate);
+            fs = new FilterStruct("FlipV", resizeCopy, FilterType.FlipVertical);
+            extraList.add(fs);
+
             nightDayMode();
 
         } else {
