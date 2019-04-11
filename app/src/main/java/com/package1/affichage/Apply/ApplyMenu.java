@@ -342,6 +342,16 @@ public class ApplyMenu {
             fs = new FilterStruct("FlipV", resizeCopy, FilterType.FlipVertical);
             extraList.add(fs);
 
+            // Cartoon
+            resizeCopy = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.flip_v);
+            fs = new FilterStruct("Cartoon", resizeCopy, FilterType.Cartoon);
+            extraList.add(fs);
+
+            // Draw
+            resizeCopy = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.flip_v);
+            fs = new FilterStruct("Draw", resizeCopy, FilterType.Draw);
+            extraList.add(fs);
+
             nightDayMode();
 
         } else {

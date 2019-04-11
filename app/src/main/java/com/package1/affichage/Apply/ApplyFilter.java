@@ -335,6 +335,14 @@ public class ApplyFilter extends AppCompatActivity {
                 imageEditingCopy = flipV(imageEditingCopy);
                 imageEditing = imageEditingCopy.copy(Bitmap.Config.ARGB_8888, true);
                 break;
+            case Cartoon:
+                setGone(seekBar1, seekBar2);
+              //  imageEditingCopy = renderscript.posterisation(Bitmap[0], progressBar1 + 2);
+              //  imageEditingCopy = renderscript.increaseBorder(Bitmap[0], progressBar1 * 10);
+
+                break;
+            case Draw:
+                break;
             default:
                 break;
 

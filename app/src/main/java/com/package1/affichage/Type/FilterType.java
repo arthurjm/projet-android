@@ -35,5 +35,7 @@ public enum FilterType {
     NightMode,
     DayMode,
     FlipVertical,
-    FlipHorizontal
+    FlipHorizontal,
+    Cartoon,
+    Draw
 }
