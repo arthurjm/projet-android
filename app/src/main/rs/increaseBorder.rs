@@ -63,7 +63,7 @@ uchar4 RS_KERNEL increaseBorder(uchar4 in, uint32_t x, uint32_t y) {
 
     A.a = 1; B.a = 1;
 
-    temp = sqrt(A*A + B*B) * 1081.8 / 255.0;
+    temp = sqrt(A*A + B*B) ;
 
     uchar4 border = rsPackColorTo8888(temp);
     uchar4 black = in;
