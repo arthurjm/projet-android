@@ -3,22 +3,21 @@ package com.package1.affichage;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.webkit.PermissionRequest;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.Toast;
@@ -36,6 +35,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 import static com.package1.MainActivity.image;
 import static com.package1.MainActivity.imageEditing;
@@ -44,131 +44,120 @@ import static com.package1.MainActivity.imgView;
 
 /**
  * @author Mathieu
+ * In this class, we can fin different function like share an image, or save it
+ * This class coressponding to the layout apply_filter
  */
 public class PhotoEditing extends AppCompatActivity {
 
-    /**
-     * MenuRecyclerView of layout
-     *
-     * @see RecyclerView
-     */
-    public static RecyclerView menuRecyclerView;
-    /**
-     * @see MenuAdapter
-     */
-    public static MenuAdapter menuAdapter;
-    public static Bitmap actualMiniImage;
-    /**
-     * @see ApplyMenu
-     */
-    public static ApplyMenu applyMenu;
 
-    /**
-     * FilterRecyclerView of layout
-     *
-     * @see RecyclerView
-     */
+    public static RecyclerView menuRecyclerView;
+    public static MenuAdapter menuAdapter;
     public static RecyclerView filterRecyclerView;
-    /**
-     * @see FilterAdapter
-     */
     public static FilterAdapter filterAdapter;
-    /**
-     * SeekBar of layout
-     *
-     * @see SeekBar
-     */
+
+    public static ConstraintLayout applyFilterLayout;
+
+    public static Bitmap actualMiniImage;
+    public static ApplyMenu applyMenu;
     public static SeekBar seekBar1;
-    /**
-     * SeekBar of layout
-     *
-     * @see SeekBar
-     */
     public static SeekBar seekBar2;
-    /**
-     * a variable of type Renderscript
-     *
-     * @see RS
-     */
+
     public static RS renderscript;
     public static FaceDetection faceDetection;
     public static HistogramManipulation hist;
 
-    public static Context context;
-    /**
-     * New dimension for the image
-     */
-    private int adaptedWidth;
     public static Button back;
-
     public static boolean nightMode = false;
 
-    public static ConstraintLayout applyFilterLayout;
+    private static Context context;
+    private int adaptedWidth;
 
     @Override
-    /**
-     *
-     */
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.photo_recycle_view);
+        setContentView(R.layout.apply_filter);
 
+        adaptedWidth = 2000;
         initiate();
-
-    }
-
-    public static void nightMode() {
-        applyFilterLayout.setBackgroundColor(Color.BLACK);
-    }
-
-    public static void dayMode() {
-        applyFilterLayout.setBackgroundColor(context.getColor(R.color.whiteNuance));
     }
 
     /**
-     * To initiate buttons seekbars and context in layout
+     * To change the background color of the layout in Black
+     * We set nightMode at true to change Text's color
+     *
+     * @see PhotoEditing#nightMode
      */
-    public void initiate() {
-
-        applyFilterLayout = findViewById(R.id.applyFilter);
-        context = this.getApplicationContext();
-        renderscript = new RS(context);
-        faceDetection = new FaceDetection(context);
-        applyMenu = new ApplyMenu(context, renderscript, faceDetection, hist);
-
-        // Button
-        back = findViewById(R.id.back);
+    public static void nightMode() {
+        menuRecyclerView.setVisibility(View.VISIBLE);
+        filterRecyclerView.setVisibility(View.GONE);
         back.setVisibility(View.GONE);
+        applyFilterLayout.setBackgroundColor(Color.BLACK);
+        applyMenu.menuList.clear();
+        applyMenu.menuList();
+        nightMode = true;
+    }
 
+    /**
+     * To change the background color of the layout in a nuance of white
+     * We set nightMode at false to change Text's color
+     *
+     * @see PhotoEditing#nightMode
+     */
+    public static void dayMode() {
+        menuRecyclerView.setVisibility(View.VISIBLE);
+        filterRecyclerView.setVisibility(View.GONE);
+        back.setVisibility(View.GONE);
+        applyFilterLayout.setBackgroundColor(context.getColor(R.color.whiteNuance));
+        applyMenu.menuList.clear();
+        applyMenu.menuList();
+        nightMode = false;
+    }
+
+    /**
+     * To initiate RecyclerViews
+     */
+    public void initiateRecyclerView() {
         // RecyclerView
         filterRecyclerView = findViewById(R.id.idRecyclerViewHorizontalList);
         filterAdapter = new FilterAdapter(applyMenu.colorList, context, MenuType.Nothing);
-        LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-        filterRecyclerView.setLayoutManager(horizontalLayoutManager);
+        LinearLayoutManager filterManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+        filterRecyclerView.setLayoutManager(filterManager);
         filterRecyclerView.setAdapter(filterAdapter);
 
         menuRecyclerView = findViewById(R.id.idMenuViewHorizontalList);
-        menuAdapter = new MenuAdapter(applyMenu.menuList, context);
-        LinearLayoutManager horizontalLayoutManager2 = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-        menuRecyclerView.setLayoutManager(horizontalLayoutManager2);
+        menuAdapter = new MenuAdapter(applyMenu.menuList);
+        LinearLayoutManager menuManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+        menuRecyclerView.setLayoutManager(menuManager);
         menuRecyclerView.setAdapter(menuAdapter);
 
         // Visibility of recyclerView
         filterRecyclerView.setVisibility(View.GONE);
         menuRecyclerView.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * To initiate different things like buttons ..
+     */
+    public void initiate() {
+
+        context = this.getApplicationContext();
+        renderscript = new RS(context);
+        faceDetection = new FaceDetection(context);
+        applyMenu = new ApplyMenu(context, renderscript, faceDetection, hist);
+        applyFilterLayout = findViewById(R.id.applyFilter);
+
+        initiateRecyclerView();
 
         // Image
         imgView = findViewById(R.id.imageResult);
         //allow to change the limit on the picture's resolution, if the picture's width is bigger than the limit,
         // it will stay at the limit value instead, the picture's height will be changed accordingly
-        adaptedWidth = 2000;
         if (image.getWidth() < adaptedWidth) {
             adaptedWidth = image.getWidth();
         }
 
         imageEditing = Bitmap.createScaledBitmap(image, adaptedWidth, (int) ((image.getHeight() * adaptedWidth) / image.getWidth()), true);
         imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
-
         imgView.setImageBitmap(imageEditing);
 
         // SeekBar and visibility
@@ -176,6 +165,10 @@ public class PhotoEditing extends AppCompatActivity {
         seekBar1.setVisibility(View.GONE);
         seekBar2 = findViewById(R.id.seekBarNormal);
         seekBar2.setVisibility(View.GONE);
+
+        // Button
+        back = findViewById(R.id.back);
+        back.setVisibility(View.GONE);
 
         addListener();
         // Create menu
@@ -197,7 +190,6 @@ public class PhotoEditing extends AppCompatActivity {
                 back.setVisibility(View.GONE);
             }
         });
-
         Button save = findViewById(R.id.save);
         save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -232,13 +224,14 @@ public class PhotoEditing extends AppCompatActivity {
     }
 
     /**
-     * to share the image
+     * to share the image in all social's network
+     * When we share the image, we save it too
      *
      * @param bitmap
      */
     public void share(Bitmap bitmap) {
 
-        String bitmapPath = MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, "title", null);
+        String bitmapPath = MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, System.currentTimeMillis() + "", null);
         Uri uri = Uri.parse(bitmapPath);
         Intent share = new Intent(Intent.ACTION_SEND);
         share.putExtra(Intent.EXTRA_STREAM, uri);
@@ -246,26 +239,6 @@ public class PhotoEditing extends AppCompatActivity {
         share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         context.startActivity(Intent.createChooser(share, "Share image File"));
 
-    }
-
-    /**
-     * to define the imageView in layout
-     *
-     * @param bmp
-     */
-    public void undo(Bitmap bmp) {
-        imgView.setImageBitmap(bmp);
-        resetSeekbar();
-    }
-
-    /**
-     * reset progression seekbar's progression
-     *
-     * @see SeekBar#setProgress(int)
-     */
-    public void resetSeekbar() {
-        seekBar1.setProgress(0);
-        seekBar2.setProgress(0);
     }
 
     /**
@@ -300,6 +273,26 @@ public class PhotoEditing extends AppCompatActivity {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * to define the imageView in layout
+     *
+     * @param bmp
+     */
+    public void undo(Bitmap bmp) {
+        imgView.setImageBitmap(bmp);
+        resetSeekbar();
+    }
+
+    /**
+     * reset progression seekBar's progression
+     *
+     * @see SeekBar#setProgress(int)
+     */
+    public void resetSeekbar() {
+        seekBar1.setProgress(0);
+        seekBar2.setProgress(0);
     }
 
     @Override

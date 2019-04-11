@@ -2,13 +2,11 @@ package com.package1.affichage.Apply;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.SeekBar;
-import android.widget.Toast;
 
 import com.package1.ChanelType;
 import com.package1.HistogramManipulation;
@@ -24,14 +22,9 @@ import com.package1.affichage.Type.MenuType;
 import static com.package1.MainActivity.imageEditing;
 import static com.package1.MainActivity.imageEditingCopy;
 import static com.package1.MainActivity.imgView;
-import static com.package1.affichage.PhotoEditing.applyMenu;
-import static com.package1.affichage.PhotoEditing.back;
-import static com.package1.affichage.PhotoEditing.context;
 import static com.package1.affichage.PhotoEditing.dayMode;
 import static com.package1.affichage.PhotoEditing.faceDetection;
-import static com.package1.affichage.PhotoEditing.filterRecyclerView;
 import static com.package1.affichage.PhotoEditing.hist;
-import static com.package1.affichage.PhotoEditing.menuRecyclerView;
 import static com.package1.affichage.PhotoEditing.nightMode;
 import static com.package1.affichage.PhotoEditing.renderscript;
 import static com.package1.affichage.PhotoEditing.seekBar1;
@@ -68,7 +61,7 @@ public class ApplyFilter extends AppCompatActivity {
     }
 
     /**
-     * To set the view to gone
+     * To set the view of the seekBar to gone
      *
      * @param sb
      * @see View#GONE
@@ -78,7 +71,7 @@ public class ApplyFilter extends AppCompatActivity {
     }
 
     /**
-     * To set the view to gone
+     * To set the view of seekBars to gone
      *
      * @param sb
      * @param sb1
@@ -89,7 +82,7 @@ public class ApplyFilter extends AppCompatActivity {
     }
 
     /**
-     * To set the view to visible
+     * To set the view of the seekBar to visible
      *
      * @param sb
      * @see View#VISIBLE
@@ -99,7 +92,7 @@ public class ApplyFilter extends AppCompatActivity {
     }
 
     /**
-     * To set the view to visible
+     * To set the view of seekBars to visible
      *
      * @param sb
      * @param sb1
@@ -111,7 +104,7 @@ public class ApplyFilter extends AppCompatActivity {
     }
 
     /**
-     * To set the max value
+     * To set the max value of the seekBar
      *
      * @param sb
      * @param max
@@ -122,7 +115,7 @@ public class ApplyFilter extends AppCompatActivity {
     }
 
     /**
-     * To set the background at RGB
+     * To set the background of the seekBar at RGB
      *
      * @param sb
      * @see SeekBar#setBackgroundResource(int)
@@ -132,7 +125,7 @@ public class ApplyFilter extends AppCompatActivity {
     }
 
     /**
-     * To set the background at normal
+     * To set the background of the seekBar at normal
      *
      * @param sb
      * @see SeekBar#setBackgroundResource(int)
@@ -142,9 +135,9 @@ public class ApplyFilter extends AppCompatActivity {
     }
 
     /**
-     * To check in which case we are
+     * To check in which case we are, and call the good function
      *
-     * @param type
+     * @param type the current filter
      */
     public void useFunction(FilterType type) {
         renderscript = new RS(ctx);
@@ -173,7 +166,10 @@ public class ApplyFilter extends AppCompatActivity {
 
 
     /**
-     * Different functions to set different elements in the layout and apply filters when we don't need to have seekbar's
+     * Different functions to set the views of seekBars, their max and min values, their background following the current filter
+     * And if we don't need to have a seekBar, we apply the filter
+     * If we need to use one or many seekBars, we set the local variable FilterType
+     * @see FilterType
      */
     public void colorFunction(FilterType type) {
         switch (type) {
@@ -315,7 +311,7 @@ public class ApplyFilter extends AppCompatActivity {
         switch (type) {
             case FaceDetection:
                 setGone(seekBar1, seekBar2);
-                imageEditingCopy = faceDetection.putSunglass(imageEditing);
+                imageEditingCopy = faceDetection.drawOnImage(imageEditing);
                 break;
             case Rotate:
                 setGone(seekBar1, seekBar2);
@@ -324,30 +320,51 @@ public class ApplyFilter extends AppCompatActivity {
                 break;
             case NightMode:
                 setGone(seekBar1, seekBar2);
-                //seekBar2.getThumb().setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
-                applyMenu.menuList.clear();
-                applyMenu.menuList();
-                menuRecyclerView.setVisibility(View.VISIBLE);
-                filterRecyclerView.setVisibility(View.GONE);
-                back.setVisibility(View.GONE);
                 nightMode();
-                nightMode = true;
                 break;
             case DayMode:
                 setGone(seekBar1, seekBar2);
                 dayMode();
-                applyMenu.menuList.clear();
-                applyMenu.menuList();
-                menuRecyclerView.setVisibility(View.VISIBLE);
-                filterRecyclerView.setVisibility(View.GONE);
-                back.setVisibility(View.GONE);
-                nightMode = false;
+            case FlipHorizontal:
+                setGone(seekBar1, seekBar2);
+                imageEditingCopy = flipH(imageEditingCopy);
+                imageEditing = imageEditingCopy.copy(Bitmap.Config.ARGB_8888, true);
+                break;
+            case FlipVertical:
+                setGone(seekBar1, seekBar2);
+                imageEditingCopy = flipV(imageEditingCopy);
+                imageEditing = imageEditingCopy.copy(Bitmap.Config.ARGB_8888, true);
+                break;
             default:
                 break;
 
         }
     }
 
+    /**
+     * Flip an image in vertical
+     *
+     * @param source bitmap we want to change
+     * @return the bitmap modify
+     */
+    public Bitmap flipH(Bitmap source){
+        Matrix matrix = new Matrix();
+        matrix.preScale(1.0f, -1.0f);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+    }
+
+    /**
+     * Flip in image in horizontal
+     *
+     * @param source bitmap we want to change
+     * @return the bitmap modify
+     */
+    public Bitmap flipV(Bitmap source){
+        Matrix matrix = new Matrix();
+        matrix.preScale(-1.0f, 1.0f);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+
+    }
     /**
      * Rotate a bitmap
      *
@@ -377,6 +394,10 @@ public class ApplyFilter extends AppCompatActivity {
             public void onStartTrackingTouch(SeekBar seekBar) {
             }
 
+            /**
+             * Apply the good filter when we need to have one or many seekBar
+             * @param seekBar
+             */
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 new ApplyFilter.MyTask().execute(imageEditing);
@@ -394,6 +415,10 @@ public class ApplyFilter extends AppCompatActivity {
             public void onStartTrackingTouch(SeekBar seekBar) {
             }
 
+            /**
+             * Apply the good filter when we need to have one or many seekBar
+             * @param seekBar
+             */
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 new ApplyFilter.MyTask().execute(imageEditing);
@@ -402,7 +427,7 @@ public class ApplyFilter extends AppCompatActivity {
     }
 
     /**
-     * Fonction "AsyncTask" enables proper and easy use of the UI thread
+     * Function "AsyncTask" enables proper and easy use of the UI thread
      * doInBackGround enables apply the function that we choose in background
      * and return the image edited when it finishes
      */
@@ -414,8 +439,6 @@ public class ApplyFilter extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
-            Toast.makeText(ctx, "function start", Toast.LENGTH_SHORT).show();
         }
 
         /**
@@ -490,8 +513,6 @@ public class ApplyFilter extends AppCompatActivity {
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
             imgView.setImageBitmap(bitmap);
-
-            Toast.makeText(ctx, "function end", Toast.LENGTH_SHORT).show();
         }
     }
 }

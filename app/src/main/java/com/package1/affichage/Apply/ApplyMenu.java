@@ -38,11 +38,10 @@ import static com.package1.affichage.PhotoEditing.nightMode;
  * @author Mathieu
  * In this class, we can find all functions that we use to modify the menuRecyclerView
  * We have different list which contains filter's list
- * In colorList we have different filter's that we use to modify the basic color of a picture
- * In contrastList we have different filter's that we use to modify the contrast/saturation of a picture
- * In maskList we have different filter's that we use to apply blur effects
- * In extraList we have different filter's like the rotation or the faceDetection
- * <p>
+ * In colorList we have different filter's that we use to modify the basic color of a picture ...
+ * In contrastList we have different filter's that we use to modify the contrast/saturation of a picture ...
+ * In maskList we have different filter's that we use to apply blur effects ...
+ * In extraList we have different filter's like the rotation or the faceDetection ...
  * There is also some variables like renderscript or faceDetection. They are there to apply some effects
  */
 public class ApplyMenu {
@@ -84,7 +83,7 @@ public class ApplyMenu {
     }
 
     /**
-     * To create the menu
+     * To create the principal menu
      */
     public void menuList() {
 
@@ -211,7 +210,7 @@ public class ApplyMenu {
 
             // Constrast setting
             resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            hist = new HistogramManipulation(resizeCopy, ChanelType.V,renderscript);
+            hist = new HistogramManipulation(resizeCopy, ChanelType.V, renderscript);
             hist.linearExtensionLUT(198, 50);
             //fs = new FilterStruct("contrast", hist.applyLUT(resizeCopy));
             fs = new FilterStruct("Contrast", renderscript.applyLUT(resizeCopy, hist), FilterType.Contrast);
@@ -219,7 +218,7 @@ public class ApplyMenu {
 
             // ShiftLight
             resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            hist = new HistogramManipulation(resizeCopy, ChanelType.V,renderscript);
+            hist = new HistogramManipulation(resizeCopy, ChanelType.V, renderscript);
             hist.shiftLUT(45);
             //fs = new FilterStruct("shiftLight", hist.applyLUT(resizeCopy));
             fs = new FilterStruct("ShiftLight", renderscript.applyLUT(resizeCopy, hist), FilterType.ShiftLight);
@@ -227,7 +226,7 @@ public class ApplyMenu {
 
             // ShiftSaturation
             resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            hist = new HistogramManipulation(resizeCopy, ChanelType.S,renderscript);
+            hist = new HistogramManipulation(resizeCopy, ChanelType.S, renderscript);
             hist.shiftLUT(45);
             //fs = new FilterStruct("shiftSaturation", hist.applyLUT(resizeCopy));
             fs = new FilterStruct("ShiftSaturation", renderscript.applyLUT(resizeCopy, hist), FilterType.ShiftSaturation);
@@ -235,15 +234,16 @@ public class ApplyMenu {
 
             // ShiftColor
             resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            hist = new HistogramManipulation(resizeCopy, ChanelType.H,renderscript);
+            hist = new HistogramManipulation(resizeCopy, ChanelType.H, renderscript);
             hist.shiftCycleLUT(120);
             //fs = new FilterStruct("shiftColor", hist.applyLUT(resizeCopy));
             fs = new FilterStruct("ShiftColor", renderscript.applyLUT(resizeCopy, hist), FilterType.ShiftColor);
             contrastList.add(fs);
 
+
             // Isohelie
             resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            hist = new HistogramManipulation(resizeCopy, ChanelType.V,renderscript);
+            hist = new HistogramManipulation(resizeCopy, ChanelType.V, renderscript);
             hist.isohelieLUT(4);
             //fs = new FilterStruct("isohelie", hist.applyLUT(resizeCopy));
             fs = new FilterStruct("Isohelie", renderscript.applyLUT(resizeCopy, hist), FilterType.Isohelie);
@@ -251,7 +251,7 @@ public class ApplyMenu {
 
             // EqualizationLight
             resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            hist = new HistogramManipulation(resizeCopy, ChanelType.V,renderscript);
+            hist = new HistogramManipulation(resizeCopy, ChanelType.V, renderscript);
             hist.equalizationLUT();
             //fs = new FilterStruct("equa light", hist.applyLUT(resizeCopy));
             fs = new FilterStruct("EquaLight", renderscript.applyLUT(resizeCopy, hist), FilterType.EquaLight);
@@ -324,12 +324,22 @@ public class ApplyMenu {
         if (extraList.isEmpty() == true) {
             // FaceDetection
             resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            fs = new FilterStruct("Face Detection", faceDetection.putSunglass(resizeCopy), FilterType.FaceDetection);
+            fs = new FilterStruct("Face Detection", faceDetection.drawOnImage(resizeCopy), FilterType.FaceDetection);
             extraList.add(fs);
 
             // Rotate
             resizeCopy = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.rotate);
             fs = new FilterStruct("Rotate", resizeCopy, FilterType.Rotate);
+            extraList.add(fs);
+
+            // Flip Horizontal
+            resizeCopy = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.flip_h);
+            fs = new FilterStruct("FlipH", resizeCopy, FilterType.FlipHorizontal);
+            extraList.add(fs);
+
+            // Flip vertical
+            resizeCopy = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.flip_v);
+            fs = new FilterStruct("FlipV", resizeCopy, FilterType.FlipVertical);
             extraList.add(fs);
 
             nightDayMode();
@@ -343,6 +353,9 @@ public class ApplyMenu {
 
     }
 
+    /**
+     * To change the filterStruct, if we are in night or day Mode
+     */
     public void nightDayMode() {
         Bitmap bmp;
         FilterStruct fs;

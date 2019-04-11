@@ -6,29 +6,28 @@ import android.graphics.Color;
 
 public class Convolution {
     /**
-     *
      * the height of convolution
-     *
      */
     private int pxHeight;
     /**
-     *the width of convolution
+     * the width of convolution
      */
     private int pxWidth;
     /**
-     *the mask for the convolution
+     * the mask for the convolution
      */
     private int[][] mask;
     /**
-     *the weight total
+     * the weight total
      */
     private int weightTotal = 0;
 
 
     /**
-     *construction of a convolution with a mask (newHeight and newWidth are different)
+     * construction of a convolution with a mask (newHeight and newWidth are different)
+     *
      * @param tab
-     * @param newWidth the width of mask
+     * @param newWidth  the width of mask
      * @param newHeight the height of height
      */
     public Convolution(int[][] tab, int newWidth, int newHeight) {
@@ -48,7 +47,8 @@ public class Convolution {
     }
 
     /**
-     *construction of a convolution with a mask (same newHeight and newWidth)
+     * construction of a convolution with a mask (same newHeight and newWidth)
+     *
      * @param tab
      * @param newWidth the width of mask
      */
@@ -59,6 +59,7 @@ public class Convolution {
 
     /**
      * construction of a convolution with a mask (same newHeight and newWidth)
+     *
      * @param newWidth the width of mask
      */
     public Convolution(int newWidth) {
@@ -67,7 +68,8 @@ public class Convolution {
 
     /**
      * construction of a convolution with a mask (newHeight and newWidth are different)
-     * @param newWidth the width of mask
+     *
+     * @param newWidth  the width of mask
      * @param newHeight the height of mask
      */
     public Convolution(int newWidth, int newHeight) {
@@ -84,6 +86,7 @@ public class Convolution {
 
     /**
      * creat a Gaussien mask
+     *
      * @param gamma to decide each indice of the mask
      */
     public void setGaussienMask(double gamma) {
@@ -96,32 +99,33 @@ public class Convolution {
                 tempWeight += (int) v;
             }
         }
-        weightTotal=tempWeight;
+        weightTotal = tempWeight;
     }
 
     /**
      * to creat a sobel mask
+     *
      * @param isVertical
      */
-    public void setSobelMask(boolean isVertical){
-        weightTotal=1;
-        for(int i=0; i<pxWidth;i++){
-            for(int j=0; j<pxHeight;j++){
-                if (isVertical){
-                    if(i==(pxWidth-1)/2){//it means that it is in the middle of the mask (as mask are always odd in width)
-                        mask[i][j]=0;
-                    }else if(i<(pxWidth-1)/2){
-                        mask[i][j]=-1;
-                    }else{
-                        mask[i][j]=1;
+    public void setSobelMask(boolean isVertical) {
+        weightTotal = 1;
+        for (int i = 0; i < pxWidth; i++) {
+            for (int j = 0; j < pxHeight; j++) {
+                if (isVertical) {
+                    if (i == (pxWidth - 1) / 2) {//it means that it is in the middle of the mask (as mask are always odd in width)
+                        mask[i][j] = 0;
+                    } else if (i < (pxWidth - 1) / 2) {
+                        mask[i][j] = -1;
+                    } else {
+                        mask[i][j] = 1;
                     }
-                }else{
-                    if(j==(pxHeight-1)/2){//it means that it is in the middle of the mask (as mask are always odd in height)
-                        mask[i][j]=0;
-                    }else if(j<(pxHeight-1)/2){
-                        mask[i][j]=-1;
-                    }else{
-                        mask[i][j]=1;
+                } else {
+                    if (j == (pxHeight - 1) / 2) {//it means that it is in the middle of the mask (as mask are always odd in height)
+                        mask[i][j] = 0;
+                    } else if (j < (pxHeight - 1) / 2) {
+                        mask[i][j] = -1;
+                    } else {
+                        mask[i][j] = 1;
                     }
                 }
             }
@@ -131,14 +135,14 @@ public class Convolution {
     /**
      * to creat a laplacian mask
      */
-    public void setLaplacianMask(){
-        weightTotal=1;
-        for(int i=0; i<pxWidth;i++) {
+    public void setLaplacianMask() {
+        weightTotal = 1;
+        for (int i = 0; i < pxWidth; i++) {
             for (int j = 0; j < pxHeight; j++) {
-                if(i==(pxWidth-1)/2 && j==(pxHeight-1)/2){
-                    mask[i][j]=pxHeight*pxWidth-1;
-                }else{
-                    mask[i][j]=-1;
+                if (i == (pxWidth - 1) / 2 && j == (pxHeight - 1) / 2) {
+                    mask[i][j] = pxHeight * pxWidth - 1;
+                } else {
+                    mask[i][j] = -1;
                 }
             }
         }
@@ -146,6 +150,7 @@ public class Convolution {
 
     /**
      * to set the height with the value pxHeight
+     *
      * @param pxHeight the value to set
      */
     public void setPxHeight(int pxHeight) {
@@ -154,6 +159,7 @@ public class Convolution {
 
     /**
      * to set the width with the value pxWidth
+     *
      * @param pxWidth the value to set
      */
     public void setPxWidth(int pxWidth) {
@@ -162,6 +168,7 @@ public class Convolution {
 
     /**
      * to get the mask
+     *
      * @return
      */
     public int[][] getMask() {
@@ -170,6 +177,7 @@ public class Convolution {
 
     /**
      * to set the mask
+     *
      * @param mask
      */
     public void setMask(int[][] mask) {
@@ -178,15 +186,16 @@ public class Convolution {
 
     /**
      * to limit the value not exceeding a value limit
+     *
      * @param value the value to limit
      * @param limit the value limit
      * @return
      */
-    private int limitValue(int value, int limit){
-        if(value>limit){
-            value=limit;
-        }else if(value<0){
-            value=0;
+    private int limitValue(int value, int limit) {
+        if (value > limit) {
+            value = limit;
+        } else if (value < 0) {
+            value = 0;
         }
         return value;
     }
@@ -201,6 +210,7 @@ public class Convolution {
 
     /**
      * to apply the mask to the image
+     *
      * @param original the orginal image
      * @return image processed
      */
@@ -276,7 +286,8 @@ public class Convolution {
     }
 
     /**
-     *apply the mask to the image except edge of the image
+     * apply the mask to the image except edge of the image
+     *
      * @param original the original image
      * @return the image processed
      */
@@ -319,9 +330,9 @@ public class Convolution {
                         }
                     }
 
-                    tempR = limitValue(tempR,255);
-                    tempG = limitValue(tempG,255);
-                    tempB = limitValue(tempB,255);
+                    tempR = limitValue(tempR, 255);
+                    tempG = limitValue(tempG, 255);
+                    tempB = limitValue(tempB, 255);
                 } else { //sinon, on applique le traitement d'une bordure
                     localWeight = 0;
                     for (int j = 0; j < pxHeight; j++) {
@@ -340,9 +351,9 @@ public class Convolution {
                         tempG = 0;
                         tempB = 0;
                     } else {
-                        tempR = limitValue(tempR / localWeight,255);
-                        tempG = limitValue(tempG / localWeight,255);
-                        tempB = limitValue(tempB / localWeight,255);
+                        tempR = limitValue(tempR / localWeight, 255);
+                        tempG = limitValue(tempG / localWeight, 255);
+                        tempB = limitValue(tempB / localWeight, 255);
                     }
                 }
                 tabPixels[index] = Color.rgb(tempR, tempG, tempB);

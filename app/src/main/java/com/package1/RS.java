@@ -25,15 +25,16 @@ import com.package1.Mask.SobelMask;
 
 /**
  * Created by amondon001 on 22/02/19.
- * Classe regroupant l'appel des noyaux renderscript
- * Les fonctions ne modifient pas l'image passée en paramètre mais renvoient une nouvelle image
+ * Class with all the renderscript functions and call
+ * Those functions don't modify the source bitmap but they return a new one
+ * Can be very slow
  */
 
 public class RS {
 
     private RenderScript rs;
-    private Allocation input; // L'image à traiter
-    private Allocation output; // L'image traitée
+    private Allocation input; // Source image
+    private Allocation output; // Returned image
 
     public RS(Context ctx) {
         rs = RenderScript.create(ctx);
@@ -41,7 +42,8 @@ public class RS {
 
     /**
      * Initialise les allocations avec l'image passée en paramètre
-     * @param bmp
+     *
+     * @param bmp Source image
      */
     private void setInputOutput(Bitmap bmp) {
         input = Allocation.createFromBitmap(rs, bmp);
@@ -49,10 +51,11 @@ public class RS {
     }
 
     /**
-     * Change la teinte d'une image à une valeur définie (hue) comprise entre 0 et 359
-     * @param bmp
-     * @param hue
-     * @return a new bitamp
+     * Change image's hue, between 0 and 360
+     *
+     * @param bmp Source image
+     * @param hue [0;360]
+     * @return Modified image
      */
     public Bitmap colorize(Bitmap bmp, int hue) {
         setInputOutput(bmp);
@@ -70,10 +73,11 @@ public class RS {
 
     /**
      * Keep a giving hue to an image
-     * @param bmp
-     * @param hue
-     * @param precision
-     * @return
+     *
+     * @param bmp Source image
+     * @param hue The hue we want to keep [0;360]
+     * @param precision The precision we want [0;360]
+     * @return Modified image
      */
     public Bitmap keepHue(Bitmap bmp, int hue, int precision) {
         setInputOutput(bmp);
@@ -91,9 +95,10 @@ public class RS {
     }
 
     /**
-     * Passe une image couleur en gris
-     * @param bmp
-     * @return
+     * Transform a colored image into a grey image
+     *
+     * @param bmp Source image
+     * @return Modified image
      */
     public Bitmap toGrey(Bitmap bmp) {
         setInputOutput(bmp);
@@ -109,9 +114,10 @@ public class RS {
     }
 
     /**
-     * Inverse les couleurs d'une image
-     * @param bmp
-     * @return
+     * Invert the colors
+     *
+     * @param bmp Source image
+     * @return Modified image
      */
     public Bitmap invert(Bitmap bmp) {
         setInputOutput(bmp);
@@ -127,11 +133,12 @@ public class RS {
     }
 
     /**
-     * Réduit le nombre de valeurs possibles d'une image
-     * Peut aussi être appelé Isohélie
-     * @param bmp L'image à traiter
-     * @param depth Le nombre de valeurs possibles
-     * @return L'image traitée
+     * Reduce the possible values a pixel can have on channel V
+     * Also called Isohelie
+     *
+     * @param bmp Source image
+     * @param depth Number of possible values [2;256]
+     * @return Modified image
      */
     public Bitmap posterisation(Bitmap bmp, int depth) {
         setInputOutput(bmp);
@@ -147,6 +154,13 @@ public class RS {
         return res;
     }
 
+    /**
+     * Reduce the possible values a pixel can have on channels R, G and B
+     *
+     * @param bmp Source image
+     * @param depth Number of possible values [2;256]
+     * @return Modified image
+     */
     public Bitmap posterisationRGB(Bitmap bmp, int depth) {
         setInputOutput(bmp);
         Bitmap res = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), bmp.getConfig());
@@ -163,9 +177,10 @@ public class RS {
 
     /**
      * Apply a convolution to an image
-     * @param bmp
+     *
+     * @param bmp Source image
      * @param mask The object Mask to apply
-     * @return
+     * @return Modified image
      */
     public Bitmap convolution(Bitmap bmp, Mask mask) {
         setInputOutput(bmp);
@@ -196,6 +211,12 @@ public class RS {
         return res;
     }
 
+    /**
+     *  Apply both horizontal and vertical Sobel mask to an image using convolution
+     *
+     * @param bmp Source image
+     * @return Modified image
+     */
     public Bitmap sobel(Bitmap bmp) {
         setInputOutput(bmp);
         Bitmap res = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), bmp.getConfig());
@@ -216,9 +237,10 @@ public class RS {
 
     /**
      * Increase borders adding black pixels
-     * @param bmp
+     *
+     * @param bmp Source image
      * @param precision The precision we want to add black pixels
-     * @return
+     * @return Modified image
      */
     public Bitmap increaseBorder(Bitmap bmp, int precision) {
         setInputOutput(bmp);
@@ -241,7 +263,8 @@ public class RS {
 
     /**
      * Create an histogram on a specified canal
-     * @param bmp
+     *
+     * @param bmp Source image
      * @param channel R or G or B or H or S or V
      * @return Histogram int tab
      */
@@ -291,10 +314,11 @@ public class RS {
     }
 
     /**
-     * Applique une LUT passée en paramètre à une image passée en paramètre
-     * @param bmp
-     * @param HM
-     * @return
+     * Apply a LUT to an image
+     *
+     * @param bmp Source image
+     * @param HM The LUT to use
+     * @return Modified image
      */
     public Bitmap applyLUT(Bitmap bmp, HistogramManipulation HM) {
         setInputOutput(bmp);

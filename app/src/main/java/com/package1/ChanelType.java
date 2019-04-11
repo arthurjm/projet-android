@@ -9,5 +9,5 @@ public enum ChanelType {
     B,
     H,
     S,
-    V;
+    V
 }

@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.package1.R;
 import com.package1.affichage.Apply.ApplyFilter;
@@ -31,13 +30,8 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
      * @see FilterStruct
      */
     private List<FilterStruct> FilterList;
-    /**
-     * a variable of type Context
-     *
-     * @see Context
-     */
-    public Context ctx;
-    public ApplyFilter applyFilter;
+
+    private ApplyFilter applyFilter;
 
     /**
      * Constructor
@@ -47,7 +41,6 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
      */
     public FilterAdapter(List<FilterStruct> FilterList, Context context, MenuType menuType) {
         this.FilterList = FilterList;
-        this.ctx = context;
         this.applyFilter = new ApplyFilter(context, menuType);
     }
 
@@ -76,12 +69,12 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
     public void onBindViewHolder(final FilterViewHolder holder, final int position) {
 
         holder.imageView.setImageBitmap(FilterList.get(position).getImage());
-        holder.txtview.setText(FilterList.get(position).getFilterName());
+        holder.textView.setText(FilterList.get(position).getFilterName());
         // Change the text's color depending the situation
         if (nightMode == true) {
-            holder.txtview.setTextColor(Color.WHITE);
+            holder.textView.setTextColor(Color.WHITE);
         } else {
-            holder.txtview.setTextColor(Color.BLACK);
+            holder.textView.setTextColor(Color.BLACK);
         }
 
         holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -89,13 +82,15 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
             public void onClick(View v) {
                 // use adequate function with the select image
                 applyFilter.useFunction(FilterList.get(position).getFilterType());
-                String productName = FilterList.get(position).getFilterName().toString();
-                Toast.makeText(ctx, productName + " is selected", Toast.LENGTH_SHORT).show();
             }
         });
 
     }
 
+    /**
+     * The size of the list
+     * @return
+     */
     @Override
     public int getItemCount() {
         return FilterList.size();
@@ -103,12 +98,12 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
 
     public class FilterViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
-        TextView txtview;
+        TextView textView;
 
         public FilterViewHolder(View view) {
             super(view);
             imageView = view.findViewById(R.id.idProductImage);
-            txtview = view.findViewById(R.id.idProductName);
+            textView = view.findViewById(R.id.idProductName);
         }
     }
 }

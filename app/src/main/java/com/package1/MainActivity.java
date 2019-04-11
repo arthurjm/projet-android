@@ -30,6 +30,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * This class corresponding to the layout activity_main
+ */
 public class MainActivity extends AppCompatActivity {
     /**
      * The original image
@@ -47,25 +50,18 @@ public class MainActivity extends AppCompatActivity {
      * The image displayed on the screen
      */
     public static ImageView imgView;
-    private Uri filePath;
-    private String imagepath = null;
+
     private String photoPath;
-    /**
-     * We set the code "PICK_IMAGE_REQUEST" as 1
-     */
+
     private int PICK_IMAGE_REQUEST = 1;
     private int TAKE_PHOTO = 1;
     private int REQUEST_CODE = 1;
 
     /**
-     * Access to gallery
+     * The Number of values that can be taken by the values of the histogram,
+     * must be the same value as in the "HistogramManipulation" class
      */
-    private Button gallery;
-    /**
-     * Access to camera
-     */
-    private Button camera;
-    public Context context;
+    public static int NumberofValues = 256;
 
     /**
      * @param savedInstanceState
@@ -76,10 +72,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Log.i("CV", "onCreate()");
 
-        initiate();
         addListenerOnButton();
         permission();
-
     }
 
     /**
@@ -94,44 +88,37 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * To set each button on the screen
-     */
-    public void initiate() {
-
-        gallery = findViewById(R.id.gallery);
-        camera = findViewById(R.id.camera);
-        context = getApplicationContext();
-
-    }
-
     private void requestAlertWindowPermission() {
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE);
     }
-
 
     /**
      * To link the corresponding action with each button
      */
     public void addListenerOnButton() {
 
-        if (gallery != null && camera != null) {
-            gallery.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    loadPhoto();
+        Button camera = findViewById(R.id.camera);
+        Button gallery = findViewById(R.id.gallery);
 
-                }
-            });
-            camera.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    takePhoto();
-                }
-            });
-        }
+        gallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadPhoto();
+
+            }
+        });
+        camera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                takePhoto();
+            }
+        });
+
     }
 
+    /**
+     * To take a photo with the camera
+     */
     public void takePhoto() {
 
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -147,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
                 // create URI
                 Uri photoUri;
                 if (photoFile != null) {
-                    photoUri = FileProvider.getUriForFile(context, "com.package1.fileprovider", photoFile);
+                    photoUri = FileProvider.getUriForFile(getApplicationContext(), "com.package1.fileprovider", photoFile);
                     // transfert URI to intent for register photo in temp file
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
                     startActivityForResult(intent, TAKE_PHOTO);
@@ -161,6 +148,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * To load a photo in the smartphone
+     */
     public void loadPhoto() {
 
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -171,15 +161,17 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
     /**
+     * To start an activity
+     *
      * @param requestCode the same code in the function "startActivityForResult" to make sure the datas from which Activity
      * @param resultCode  the code returned by the method "setResult()" of Activity
      * @param data        a variable of type data
      */
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        filePath = null;
+        Uri filePath = null;
+        String imagepath = null;
 
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -225,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * To rotate the image
+     * To have a good axe in our photo
      *
      * @param photoFilePath
      * @return a Bitmap
@@ -266,10 +258,12 @@ public class MainActivity extends AppCompatActivity {
         return rotatedBitmap;
     }
 
+    /**
+     * To go on apply_filter layout
+     */
     public void filterPage() {
         startActivity(new Intent(this, PhotoEditing.class));
     }
-
 
     /**
      *
@@ -324,7 +318,6 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         Log.i("CV", "onDestroy()");
     }
-
 
 }
 
