@@ -192,6 +192,7 @@ public class ApplyFilter extends AppCompatActivity {
                 setBorn(seekBar1, 359);
                 setBorn(seekBar2, 180);
                 setRGBBackground(seekBar1);
+                setNormalBackground(seekBar2);
                 seekBar1.setProgress(0);
                 seekBar2.setProgress(0);
                 setFilterType(FilterType.KeepHue);
