@@ -347,7 +347,7 @@ public class ApplyFilter extends AppCompatActivity {
      * @param source bitmap we want to change
      * @return the bitmap modify
      */
-    public Bitmap flipV(Bitmap source){
+    public Bitmap flipH(Bitmap source){
         Matrix matrix = new Matrix();
         matrix.preScale(1.0f, -1.0f);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
@@ -359,7 +359,7 @@ public class ApplyFilter extends AppCompatActivity {
      * @param source bitmap we want to change
      * @return the bitmap modify
      */
-    public Bitmap flipH(Bitmap source){
+    public Bitmap flipV(Bitmap source){
         Matrix matrix = new Matrix();
         matrix.preScale(-1.0f, 1.0f);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
