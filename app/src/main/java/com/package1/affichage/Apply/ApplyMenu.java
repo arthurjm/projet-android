@@ -324,7 +324,7 @@ public class ApplyMenu {
         if (extraList.isEmpty() == true) {
             // FaceDetection
             resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            fs = new FilterStruct("Face Detection", faceDetection.putSunglass(resizeCopy), FilterType.FaceDetection);
+            fs = new FilterStruct("Face Detection", faceDetection.drawOnImage(resizeCopy), FilterType.FaceDetection);
             extraList.add(fs);
 
             // Rotate
