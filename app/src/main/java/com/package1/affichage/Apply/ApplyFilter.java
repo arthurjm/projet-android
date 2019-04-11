@@ -3,6 +3,7 @@ package com.package1.affichage.Apply;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -29,7 +30,7 @@ import static com.package1.affichage.PhotoEditing.nightMode;
 import static com.package1.affichage.PhotoEditing.renderscript;
 import static com.package1.affichage.PhotoEditing.seekBar1;
 import static com.package1.affichage.PhotoEditing.seekBar2;
-
+import static com.package1.affichage.PhotoEditing.animationIV;
 /**
  * @author Mathieu
  * In this class, we can find all functions that we use to modify the actual image
@@ -44,7 +45,7 @@ public class ApplyFilter extends AppCompatActivity {
     public MenuType menuType;
     public Context ctx;
     public int progressBar1, progressBar2;
-
+    private AnimationDrawable animationDrawable;
     /**
      * Constructor
      *
@@ -131,7 +132,7 @@ public class ApplyFilter extends AppCompatActivity {
      * @see SeekBar#setBackgroundResource(int)
      */
     public void setNormalBackground(SeekBar sb) {
-        sb.setBackgroundResource(0);
+        sb.setBackgroundResource(R.drawable.icon);
     }
 
     /**
@@ -460,6 +461,12 @@ public class ApplyFilter extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            super.onPreExecute();
+            imgView.setVisibility(View.GONE);
+            animationIV.setVisibility(View.VISIBLE);
+            animationDrawable = (AnimationDrawable) animationIV.getDrawable();
+            animationDrawable.start();
+
         }
 
         /**
@@ -536,7 +543,11 @@ public class ApplyFilter extends AppCompatActivity {
          */
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
+            animationIV.setVisibility(View.GONE);
             imgView.setImageBitmap(bitmap);
+            imgView.setVisibility(View.VISIBLE);
+
+
         }
     }
 }
