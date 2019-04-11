@@ -71,7 +71,7 @@ public class PhotoEditing extends AppCompatActivity {
     public static Button back;
     public static boolean nightMode = false;
 
-    private static Context context;
+    private Context context;
     private int adaptedWidth;
     private AnimationDrawable animationDrawable;
     public static ImageView animationIV;
@@ -107,11 +107,11 @@ public class PhotoEditing extends AppCompatActivity {
      *
      * @see PhotoEditing#nightMode
      */
-    public static void dayMode() {
+    public static void dayMode(Context ctx) {
         menuRecyclerView.setVisibility(View.VISIBLE);
         filterRecyclerView.setVisibility(View.GONE);
         back.setVisibility(View.GONE);
-        applyFilterLayout.setBackgroundColor(context.getColor(R.color.whiteNuance));
+        applyFilterLayout.setBackgroundColor(ctx.getColor(R.color.whiteNuance));
         applyMenu.menuList.clear();
         applyMenu.menuList();
         nightMode = false;
