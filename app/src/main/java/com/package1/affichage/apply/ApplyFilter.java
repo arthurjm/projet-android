@@ -24,7 +24,6 @@ import static com.package1.MainActivity.imageEditing;
 import static com.package1.MainActivity.imageEditingCopy;
 import static com.package1.MainActivity.imgView;
 import static com.package1.affichage.PhotoEditing.hist;
-import static com.package1.affichage.PhotoEditing.animationIV;
 /**
  * @author Mathieu
  *         In this class, we can find all functions that we use to modify the actual image
@@ -364,6 +363,15 @@ public class ApplyFilter {
                 imageEditingCopy = renderscript.invert(imageEditingCopy);
                 imageEditingCopy = renderscript.increaseBorder(imageEditingCopy, 120);
                 break;
+            case Elias:
+                setGone(seekBar1, seekBar2);
+                break;
+            case Elias1:
+                setGone(seekBar1, seekBar2);
+                break;
+            case Elias2:
+                setGone(seekBar1, seekBar2);
+                break;
             default:
                 break;
 
@@ -470,10 +478,10 @@ public class ApplyFilter {
         protected void onPreExecute() {
             super.onPreExecute();
             imgView.setVisibility(View.GONE);
-            animationIV.setVisibility(View.VISIBLE);
+            context.animationIV.setVisibility(View.VISIBLE);
             //animationDrawable = (AnimationDrawable) animationIV.getDrawable();
             //animationDrawable.start();
-            FrameAnimationDrawable.create().animateRawManuallyFromXML(R.drawable.animation1, animationIV);
+            FrameAnimationDrawable.create().animateRawManuallyFromXML(R.drawable.animation1, context.animationIV);
 
 
         }
@@ -557,10 +565,9 @@ public class ApplyFilter {
             super.onPostExecute(bitmap);
             //animationDrawable.stop();
             FrameAnimationDrawable.create().stopAnimation(true);
-            animationIV.setVisibility(View.GONE);
+            context.animationIV.setVisibility(View.GONE);
             imgView.setImageBitmap(bitmap);
             imgView.setVisibility(View.VISIBLE);
-
 
         }
     }

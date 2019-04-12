@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -63,7 +64,7 @@ public class PhotoEditing extends AppCompatActivity {
 
     private Context context;
     public int adaptedWidth;
-    public static ImageView animationIV;
+    public ImageView animationIV;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -184,8 +185,8 @@ public class PhotoEditing extends AppCompatActivity {
                 menuRecyclerView.setVisibility(View.VISIBLE);
                 filterRecyclerView.setVisibility(View.GONE);
                 back.setVisibility(View.GONE);
-                imageEditingCopy= imageEditing.copy(Bitmap.Config.ARGB_8888, true);;
-                undo(imageEditing);
+                imageEditingCopy= imageEditing.copy(Bitmap.Config.ARGB_8888, true);
+                reset(imageEditing);
             }
         });
         Button save = findViewById(R.id.save);
@@ -196,13 +197,13 @@ public class PhotoEditing extends AppCompatActivity {
                 saveImageToGallery(imageEditing);
             }
         });
-        Button undoBut = findViewById(R.id.undo);
-        undoBut.setOnClickListener(new View.OnClickListener() {
+        Button resetBut = findViewById(R.id.reset);
+        resetBut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 imageEditing = Bitmap.createScaledBitmap(image, adaptedWidth, ((image.getHeight() * adaptedWidth) / image.getWidth()), true);
                 imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
-                undo(imageEditing);
+                reset(imageEditing);
                 Toast.makeText(context, "Remise à zero", Toast.LENGTH_SHORT).show();
             }
         });
@@ -241,6 +242,14 @@ public class PhotoEditing extends AppCompatActivity {
 
     }
 
+    // opening image in default image viewer app
+    private void openImage(String path) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.setDataAndType(Uri.parse(path), "image/*");
+        startActivity(intent);
+    }
+
     /**
      * to save the image
      *
@@ -251,7 +260,7 @@ public class PhotoEditing extends AppCompatActivity {
         if(dir.exists()){
             dir.mkdirs();
         }
-        String fileName = System.currentTimeMillis() + "";
+        final String fileName = System.currentTimeMillis() + "";
         File file = new File(dir, fileName);
 
         try {
@@ -260,6 +269,14 @@ public class PhotoEditing extends AppCompatActivity {
             out.flush();
             out.close();
             Toast.makeText(context, "Image sauvegardée", Toast.LENGTH_SHORT).show();
+            ConstraintLayout test = findViewById(R.id.applyFilter);
+            Snackbar snackbar = Snackbar.make(test, "Image saved to gallery!", Snackbar.LENGTH_LONG).setAction("OPEN", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    openImage(fileName);
+                }
+            });
+            snackbar.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -276,7 +293,7 @@ public class PhotoEditing extends AppCompatActivity {
      *
      * @param bmp the bitmap
      */
-    public void undo(Bitmap bmp) {
+    public void reset(Bitmap bmp) {
         imgView.setImageBitmap(bmp);
         resetSeekbar();
     }
