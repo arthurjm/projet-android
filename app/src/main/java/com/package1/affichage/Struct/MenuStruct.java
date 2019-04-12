@@ -35,8 +35,8 @@ public class MenuStruct {
     /**
      * Constructor
      *
-     * @param filterName
-     * @param image
+     * @param filterName the filterName
+     * @param image the Bitmap
      */
     public MenuStruct(String filterName, Bitmap image, MenuType menuType) {
         this.filterName = filterName;

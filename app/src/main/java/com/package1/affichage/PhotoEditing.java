@@ -15,7 +15,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
@@ -40,28 +39,24 @@ import static com.package1.MainActivity.imgView;
 
 /**
  * @author Mathieu
- * In this class, we can fin different function like share an image, or save it
- * This class coressponding to the layout apply_filter
+ *         In this class, we can fin different function like share an image, or save it
+ *         This class coressponding to the layout apply_filter
  */
 public class PhotoEditing extends AppCompatActivity {
 
 
+    public static HistogramManipulation hist;
     public RecyclerView menuRecyclerView;
     public MenuAdapter menuAdapter;
     public RecyclerView filterRecyclerView;
     public FilterAdapter filterAdapter;
-
     public ConstraintLayout applyFilterLayout;
-
     public Bitmap actualMiniImage;
     public ApplyMenu applyMenu;
     public SeekBar seekBar1;
     public SeekBar seekBar2;
-
     public RS renderscript;
     public FaceDetection faceDetection;
-    public static HistogramManipulation hist;
-
     public Button back;
     public boolean nightMode = false;
 
@@ -223,7 +218,7 @@ public class PhotoEditing extends AppCompatActivity {
      * to share the image in all social's network
      * When we share the image, we save it too
      *
-     * @param bitmap
+     * @param bitmap the bitmap that we want to share
      */
     public void share(Bitmap bitmap) {
 
@@ -240,15 +235,11 @@ public class PhotoEditing extends AppCompatActivity {
     /**
      * to save the image
      *
-     * @param bmp
+     * @param bmp the bitmap that we want to save
      */
     private void saveImageToGallery(Bitmap bmp) {
         File dir = new File(Environment.getExternalStorageDirectory(), "Projet");
-        if (!dir.exists()) {
-            dir.mkdir();
-        }
-        System.out.println(dir);
-        final String fileName = System.currentTimeMillis() + "";
+        String fileName = System.currentTimeMillis() + "";
         File file = new File(dir, fileName);
 
         try {
@@ -256,8 +247,6 @@ public class PhotoEditing extends AppCompatActivity {
             bmp.compress(Bitmap.CompressFormat.JPEG, 100, out);
             out.flush();
             out.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -273,7 +262,7 @@ public class PhotoEditing extends AppCompatActivity {
     /**
      * to define the imageView in layout
      *
-     * @param bmp
+     * @param bmp the bitmap
      */
     public void undo(Bitmap bmp) {
         imgView.setImageBitmap(bmp);

@@ -2,6 +2,7 @@ package com.package1.affichage.Adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +21,7 @@ import java.util.List;
 
 /**
  * @author Mathieu
- * Adapter of FilterAdapter
+ *         Adapter of FilterAdapter
  */
 public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterViewHolder> {
 
@@ -34,27 +35,31 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
     private ApplyFilter applyFilter;
 
     private PhotoEditing context;
+
     /**
      * Constructor
      *
-     * @param FilterList
-     * @param context
+     * @param FilterList the list that we need
+     * @param context    the context
      */
     public FilterAdapter(List<FilterStruct> FilterList, Context context, MenuType menuType) {
         this.FilterList = FilterList;
         this.applyFilter = new ApplyFilter(context, menuType);
-        this.context =  (PhotoEditing) context;
+        this.context = (PhotoEditing) context;
     }
 
     /**
      * To initialise the viewHolder
      *
-     * @param parent
-     * @param viewType
-     * @return
+     * @param parent   the ViewGroup
+     * @param viewType int
+     * @return FilterViewHolder
+     * @see ViewGroup
+     * @see FilterViewHolder
      */
+    @NonNull
     @Override
-    public FilterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public FilterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //inflate the layout file
         View photoProductView = LayoutInflater.from(parent.getContext()).inflate(R.layout.pattern_recycler, parent, false);
         return new FilterViewHolder(photoProductView);
@@ -64,11 +69,11 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
     /**
      * Modify the actual case in the recyclerView
      *
-     * @param holder
-     * @param position
+     * @param holder the holder
+     * @param position the position where we are
      */
     @Override
-    public void onBindViewHolder(final FilterViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull FilterViewHolder holder, final int position) {
 
         holder.imageView.setImageBitmap(FilterList.get(position).getImage());
         holder.textView.setText(FilterList.get(position).getFilterName());
@@ -91,18 +96,19 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
 
     /**
      * The size of the list
-     * @return
+     *
+     * @return the size of the list
      */
     @Override
     public int getItemCount() {
         return FilterList.size();
     }
 
-    public class FilterViewHolder extends RecyclerView.ViewHolder {
+    class FilterViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
         TextView textView;
 
-        public FilterViewHolder(View view) {
+        FilterViewHolder(View view) {
             super(view);
             imageView = view.findViewById(R.id.idProductImage);
             textView = view.findViewById(R.id.idProductName);

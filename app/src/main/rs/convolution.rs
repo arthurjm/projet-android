@@ -16,6 +16,7 @@ uchar4 RS_KERNEL convolution(uchar4 in, uint32_t x, uint32_t y) {
 
     float4 temp = 0.0f;
     int localWeight = 0;
+    // Works like applicationConvolution in Convolution.java
     //entre dans le if si le pixel central permet d'appliquer le masque en entier
     if (!(x < maskWidth / 2 || y < maskHeight / 2 || x > width - (maskWidth + 1) / 2 || y > height - (maskHeight + 1) / 2)) {
         for (int j = 0; j < maskHeight; j++) {
@@ -30,7 +31,7 @@ uchar4 RS_KERNEL convolution(uchar4 in, uint32_t x, uint32_t y) {
 
         for (int j = 0; j < maskHeight; j++) {
             for (int i = 0; i < maskWidth; i++) {
-                if ((x + i - maskWidth / 2) >= 0 && (x + i - maskWidth / 2) < width && (y + j - maskHeight / 2) >= 0 && (y + j - maskHeight / 2) < height) {
+                if ((x + i >= maskWidth / 2) && (x + i - maskWidth / 2) < width && (y + j >= maskHeight / 2) && (y + j - maskHeight / 2) < height) {
                     float4 pixel = rsUnpackColor8888(rsGetElementAt_uchar4(input, x + i - maskWidth / 2, y + j - maskHeight / 2));
                     temp += pixel * (float) rsGetElementAt_int(mask, i, j);
                     localWeight += rsGetElementAt_int(mask, i, j);

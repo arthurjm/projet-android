@@ -2,6 +2,7 @@ package com.package1.affichage.Adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,12 +39,17 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
     /**
      * To initialise the viewHolder
      *
-     * @param parent
-     * @param viewType
-     * @return
+     * @param parent the ViewGroup
+     *               @see ViewGroup
+     *
+     * @param viewType int
+     *
+     * @return MenuViewHolder
+     * @see MenuViewHolder
      */
+    @NonNull
     @Override
-    public MenuViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MenuViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //inflate the layout file
         View photoProductView = LayoutInflater.from(parent.getContext()).inflate(R.layout.pattern_recycler, parent, false);
         return new MenuViewHolder(photoProductView);
@@ -53,11 +59,11 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
     /**
      * Modify the actual case in the recyclerView
      *
-     * @param holder
-     * @param position
+     * @param holder the holder
+     * @param position the position where we are
      */
     @Override
-    public void onBindViewHolder(final MenuViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final MenuViewHolder holder, final int position) {
 
         holder.imageView.setImageBitmap(menuList.get(position).getImage());
         holder.textView.setText(menuList.get(position).getFilterName());
@@ -80,7 +86,8 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
 
     /**
      * The size of the list
-     * @return
+     *
+     * @return the size of the list
      */
     @Override
     public int getItemCount() {
@@ -88,11 +95,11 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
     }
 
 
-    public class MenuViewHolder extends RecyclerView.ViewHolder {
+    class MenuViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
         TextView textView;
 
-        public MenuViewHolder(View view) {
+        MenuViewHolder(View view) {
             super(view);
             imageView = view.findViewById(R.id.idProductImage);
             textView = view.findViewById(R.id.idProductName);

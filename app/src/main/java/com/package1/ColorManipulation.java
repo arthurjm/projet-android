@@ -3,14 +3,8 @@ package com.package1;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 
-import java.util.Random;
-
 public class ColorManipulation {
-    /**
-     * a variable of type random
-     * to pick a color ar random
-     */
-    static Random random = new Random();//sert pour la colorisation
+
     /**
      * a list of variable int
      * to create a list of pixels of the image processing
@@ -22,10 +16,10 @@ public class ColorManipulation {
     private int A, R, G, B;
 
     /**
-     * @param index
-     * @param isA
+     * @param index Int
+     * @param isA Boolean
      */
-    public void convert(int index, boolean isA) {
+    private void convert(int index, boolean isA) {
         if (isA) {
             A = (tabPixels[index] >> 24) & 0xff;
             R = (tabPixels[index] >> 16) & 0xff;
@@ -38,7 +32,7 @@ public class ColorManipulation {
         }
     }
 
-    public void passageNuanceGrey() {
+    private void passageNuanceGrey() {
         R = ((R * 30) + (G * 59) + B * 11) / 100;
         G = R;
         B = R;
@@ -81,9 +75,9 @@ public class ColorManipulation {
      *
      * @param original the original image
      * @param color    the color chosen
-     * @param seuilR
-     * @param seuilG
-     * @param seuilB
+     * @param seuilR int
+     * @param seuilG int
+     * @param seuilB int
      * @return an image processed
      */
     public Bitmap convertImageSelectiveDesaturation(Bitmap original, int color, int seuilR, int seuilG, int seuilB) {
@@ -127,7 +121,6 @@ public class ColorManipulation {
         int width = original.getWidth();
         int height = original.getHeight();
         int index;
-        int newHue = chosenHue;
         tabPixels = new int[width * height];
         float[] hsv = new float[3];
 
@@ -141,7 +134,7 @@ public class ColorManipulation {
                 convert(index, false);
                 //on passe en HSV puis on modifie le "hue" (la teinte)
                 Color.RGBToHSV(R, G, B, hsv);
-                hsv[0] = newHue;
+                hsv[0] = chosenHue;
                 tabPixels[index] = Color.HSVToColor(hsv);
             }
         }

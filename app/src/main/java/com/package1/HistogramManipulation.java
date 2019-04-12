@@ -10,16 +10,17 @@ import static com.package1.MainActivity.NumberofValues;
 public class HistogramManipulation {
 
 
-    public int[] LUT = new int[NumberofValues];
+    int[] LUT = new int[NumberofValues];
     Histogram histogram;
-    int R, G, B;
+    private int R, G, B;
 
     /**
      * Constructor
      *
-     * @param bitmap
-     * @param chanel
-     * @param rs
+     * @param bitmap Bitmap
+     * @param chanel ChanelType (Red, Green, Blue, Hue, Saturation, Variance)
+     * @see ChanelType
+     * @param rs Renderscript
      */
     public HistogramManipulation(Bitmap bitmap, ChanelType chanel, RS rs) {
         histogram = new Histogram(rs.createHistogram(bitmap, chanel), chanel, bitmap.getHeight() * bitmap.getWidth());
@@ -222,6 +223,30 @@ public class HistogramManipulation {
                 tempCount = 0;
             }
         }
+    }
+
+    public int getR() {
+        return R;
+    }
+
+    public void setR(int r) {
+        R = r;
+    }
+
+    public int getG() {
+        return G;
+    }
+
+    public void setG(int g) {
+        G = g;
+    }
+
+    public int getB() {
+        return B;
+    }
+
+    public void setB(int b) {
+        B = b;
     }
 
     /* Here start the application of the LUT with java, unused with the renderscript version

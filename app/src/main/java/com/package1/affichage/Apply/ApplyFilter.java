@@ -1,12 +1,10 @@
 package com.package1.affichage.Apply;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
-import android.graphics.drawable.AnimationDrawable;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.SeekBar;
 
@@ -29,11 +27,11 @@ import static com.package1.affichage.PhotoEditing.hist;
 
 /**
  * @author Mathieu
- * In this class, we can find all functions that we use to modify the actual image
- * We have some variables :
- * filterType -> we use it to when we need to use seekBar, and we check in which case we we are in MyTask to apply the adequate function
- * recyclerType -> we use it to check in which type of FilterRecyclerView we are
- * progressBar1 / progressBar2 -> actual value of seekBars
+ *         In this class, we can find all functions that we use to modify the actual image
+ *         We have some variables :
+ *         filterType -> we use it to when we need to use seekBar, and we check in which case we we are in MyTask to apply the adequate function
+ *         recyclerType -> we use it to check in which type of FilterRecyclerView we are
+ *         progressBar1 / progressBar2 -> actual value of seekBars
  */
 public class ApplyFilter {
 
@@ -50,8 +48,8 @@ public class ApplyFilter {
     /**
      * Constructor
      *
-     * @param ctx
-     * @param menuType
+     * @param ctx the context
+     * @param menuType the menuType
      */
     public ApplyFilter(Context ctx, MenuType menuType) {
         this.menuType = menuType;
@@ -69,7 +67,7 @@ public class ApplyFilter {
     /**
      * To set the view of the seekBar to gone
      *
-     * @param sb
+     * @param sb the seekBar
      * @see View#GONE
      */
     private void setGone(SeekBar sb) {
@@ -79,8 +77,8 @@ public class ApplyFilter {
     /**
      * To set the view of seekBars to gone
      *
-     * @param sb
-     * @param sb1
+     * @param sb the seekBar
+     * @param sb1 the seekBar
      */
     private void setGone(SeekBar sb, SeekBar sb1) {
         setGone(sb);
@@ -90,7 +88,7 @@ public class ApplyFilter {
     /**
      * To set the view of the seekBar to visible
      *
-     * @param sb
+     * @param sb the seekBar
      * @see View#VISIBLE
      */
     private void setVisible(SeekBar sb) {
@@ -100,8 +98,8 @@ public class ApplyFilter {
     /**
      * To set the view of seekBars to visible
      *
-     * @param sb
-     * @param sb1
+     * @param sb the seekBar
+     * @param sb1 the seekBar
      * @see View#VISIBLE
      */
     private void setVisible(SeekBar sb, SeekBar sb1) {
@@ -112,8 +110,8 @@ public class ApplyFilter {
     /**
      * To set the max value of the seekBar
      *
-     * @param sb
-     * @param max
+     * @param sb the seekBar
+     * @param max the max value
      * @see SeekBar#setMax(int)
      */
     private void setBorn(SeekBar sb, int max) {
@@ -123,7 +121,7 @@ public class ApplyFilter {
     /**
      * To set the background of the seekBar at RGB
      *
-     * @param sb
+     * @param sb the seekBar
      * @see SeekBar#setBackgroundResource(int)
      */
     private void setRGBBackground(SeekBar sb) {
@@ -133,7 +131,7 @@ public class ApplyFilter {
     /**
      * To set the background of the seekBar at normal
      *
-     * @param sb
+     * @param sb the seekBar
      * @see SeekBar#setBackgroundResource(int)
      */
     private void setNormalBackground(SeekBar sb) {
@@ -330,7 +328,7 @@ public class ApplyFilter {
                 break;
             case Rotate:
                 setGone(seekBar1, seekBar2);
-                imageEditingCopy = RotateBitmap(imageEditingCopy, 90);
+                imageEditingCopy = RotateBitmap(imageEditingCopy);
                 imageEditing = imageEditingCopy.copy(Bitmap.Config.ARGB_8888, true);
                 break;
             case NightMode:
@@ -394,15 +392,14 @@ public class ApplyFilter {
     }
 
     /**
-     * Rotate a bitmap
+     * Rotate a bitmap at 90°
      *
-     * @param source
-     * @param angle
+     * @param source the Bitmap
      * @return bitmap flip with angle
      */
-    private Bitmap RotateBitmap(Bitmap source, float angle) {
+    private Bitmap RotateBitmap(Bitmap source) {
         Matrix matrix = new Matrix();
-        matrix.postRotate(angle);
+        matrix.postRotate((float) 90);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
 
@@ -424,7 +421,7 @@ public class ApplyFilter {
 
             /**
              * Apply the good filter when we need to have one or many seekBar
-             * @param seekBar
+             * @param seekBar the seekBar
              */
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
@@ -445,7 +442,7 @@ public class ApplyFilter {
 
             /**
              * Apply the good filter when we need to have one or many seekBar
-             * @param seekBar
+             * @param seekBar the seekBar
              */
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
@@ -459,6 +456,7 @@ public class ApplyFilter {
      * doInBackGround enables apply the function that we choose in background
      * and return the image edited when it finishes
      */
+    @SuppressLint("StaticFieldLeak")
     private class MyTask extends AsyncTask<Bitmap, Void, Bitmap> {
 
         /**
@@ -473,7 +471,7 @@ public class ApplyFilter {
          * match the function that we choose and apply on the image
          *
          * @param Bitmap the image that we process
-         * @return
+         * @return the bitmap
          */
         @Override
         protected Bitmap doInBackground(Bitmap... Bitmap) {

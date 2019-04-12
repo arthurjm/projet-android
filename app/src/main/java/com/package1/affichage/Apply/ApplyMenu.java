@@ -22,7 +22,6 @@ import com.package1.affichage.Type.FilterType;
 import com.package1.affichage.Type.MenuType;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import static com.package1.MainActivity.image;
@@ -31,13 +30,13 @@ import static com.package1.MainActivity.imgView;
 
 /**
  * @author Mathieu
- * In this class, we can find all functions that we use to modify the menuRecyclerView
- * We have different list which contains filter's list
- * In colorList we have different filter's that we use to modify the basic color of a picture ...
- * In contrastList we have different filter's that we use to modify the contrast/saturation of a picture ...
- * In maskList we have different filter's that we use to apply blur effects ...
- * In extraList we have different filter's like the rotation or the faceDetection ...
- * There is also some variables like renderscript or faceDetection. They are there to apply some effects
+ *         In this class, we can find all functions that we use to modify the menuRecyclerView
+ *         We have different list which contains filter's list
+ *         In colorList we have different filter's that we use to modify the basic color of a picture ...
+ *         In contrastList we have different filter's that we use to modify the contrast/saturation of a picture ...
+ *         In maskList we have different filter's that we use to apply blur effects ...
+ *         In extraList we have different filter's like the rotation or the faceDetection ...
+ *         There is also some variables like renderscript or faceDetection. They are there to apply some effects
  */
 public class ApplyMenu {
 
@@ -54,33 +53,13 @@ public class ApplyMenu {
 
     private PhotoEditing context;
 
-    public List<MenuStruct> getMenuList() {
-        return menuList;
-    }
-
-    public List<FilterStruct> getColorList() {
-        return colorList;
-    }
-
-    public List<FilterStruct> getContrastList() {
-        return contrastList;
-    }
-
-    public List<FilterStruct> getMaskList() {
-        return maskList;
-    }
-
-    public List<FilterStruct> getExtraList() {
-        return extraList;
-    }
-
     /**
      * Constructor
      *
-     * @param ctx
-     * @param renderScript
-     * @param faceDetection
-     * @param hist
+     * @param ctx           The context
+     * @param renderScript  the renderscript
+     * @param faceDetection the facedection
+     * @param hist          the histogram
      */
     public ApplyMenu(Context ctx, RS renderScript, FaceDetection faceDetection, HistogramManipulation hist) {
         this.renderscript = renderScript;
@@ -97,6 +76,14 @@ public class ApplyMenu {
 
         context = (PhotoEditing) ctx;
 
+    }
+
+    public List<MenuStruct> getMenuList() {
+        return menuList;
+    }
+
+    public List<FilterStruct> getColorList() {
+        return colorList;
     }
 
     /**
@@ -128,7 +115,7 @@ public class ApplyMenu {
     /**
      * To change the actual list in RecyclerView
      *
-     * @param menuType
+     * @param menuType the actual menuType
      */
     private void changeList(MenuType menuType) {
         switch (menuType) {
@@ -153,7 +140,7 @@ public class ApplyMenu {
     /**
      * Use a function to modify the actual recyclerView
      *
-     * @param menuType
+     * @param menuType the actual menuType
      */
     public void modifyList(MenuType menuType) {
         imgView.setImageBitmap(imageEditingCopy);
@@ -380,9 +367,8 @@ public class ApplyMenu {
         } else {
 
             // Remove Night/Day mode to update it
-            for (Iterator<FilterStruct> iterator = extraList.iterator(); iterator.hasNext(); ) {
-                FilterStruct filterStruct = iterator.next();
-                if(filterStruct.getFilterType() == FilterType.NightMode || filterStruct.getFilterType() == FilterType.DayMode){
+            for (FilterStruct filterStruct : extraList) {
+                if (filterStruct.getFilterType() == FilterType.NightMode || filterStruct.getFilterType() == FilterType.DayMode) {
                     extraList.remove(filterStruct);
                     nightDayMode();
                 }
