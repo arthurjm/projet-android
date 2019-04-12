@@ -22,6 +22,7 @@ import com.package1.affichage.Type.FilterType;
 import com.package1.affichage.Type.MenuType;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import static com.package1.MainActivity.image;
@@ -92,7 +93,7 @@ public class ApplyMenu {
         extraList = new ArrayList<>();
         maskList = new ArrayList<>();
         contrastList = new ArrayList<>();
-        resizeImageEditing = Bitmap.createScaledBitmap(image, 100,  ((image.getHeight() * 100) / image.getWidth()), true);
+        resizeImageEditing = Bitmap.createScaledBitmap(image, 100, ((image.getHeight() * 100) / image.getWidth()), true);
 
         context = (PhotoEditing) ctx;
 
@@ -379,11 +380,15 @@ public class ApplyMenu {
         } else {
 
             // Remove Night/Day mode to update it
-            extraList.remove(extraList.get(extraList.size() - 1));
-            nightDayMode();
+            for (Iterator<FilterStruct> iterator = extraList.iterator(); iterator.hasNext(); ) {
+                FilterStruct filterStruct = iterator.next();
+                if(filterStruct.getFilterType() == FilterType.NightMode || filterStruct.getFilterType() == FilterType.DayMode){
+                    extraList.remove(filterStruct);
+                    nightDayMode();
+                }
+            }
         }
         context.filterAdapter.notifyDataSetChanged();
-
     }
 
     /**
@@ -393,7 +398,7 @@ public class ApplyMenu {
         Bitmap bmp;
         FilterStruct fs;
 
-        if (context.nightMode == false) {
+        if (!context.nightMode) {
             bmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.nightmode);
             fs = new FilterStruct("NightMode", bmp, FilterType.NightMode);
             extraList.add(fs);

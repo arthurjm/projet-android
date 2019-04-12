@@ -103,7 +103,7 @@ public class PhotoEditing extends AppCompatActivity {
         menuRecyclerView.setVisibility(View.VISIBLE);
         filterRecyclerView.setVisibility(View.GONE);
         back.setVisibility(View.GONE);
-        applyFilterLayout.setBackgroundColor(Integer.parseInt("E3E2E3", 16));
+        applyFilterLayout.setBackgroundColor(context.getColor(R.color.whiteNuance));
         applyMenu.getMenuList().clear();
         applyMenu.menuList();
         nightMode = false;
@@ -291,18 +291,12 @@ public class PhotoEditing extends AppCompatActivity {
     }
 
     @Override
-    /**
-     *
-     */
     protected void onStart() {
         super.onStart();
         Log.i("CV", "onStart()");
     }
 
     @Override
-    /**
-     *
-     */
     protected void onResume() {
         super.onResume();
         Log.i("CV", "onResume()");
@@ -311,36 +305,24 @@ public class PhotoEditing extends AppCompatActivity {
     }
 
     @Override
-    /**
-     *
-     */
     protected void onPause() {
         super.onPause();
         Log.i("CV", "onPause()");
     }
 
     @Override
-    /**
-     *
-     */
     protected void onStop() {
         super.onStop();
         Log.i("CV", "onStop()");
     }
 
     @Override
-    /**
-     *
-     */
     protected void onRestart() {
         super.onRestart();
         Log.i("CV", "onRestart()");
     }
 
     @Override
-    /**
-     *
-     */
     protected void onDestroy() {
         super.onDestroy();
         Log.i("CV", "onDestroy()");
