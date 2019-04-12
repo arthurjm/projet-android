@@ -1,7 +1,6 @@
 package com.package1.affichage;
 
 import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -35,7 +34,6 @@ import com.package1.affichage.type.MenuType;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -58,8 +56,7 @@ public class PhotoEditing extends AppCompatActivity {
     public MenuAdapter menuAdapter;
     public RecyclerView filterRecyclerView;
     public FilterAdapter filterAdapter;
-    public ConstraintLayout applyFilterLayout;
-    public Bitmap actualMiniImage;
+    private ConstraintLayout applyFilterLayout;
     public ApplyMenu applyMenu;
     public SeekBar seekBar1;
     public SeekBar seekBar2;
@@ -69,7 +66,7 @@ public class PhotoEditing extends AppCompatActivity {
     public boolean nightMode = false;
 
     private Context context;
-    public int adaptedWidth;
+    private int adaptedWidth;
     public ImageView animationIV;
 
     @Override
@@ -116,7 +113,7 @@ public class PhotoEditing extends AppCompatActivity {
     /**
      * To initiate RecyclerViews
      */
-    public void initiateRecyclerView() {
+    private void initiateRecyclerView() {
         // RecyclerView
         filterRecyclerView = findViewById(R.id.idRecyclerViewHorizontalList);
         filterAdapter = new FilterAdapter(applyMenu.getColorList(), this, MenuType.Nothing);
@@ -138,7 +135,7 @@ public class PhotoEditing extends AppCompatActivity {
     /**
      * To initiate different things like buttons ..
      */
-    public void initiate() {
+    private void initiate() {
 
         context = this.getApplicationContext();
         renderscript = new RS(context);
@@ -182,7 +179,7 @@ public class PhotoEditing extends AppCompatActivity {
     /**
      * To link the corresponding action with each button
      */
-    public void addListener() {
+    private void addListener() {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -236,7 +233,7 @@ public class PhotoEditing extends AppCompatActivity {
      *
      * @param bitmap the bitmap that we want to share
      */
-    public void share(Bitmap bitmap) {
+    private void share(Bitmap bitmap) {
 
         String bitmapPath = MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, System.currentTimeMillis() + "", null);
         Uri uri = Uri.parse(bitmapPath);
@@ -292,7 +289,7 @@ public class PhotoEditing extends AppCompatActivity {
      * @param description the description
      * @return the path of this bitmap
      */
-    public String insertImage(ContentResolver cr, Bitmap source, String title, String description) {
+    private String insertImage(ContentResolver cr, Bitmap source, String title, String description) {
 
         ContentValues values = new ContentValues();
         values.put(MediaStore.Images.Media.TITLE, title);
@@ -319,7 +316,7 @@ public class PhotoEditing extends AppCompatActivity {
                 // Wait until MINI_KIND thumbnail is generated.
                 Bitmap miniThumb = MediaStore.Images.Thumbnails.getThumbnail(cr, id, MediaStore.Images.Thumbnails.MINI_KIND, null);
                 // This is for backward compatibility.
-                storeThumbnail(cr, miniThumb, id, 50F, 50F, MediaStore.Images.Thumbnails.MICRO_KIND);
+                storeThumbnail(cr, miniThumb, id);
             } else {
                 assert url != null;
                 cr.delete(url, null, null);
@@ -347,13 +344,13 @@ public class PhotoEditing extends AppCompatActivity {
      *
      * @see android.provider.MediaStore.Images.Media (StoreThumbnail private method)
      */
-    private Bitmap storeThumbnail(ContentResolver cr, Bitmap source, long id, float width, float height, int kind) {
+    private void storeThumbnail(ContentResolver cr, Bitmap source, long id) {
 
         // create the matrix to scale it
         Matrix matrix = new Matrix();
 
-        float scaleX = width / source.getWidth();
-        float scaleY = height / source.getHeight();
+        float scaleX = 50F / source.getWidth();
+        float scaleY = 50F / source.getHeight();
 
         matrix.setScale(scaleX, scaleY);
 
@@ -364,7 +361,7 @@ public class PhotoEditing extends AppCompatActivity {
         );
 
         ContentValues values = new ContentValues(4);
-        values.put(MediaStore.Images.Thumbnails.KIND, kind);
+        values.put(MediaStore.Images.Thumbnails.KIND, MediaStore.Images.Thumbnails.MICRO_KIND);
         values.put(MediaStore.Images.Thumbnails.IMAGE_ID, (int) id);
         values.put(MediaStore.Images.Thumbnails.HEIGHT, thumb.getHeight());
         values.put(MediaStore.Images.Thumbnails.WIDTH, thumb.getWidth());
@@ -377,11 +374,8 @@ public class PhotoEditing extends AppCompatActivity {
             thumb.compress(Bitmap.CompressFormat.JPEG, 100, thumbOut);
             assert thumbOut != null;
             thumbOut.close();
-            return thumb;
-        } catch (FileNotFoundException ex) {
-            return null;
-        } catch (IOException ex) {
-            return null;
+        } catch (FileNotFoundException ignored) {
+        } catch (IOException ignored) {
         }
     }
 
@@ -390,9 +384,9 @@ public class PhotoEditing extends AppCompatActivity {
      *
      * @param bmp the bitmap
      */
-    public void reset(Bitmap bmp) {
+    private void reset(Bitmap bmp) {
         imgView.setImageBitmap(bmp);
-        resetSeekbar();
+        resetseekbar();
     }
 
     /**
@@ -400,7 +394,7 @@ public class PhotoEditing extends AppCompatActivity {
      *
      * @see SeekBar#setProgress(int)
      */
-    public void resetSeekbar() {
+    private void resetseekbar() {
         seekBar1.setProgress(0);
         seekBar2.setProgress(0);
     }

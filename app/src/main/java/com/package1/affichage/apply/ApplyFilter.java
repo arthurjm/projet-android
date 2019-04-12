@@ -53,7 +53,6 @@ public class ApplyFilter {
     public ApplyFilter(Context ctx, MenuType menuType) {
         this.context = (PhotoEditing) ctx;
         this.menuType = menuType;
-        context = (PhotoEditing) ctx;
 
         this.seekBar1 = context.seekBar1;
         this.seekBar2 = context.seekBar2;

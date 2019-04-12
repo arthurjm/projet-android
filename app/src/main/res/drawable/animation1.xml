@@ -13,6 +13,4 @@
     <item android:drawable="@drawable/a7" android:duration="100"></item>
     <item android:drawable="@drawable/a8" android:duration="100"></item>
 
-
-
 </animation-list>

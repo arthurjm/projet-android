@@ -67,7 +67,7 @@ public class FrameAnimationDrawable {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final ArrayList<MyFrame> myFrames = new ArrayList<MyFrame>();
+                final ArrayList<MyFrame> myFrames = new ArrayList<>();
 
                 XmlResourceParser parser = context.getResources().getXml(
                         resourceId);

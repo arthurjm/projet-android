@@ -30,7 +30,7 @@ public class Convolution {
      * @param newWidth  the width of mask
      * @param newHeight the height of height
      */
-    public Convolution(int[][] tab, int newWidth, int newHeight) {
+    private Convolution(int[][] tab, int newWidth, int newHeight) {
         pxHeight = newHeight;
         pxWidth = newWidth;
         mask = new int[pxWidth][pxHeight];
@@ -71,7 +71,7 @@ public class Convolution {
      * @param newWidth  the width of mask
      * @param newHeight the height of mask
      */
-    public Convolution(int newWidth, int newHeight) {
+    private Convolution(int newWidth, int newHeight) {
         pxWidth = newWidth;
         pxHeight = newHeight;
         mask = new int[newWidth][newHeight];

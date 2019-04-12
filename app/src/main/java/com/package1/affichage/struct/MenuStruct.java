@@ -15,14 +15,12 @@ public class MenuStruct {
      * Filter name
      *
      * @see FilterStruct#getFilterName()
-     * @see FilterStruct#setFilterName(String)
      */
     private String filterName;
     /**
      * Image with filter
      *
      * @see FilterStruct#getImage()
-     * @see FilterStruct#setImage(Bitmap)
      */
     private Bitmap image;
     /**

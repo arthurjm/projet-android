@@ -14,14 +14,12 @@ public class FilterStruct {
      * Filter name
      *
      * @see FilterStruct#getFilterName()
-     * @see FilterStruct#setFilterName(String)
      */
     private String filterName;
     /**
      * Image with filter
      *
      * @see FilterStruct#getImage()
-     * @see FilterStruct#setImage(Bitmap)
      */
     private Bitmap image;
     /**
@@ -51,15 +49,8 @@ public class FilterStruct {
         return filterName;
     }
 
-    void setFilterName(String productName) {
-        this.filterName = productName;
-    }
-
     public Bitmap getImage() {
         return image;
     }
 
-    public void setImage(Bitmap image) {
-        this.image = image;
-    }
 }

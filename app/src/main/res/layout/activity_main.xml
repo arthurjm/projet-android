@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
@@ -18,7 +17,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/universite_logo" />
+        app:srcCompat="@drawable/universite_logo"
+        android:contentDescription="TODO" />
 
     <Button
         android:id="@+id/gallery"
@@ -52,7 +52,7 @@
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Mathieu DUBAN, Arthur MONDON, Elias KHATI-LEFRANCOIS, LiangLiang PAN"
+        android:text="@string/presentation"
         android:textAlignment="center"
         android:textStyle="italic"
         android:typeface="serif"
@@ -70,7 +70,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:fontFamily="sans-serif-black"
-        android:text="Galerie"
+        android:text="@string/gallery"
         android:textAlignment="center"
         android:textSize="16sp"
         android:textStyle="italic"
@@ -86,7 +86,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-black"
-        android:text="Camera"
+        android:text="@string/camera"
         android:textAlignment="center"
         android:textSize="16sp"
         android:textStyle="italic"

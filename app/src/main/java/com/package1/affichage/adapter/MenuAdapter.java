@@ -1,5 +1,6 @@
 package com.package1.affichage.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
@@ -64,7 +65,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
      * @param position the position where we are
      */
     @Override
-    public void onBindViewHolder(@NonNull final MenuViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final MenuViewHolder holder, @SuppressLint("RecyclerView") final int position) {
 
         holder.imageView.setImageBitmap(menuList.get(position).getImage());
         holder.textView.setText(menuList.get(position).getFilterName());

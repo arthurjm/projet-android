@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.package1.MainActivity.image;
-import static com.package1.MainActivity.imageEditing;
 import static com.package1.MainActivity.imageEditingCopy;
 import static com.package1.MainActivity.imgView;
 
@@ -173,7 +172,6 @@ public class ApplyMenu {
 
         context.filterAdapter = new FilterAdapter(colorList, context, MenuType.Color);
         context.filterRecyclerView.setAdapter(context.filterAdapter);
-        context.actualMiniImage = image.copy(Bitmap.Config.ARGB_8888, true);
 
 
         if (colorList.isEmpty()) {
@@ -221,7 +219,6 @@ public class ApplyMenu {
 
         context.filterAdapter = new FilterAdapter(contrastList, context, MenuType.Contrast);
         context.filterRecyclerView.setAdapter(context.filterAdapter);
-        context.actualMiniImage = image.copy(Bitmap.Config.ARGB_8888, true);
 
         if (contrastList.isEmpty()) {
 
@@ -272,7 +269,6 @@ public class ApplyMenu {
 
         context.filterAdapter = new FilterAdapter(maskList, context, MenuType.Mask);
         context.filterRecyclerView.setAdapter(context.filterAdapter);
-        context.actualMiniImage = image.copy(Bitmap.Config.ARGB_8888, true);
 
         if (maskList.isEmpty()) {
 
@@ -325,7 +321,6 @@ public class ApplyMenu {
     private void extrasList() {
         context.filterAdapter = new FilterAdapter(extraList, context, MenuType.Extras);
         context.filterRecyclerView.setAdapter(context.filterAdapter);
-        context.actualMiniImage = image.copy(Bitmap.Config.ARGB_8888, true);
 
         FilterStruct fs;
         if (extraList.isEmpty()) {

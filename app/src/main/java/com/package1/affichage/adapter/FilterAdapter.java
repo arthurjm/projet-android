@@ -1,5 +1,6 @@
 package com.package1.affichage.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
@@ -73,7 +74,7 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
      * @param position the position where we are
      */
     @Override
-    public void onBindViewHolder(@NonNull FilterViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull FilterViewHolder holder, @SuppressLint("RecyclerView") final int position) {
 
         holder.imageView.setImageBitmap(FilterList.get(position).getImage());
         holder.textView.setText(FilterList.get(position).getFilterName());

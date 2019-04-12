@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * To check permissions
      */
-    public void permission() {
+    private void permission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
             requestAlertWindowPermission();
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * To link the corresponding action with each button
      */
-    public void addListenerOnButton() {
+    private void addListenerOnButton() {
 
         Button camera = findViewById(R.id.camera);
         Button gallery = findViewById(R.id.gallery);
@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * To take a photo with the camera
      */
-    public void takePhoto() {
+    private void takePhoto() {
 
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * To load a photo in the smartphone
      */
-    public void loadPhoto() {
+    private void loadPhoto() {
 
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         if (intent.resolveActivity(getPackageManager()) != null) {
@@ -200,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
      * @return a variable of type String
      * @see Uri
      */
-    public String getPath(Uri uri) {
+    private String getPath(Uri uri) {
         String res = "";
         String[] projection = {MediaStore.Images.Media.DATA};
         Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
@@ -219,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
      * @param photoFilePath The file's path
      * @return a Bitmap
      */
-    public Bitmap rotateBitmap(String photoFilePath) {
+    private Bitmap rotateBitmap(String photoFilePath) {
 
         BitmapFactory.Options bounds = new BitmapFactory.Options();
         bounds.inJustDecodeBounds = true;
@@ -257,7 +257,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * To go on apply_filter layout
      */
-    public void filterPage() {
+    private void filterPage() {
         startActivity(new Intent(this, PhotoEditing.class));
     }
 
