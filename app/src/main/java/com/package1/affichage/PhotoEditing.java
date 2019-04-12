@@ -19,14 +19,14 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
-import com.package1.FaceDetection;
-import com.package1.HistogramManipulation;
+import com.package1.pictureManipulation.FaceDetection;
+import com.package1.pictureManipulation.HistogramManipulation;
 import com.package1.R;
-import com.package1.RS;
-import com.package1.affichage.Adapter.FilterAdapter;
-import com.package1.affichage.Adapter.MenuAdapter;
-import com.package1.affichage.Apply.ApplyMenu;
-import com.package1.affichage.Type.MenuType;
+import com.package1.pictureManipulation.RS;
+import com.package1.affichage.adapter.FilterAdapter;
+import com.package1.affichage.adapter.MenuAdapter;
+import com.package1.affichage.apply.ApplyMenu;
+import com.package1.affichage.type.MenuType;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -62,7 +62,7 @@ public class PhotoEditing extends AppCompatActivity {
     public boolean nightMode = false;
 
     private Context context;
-    private int adaptedWidth;
+    public int adaptedWidth;
     public static ImageView animationIV;
 
     @Override
@@ -94,7 +94,7 @@ public class PhotoEditing extends AppCompatActivity {
      * To change the background color of the layout in a nuance of white
      * We set nightMode at false to change Text's color
      *
-     * @see PhotoEditing#nightMode
+     * @see PhotoEditing#dayMode
      */
     public void dayMode() {
         menuRecyclerView.setVisibility(View.VISIBLE);
@@ -184,6 +184,8 @@ public class PhotoEditing extends AppCompatActivity {
                 menuRecyclerView.setVisibility(View.VISIBLE);
                 filterRecyclerView.setVisibility(View.GONE);
                 back.setVisibility(View.GONE);
+                imageEditingCopy= imageEditing.copy(Bitmap.Config.ARGB_8888, true);;
+                undo(imageEditing);
             }
         });
         Button save = findViewById(R.id.save);
@@ -201,6 +203,7 @@ public class PhotoEditing extends AppCompatActivity {
                 imageEditing = Bitmap.createScaledBitmap(image, adaptedWidth, ((image.getHeight() * adaptedWidth) / image.getWidth()), true);
                 imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
                 undo(imageEditing);
+                Toast.makeText(context, "Remise à zero", Toast.LENGTH_SHORT).show();
             }
         });
         Button applyBut = findViewById(R.id.apply);
@@ -208,6 +211,7 @@ public class PhotoEditing extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 imageEditing = imageEditingCopy.copy(Bitmap.Config.ARGB_8888, true);
+                Toast.makeText(context, "Effet appliqué", Toast.LENGTH_SHORT).show();
             }
         });
         Button share = findViewById(R.id.share);
@@ -244,6 +248,9 @@ public class PhotoEditing extends AppCompatActivity {
      */
     private void saveImageToGallery(Bitmap bmp) {
         File dir = new File(Environment.getExternalStorageDirectory(), "Projet");
+        if(dir.exists()){
+            dir.mkdirs();
+        }
         String fileName = System.currentTimeMillis() + "";
         File file = new File(dir, fileName);
 
@@ -252,13 +259,13 @@ public class PhotoEditing extends AppCompatActivity {
             bmp.compress(Bitmap.CompressFormat.JPEG, 100, out);
             out.flush();
             out.close();
+            Toast.makeText(context, "Image sauvegardée", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             e.printStackTrace();
         }
         //add file to gallery
         try {
             MediaStore.Images.Media.insertImage(getContentResolver(), file.getAbsolutePath(), fileName, null);
-            Toast.makeText(context, "save", Toast.LENGTH_SHORT).show();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
