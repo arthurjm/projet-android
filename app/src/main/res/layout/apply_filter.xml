@@ -55,8 +55,6 @@
             android:padding="5px"
             android:src="@drawable/animation1" />
 
-
-
     </LinearLayout>
 
     <com.github.chrisbanes.photoview.PhotoView

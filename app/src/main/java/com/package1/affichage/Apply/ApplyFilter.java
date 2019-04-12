@@ -321,7 +321,8 @@ public class ApplyFilter extends AppCompatActivity {
         switch (type) {
             case FaceDetection:
                 setGone(seekBar1, seekBar2);
-                imageEditingCopy = faceDetection.drawOnImage(imageEditing);
+                setFilterType(FilterType.FaceDetection);
+                new ApplyFilter.MyTask().execute(imageEditing);
                 break;
             case Rotate:
                 setGone(seekBar1, seekBar2);
@@ -462,11 +463,12 @@ public class ApplyFilter extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            super.onPreExecute();
             imgView.setVisibility(View.GONE);
             animationIV.setVisibility(View.VISIBLE);
-            animationDrawable = (AnimationDrawable) animationIV.getDrawable();
-            animationDrawable.start();
+            //animationDrawable = (AnimationDrawable) animationIV.getDrawable();
+            //animationDrawable.start();
+            FrameAnimationDrawable.create().animateRawManuallyFromXML(R.drawable.animation1, animationIV);
+
 
         }
 
@@ -531,6 +533,9 @@ public class ApplyFilter extends AppCompatActivity {
                 case IncreaseBorder:
                     imageEditingCopy = renderscript.increaseBorder(Bitmap[0], (progressBar1+3) * 10);
                     break;
+                case FaceDetection:
+                    imageEditingCopy = faceDetection.drawOnImage(imageEditing);
+                    break;
                 default:
                     break;
             }
@@ -544,6 +549,8 @@ public class ApplyFilter extends AppCompatActivity {
          */
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
+            //animationDrawable.stop();
+            FrameAnimationDrawable.create().stopAnimation(true);
             animationIV.setVisibility(View.GONE);
             imgView.setImageBitmap(bitmap);
             imgView.setVisibility(View.VISIBLE);
@@ -551,4 +558,5 @@ public class ApplyFilter extends AppCompatActivity {
 
         }
     }
+
 }
