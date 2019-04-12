@@ -1,5 +1,6 @@
 package com.package1.affichage.Adapter;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -39,10 +40,10 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
      * @param FilterList
      * @param context
      */
-    public FilterAdapter(List<FilterStruct> FilterList, PhotoEditing context, MenuType menuType) {
+    public FilterAdapter(List<FilterStruct> FilterList, Context context, MenuType menuType) {
         this.FilterList = FilterList;
         this.applyFilter = new ApplyFilter(context, menuType);
-        this.context = context;
+        this.context =  (PhotoEditing) context;
     }
 
     /**

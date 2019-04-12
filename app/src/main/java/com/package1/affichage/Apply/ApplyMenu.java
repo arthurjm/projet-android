@@ -81,7 +81,7 @@ public class ApplyMenu {
      * @param faceDetection
      * @param hist
      */
-    public ApplyMenu(PhotoEditing ctx, RS renderScript, FaceDetection faceDetection, HistogramManipulation hist) {
+    public ApplyMenu(Context ctx, RS renderScript, FaceDetection faceDetection, HistogramManipulation hist) {
         this.renderscript = renderScript;
         this.faceDetection = faceDetection;
         this.hist = hist;
@@ -94,7 +94,7 @@ public class ApplyMenu {
         contrastList = new ArrayList<>();
         resizeImageEditing = Bitmap.createScaledBitmap(image, 100,  ((image.getHeight() * 100) / image.getWidth()), true);
 
-        context = ctx;
+        context = (PhotoEditing) ctx;
 
     }
 

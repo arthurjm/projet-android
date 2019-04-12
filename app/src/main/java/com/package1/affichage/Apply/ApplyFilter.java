@@ -39,7 +39,6 @@ public class ApplyFilter extends AppCompatActivity {
     public FilterType filterType;
     public MenuType menuType;
     public int progressBar1, progressBar2;
-    private AnimationDrawable animationDrawable;
 
     public PhotoEditing context;
 
@@ -53,9 +52,9 @@ public class ApplyFilter extends AppCompatActivity {
      * @param ctx
      * @param menuType
      */
-    public ApplyFilter(PhotoEditing ctx, MenuType menuType) {
+    public ApplyFilter(Context ctx, MenuType menuType) {
         this.menuType = menuType;
-        context = ctx;
+        context = (PhotoEditing) ctx;
 
         this.seekBar1 = context.seekBar1;
         this.seekBar2 = context.seekBar2;
@@ -467,12 +466,6 @@ public class ApplyFilter extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            super.onPreExecute();
-            imgView.setVisibility(View.GONE);
-            context.animationIV.setVisibility(View.VISIBLE);
-            animationDrawable = (AnimationDrawable) context.animationIV.getDrawable();
-            animationDrawable.start();
-
         }
 
         /**
@@ -549,9 +542,7 @@ public class ApplyFilter extends AppCompatActivity {
          */
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
-            context.animationIV.setVisibility(View.GONE);
             imgView.setImageBitmap(bitmap);
-            imgView.setVisibility(View.VISIBLE);
 
         }
     }

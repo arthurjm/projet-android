@@ -67,7 +67,6 @@ public class PhotoEditing extends AppCompatActivity {
 
     private Context context;
     private int adaptedWidth;
-    public ImageView animationIV;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -162,9 +161,6 @@ public class PhotoEditing extends AppCompatActivity {
         seekBar1.setVisibility(View.GONE);
         seekBar2 = findViewById(R.id.seekBarNormal);
         seekBar2.setVisibility(View.GONE);
-
-        animationIV = findViewById(R.id.animationIV);
-        animationIV.setVisibility(View.GONE);
 
         // Button
         back = findViewById(R.id.back);

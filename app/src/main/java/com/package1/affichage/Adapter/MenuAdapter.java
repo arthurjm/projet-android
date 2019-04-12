@@ -1,5 +1,6 @@
 package com.package1.affichage.Adapter;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -29,9 +30,9 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
 
     private PhotoEditing context;
 
-    public MenuAdapter(List<MenuStruct> menuList, PhotoEditing context) {
+    public MenuAdapter(List<MenuStruct> menuList, Context context) {
         this.menuList = menuList;
-        this.context = context;
+        this.context = (PhotoEditing) context;
     }
 
     /**
