@@ -1,5 +1,6 @@
 package com.package1.affichage.Apply;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
@@ -17,6 +18,7 @@ import com.package1.Mask.LaplacienMask;
 import com.package1.Mask.SobelMask;
 import com.package1.R;
 import com.package1.RS;
+import com.package1.affichage.PhotoEditing;
 import com.package1.affichage.Type.FilterType;
 import com.package1.affichage.Type.MenuType;
 
@@ -26,58 +28,64 @@ import static com.package1.MainActivity.imgView;
 import static com.package1.affichage.PhotoEditing.dayMode;
 import static com.package1.affichage.PhotoEditing.faceDetection;
 import static com.package1.affichage.PhotoEditing.hist;
-import static com.package1.affichage.PhotoEditing.nightMode;
-import static com.package1.affichage.PhotoEditing.renderscript;
-import static com.package1.affichage.PhotoEditing.seekBar1;
-import static com.package1.affichage.PhotoEditing.seekBar2;
 import static com.package1.affichage.PhotoEditing.animationIV;
 /**
  * @author Mathieu
- * In this class, we can find all functions that we use to modify the actual image
- * We have some variables :
- * filterType -> we use it to when we need to use seekBar, and we check in which case we we are in MyTask to apply the adequate function
- * recyclerType -> we use it to check in which type of FilterRecyclerView we are
- * progressBar1 / progressBar2 -> actual value of seekBars
+ *         In this class, we can find all functions that we use to modify the actual image
+ *         We have some variables :
+ *         filterType -> we use it to when we need to use seekBar, and we check in which case we we are in MyTask to apply the adequate function
+ *         recyclerType -> we use it to check in which type of FilterRecyclerView we are
+ *         progressBar1 / progressBar2 -> actual value of seekBars
  */
-public class ApplyFilter extends AppCompatActivity {
+public class ApplyFilter {
 
-    public FilterType filterType;
-    public MenuType menuType;
-    public Context ctx;
-    public int progressBar1, progressBar2;
-    private AnimationDrawable animationDrawable;
+    private FilterType filterType;
+    private MenuType menuType;
+    private int progressBar1, progressBar2;
+
+    private PhotoEditing context;
+
+    private SeekBar seekBar1;
+    private SeekBar seekBar2;
+    private RS renderscript;
+
     /**
      * Constructor
      *
-     * @param ctx
-     * @param menuType
+     * @param ctx the context
+     * @param menuType the menuType
      */
     public ApplyFilter(Context ctx, MenuType menuType) {
         this.ctx = ctx;
         this.menuType = menuType;
+        context = (PhotoEditing) ctx;
+
+        this.seekBar1 = context.seekBar1;
+        this.seekBar2 = context.seekBar2;
+        this.renderscript = context.renderscript;
     }
 
-    public void setFilterType(FilterType filterType) {
+    private void setFilterType(FilterType filterType) {
         this.filterType = filterType;
     }
 
     /**
      * To set the view of the seekBar to gone
      *
-     * @param sb
+     * @param sb the seekBar
      * @see View#GONE
      */
-    public void setGone(SeekBar sb) {
+    private void setGone(SeekBar sb) {
         sb.setVisibility(View.GONE);
     }
 
     /**
      * To set the view of seekBars to gone
      *
-     * @param sb
-     * @param sb1
+     * @param sb the seekBar
+     * @param sb1 the seekBar
      */
-    public void setGone(SeekBar sb, SeekBar sb1) {
+    private void setGone(SeekBar sb, SeekBar sb1) {
         setGone(sb);
         setGone(sb1);
     }
@@ -85,21 +93,21 @@ public class ApplyFilter extends AppCompatActivity {
     /**
      * To set the view of the seekBar to visible
      *
-     * @param sb
+     * @param sb the seekBar
      * @see View#VISIBLE
      */
-    public void setVisible(SeekBar sb) {
+    private void setVisible(SeekBar sb) {
         sb.setVisibility(View.VISIBLE);
     }
 
     /**
      * To set the view of seekBars to visible
      *
-     * @param sb
-     * @param sb1
+     * @param sb the seekBar
+     * @param sb1 the seekBar
      * @see View#VISIBLE
      */
-    public void setVisible(SeekBar sb, SeekBar sb1) {
+    private void setVisible(SeekBar sb, SeekBar sb1) {
         sb.setVisibility(View.VISIBLE);
         sb1.setVisibility(View.VISIBLE);
     }
@@ -107,31 +115,31 @@ public class ApplyFilter extends AppCompatActivity {
     /**
      * To set the max value of the seekBar
      *
-     * @param sb
-     * @param max
+     * @param sb the seekBar
+     * @param max the max value
      * @see SeekBar#setMax(int)
      */
-    public void setBorn(SeekBar sb, int max) {
+    private void setBorn(SeekBar sb, int max) {
         sb.setMax(max);
     }
 
     /**
      * To set the background of the seekBar at RGB
      *
-     * @param sb
+     * @param sb the seekBar
      * @see SeekBar#setBackgroundResource(int)
      */
-    public void setRGBBackground(SeekBar sb) {
+    private void setRGBBackground(SeekBar sb) {
         sb.setBackgroundResource(R.drawable.seekbar_progess);
     }
 
     /**
      * To set the background of the seekBar at normal
      *
-     * @param sb
+     * @param sb the seekBar
      * @see SeekBar#setBackgroundResource(int)
      */
-    public void setNormalBackground(SeekBar sb) {
+    private void setNormalBackground(SeekBar sb) {
         sb.setBackgroundResource(R.drawable.icon);
     }
 
@@ -141,7 +149,7 @@ public class ApplyFilter extends AppCompatActivity {
      * @param type the current filter
      */
     public void useFunction(FilterType type) {
-        renderscript = new RS(ctx);
+        renderscript = new RS(context);
         addListener();
         imgView.setImageBitmap(imageEditingCopy);
 
@@ -173,7 +181,7 @@ public class ApplyFilter extends AppCompatActivity {
      *
      * @see FilterType
      */
-    public void colorFunction(FilterType type) {
+    private void colorFunction(FilterType type) {
         switch (type) {
             case Grey:
                 setGone(seekBar1, seekBar2);
@@ -221,7 +229,7 @@ public class ApplyFilter extends AppCompatActivity {
         }
     }
 
-    public void saturationFunction(FilterType type) {
+    private void saturationFunction(FilterType type) {
         switch (type) {
             case Contrast:
                 setVisible(seekBar1);
@@ -266,7 +274,7 @@ public class ApplyFilter extends AppCompatActivity {
         }
     }
 
-    public void maskFunction(FilterType type) {
+    private void maskFunction(FilterType type) {
         switch (type) {
             case Blur:
                 setNormalBackground(seekBar1);
@@ -317,7 +325,7 @@ public class ApplyFilter extends AppCompatActivity {
         }
     }
 
-    public void extraFunction(FilterType type) {
+    private void extraFunction(FilterType type) {
         switch (type) {
             case FaceDetection:
                 setGone(seekBar1, seekBar2);
@@ -326,16 +334,16 @@ public class ApplyFilter extends AppCompatActivity {
                 break;
             case Rotate:
                 setGone(seekBar1, seekBar2);
-                imageEditingCopy = RotateBitmap(imageEditingCopy, 90);
+                imageEditingCopy = RotateBitmap(imageEditingCopy);
                 imageEditing = imageEditingCopy.copy(Bitmap.Config.ARGB_8888, true);
                 break;
             case NightMode:
                 setGone(seekBar1, seekBar2);
-                nightMode();
+                context.nightMode();
                 break;
             case DayMode:
                 setGone(seekBar1, seekBar2);
-                dayMode();
+                context.dayMode();
             case FlipHorizontal:
                 setGone(seekBar1, seekBar2);
                 imageEditingCopy = flipH(imageEditingCopy);
@@ -370,7 +378,7 @@ public class ApplyFilter extends AppCompatActivity {
      * @param source bitmap we want to change
      * @return the bitmap modify
      */
-    public Bitmap flipH(Bitmap source) {
+    private Bitmap flipH(Bitmap source) {
         Matrix matrix = new Matrix();
         matrix.preScale(1.0f, -1.0f);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
@@ -382,7 +390,7 @@ public class ApplyFilter extends AppCompatActivity {
      * @param source bitmap we want to change
      * @return the bitmap modify
      */
-    public Bitmap flipV(Bitmap source) {
+    private Bitmap flipV(Bitmap source) {
         Matrix matrix = new Matrix();
         matrix.preScale(-1.0f, 1.0f);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
@@ -390,15 +398,14 @@ public class ApplyFilter extends AppCompatActivity {
     }
 
     /**
-     * Rotate a bitmap
+     * Rotate a bitmap at 90°
      *
-     * @param source
-     * @param angle
+     * @param source the Bitmap
      * @return bitmap flip with angle
      */
-    public Bitmap RotateBitmap(Bitmap source, float angle) {
+    private Bitmap RotateBitmap(Bitmap source) {
         Matrix matrix = new Matrix();
-        matrix.postRotate(angle);
+        matrix.postRotate((float) 90);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
 
@@ -420,7 +427,7 @@ public class ApplyFilter extends AppCompatActivity {
 
             /**
              * Apply the good filter when we need to have one or many seekBar
-             * @param seekBar
+             * @param seekBar the seekBar
              */
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
@@ -441,7 +448,7 @@ public class ApplyFilter extends AppCompatActivity {
 
             /**
              * Apply the good filter when we need to have one or many seekBar
-             * @param seekBar
+             * @param seekBar the seekBar
              */
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
@@ -455,6 +462,7 @@ public class ApplyFilter extends AppCompatActivity {
      * doInBackGround enables apply the function that we choose in background
      * and return the image edited when it finishes
      */
+    @SuppressLint("StaticFieldLeak")
     private class MyTask extends AsyncTask<Bitmap, Void, Bitmap> {
 
         /**
@@ -476,13 +484,13 @@ public class ApplyFilter extends AppCompatActivity {
          * match the function that we choose and apply on the image
          *
          * @param Bitmap the image that we process
-         * @return
+         * @return the bitmap
          */
         @Override
         protected Bitmap doInBackground(Bitmap... Bitmap) {
             switch (filterType) {
-                case IsoHelieRGB :
-                    imageEditingCopy = renderscript.posterisationRGB(Bitmap[0], progressBar1+2);
+                case IsoHelieRGB:
+                    imageEditingCopy = renderscript.posterisationRGB(Bitmap[0], progressBar1 + 2);
                     break;
                 case EquaLight:
                     hist = new HistogramManipulation(Bitmap[0], ChanelType.V, renderscript);
@@ -531,7 +539,7 @@ public class ApplyFilter extends AppCompatActivity {
                     imageEditingCopy = renderscript.convolution(Bitmap[0], maskGaussian);
                     break;
                 case IncreaseBorder:
-                    imageEditingCopy = renderscript.increaseBorder(Bitmap[0], (progressBar1+3) * 10);
+                    imageEditingCopy = renderscript.increaseBorder(Bitmap[0], (progressBar1 + 3) * 10);
                     break;
                 case FaceDetection:
                     imageEditingCopy = faceDetection.drawOnImage(imageEditing);
@@ -558,5 +566,4 @@ public class ApplyFilter extends AppCompatActivity {
 
         }
     }
-
 }

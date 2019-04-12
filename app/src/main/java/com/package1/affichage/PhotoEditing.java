@@ -1,6 +1,5 @@
 package com.package1.affichage;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,16 +9,12 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.webkit.PermissionRequest;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
@@ -36,7 +31,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.List;
 
 import static com.package1.MainActivity.image;
 import static com.package1.MainActivity.imageEditing;
@@ -45,35 +39,30 @@ import static com.package1.MainActivity.imgView;
 
 /**
  * @author Mathieu
- * In this class, we can fin different function like share an image, or save it
- * This class coressponding to the layout apply_filter
+ *         In this class, we can fin different function like share an image, or save it
+ *         This class coressponding to the layout apply_filter
  */
 public class PhotoEditing extends AppCompatActivity {
 
 
-    public static RecyclerView menuRecyclerView;
-    public static MenuAdapter menuAdapter;
-    public static RecyclerView filterRecyclerView;
-    public static FilterAdapter filterAdapter;
-
-    public static ConstraintLayout applyFilterLayout;
-
-    public static Bitmap actualMiniImage;
-    public static ApplyMenu applyMenu;
-    public static SeekBar seekBar1;
-    public static SeekBar seekBar2;
-
-    public static RS renderscript;
-    public static FaceDetection faceDetection;
     public static HistogramManipulation hist;
+    public RecyclerView menuRecyclerView;
+    public MenuAdapter menuAdapter;
+    public RecyclerView filterRecyclerView;
+    public FilterAdapter filterAdapter;
+    public ConstraintLayout applyFilterLayout;
+    public Bitmap actualMiniImage;
+    public ApplyMenu applyMenu;
+    public SeekBar seekBar1;
+    public SeekBar seekBar2;
+    public RS renderscript;
+    public FaceDetection faceDetection;
+    public Button back;
+    public boolean nightMode = false;
 
-    public static Button back;
-    public static boolean nightMode = false;
-
-    private static Context context;
+    private Context context;
     private int adaptedWidth;
     public static ImageView animationIV;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -90,12 +79,12 @@ public class PhotoEditing extends AppCompatActivity {
      *
      * @see PhotoEditing#nightMode
      */
-    public static void nightMode() {
+    public void nightMode() {
         menuRecyclerView.setVisibility(View.VISIBLE);
         filterRecyclerView.setVisibility(View.GONE);
         back.setVisibility(View.GONE);
         applyFilterLayout.setBackgroundColor(Color.BLACK);
-        applyMenu.menuList.clear();
+        applyMenu.getMenuList().clear();
         applyMenu.menuList();
         nightMode = true;
     }
@@ -106,12 +95,12 @@ public class PhotoEditing extends AppCompatActivity {
      *
      * @see PhotoEditing#nightMode
      */
-    public static void dayMode() {
+    public void dayMode() {
         menuRecyclerView.setVisibility(View.VISIBLE);
         filterRecyclerView.setVisibility(View.GONE);
         back.setVisibility(View.GONE);
         applyFilterLayout.setBackgroundColor(context.getColor(R.color.whiteNuance));
-        applyMenu.menuList.clear();
+        applyMenu.getMenuList().clear();
         applyMenu.menuList();
         nightMode = false;
     }
@@ -122,13 +111,13 @@ public class PhotoEditing extends AppCompatActivity {
     public void initiateRecyclerView() {
         // RecyclerView
         filterRecyclerView = findViewById(R.id.idRecyclerViewHorizontalList);
-        filterAdapter = new FilterAdapter(applyMenu.colorList, context, MenuType.Nothing);
+        filterAdapter = new FilterAdapter(applyMenu.getColorList(), this, MenuType.Nothing);
         LinearLayoutManager filterManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         filterRecyclerView.setLayoutManager(filterManager);
         filterRecyclerView.setAdapter(filterAdapter);
 
         menuRecyclerView = findViewById(R.id.idMenuViewHorizontalList);
-        menuAdapter = new MenuAdapter(applyMenu.menuList);
+        menuAdapter = new MenuAdapter(applyMenu.getMenuList(), this);
         LinearLayoutManager menuManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         menuRecyclerView.setLayoutManager(menuManager);
         menuRecyclerView.setAdapter(menuAdapter);
@@ -146,7 +135,7 @@ public class PhotoEditing extends AppCompatActivity {
         context = this.getApplicationContext();
         renderscript = new RS(context);
         faceDetection = new FaceDetection(context);
-        applyMenu = new ApplyMenu(context, renderscript, faceDetection, hist);
+        applyMenu = new ApplyMenu(this, renderscript, faceDetection, hist);
         applyFilterLayout = findViewById(R.id.applyFilter);
 
         initiateRecyclerView();
@@ -159,7 +148,7 @@ public class PhotoEditing extends AppCompatActivity {
             adaptedWidth = image.getWidth();
         }
 
-        imageEditing = Bitmap.createScaledBitmap(image, adaptedWidth, (int) ((image.getHeight() * adaptedWidth) / image.getWidth()), true);
+        imageEditing = Bitmap.createScaledBitmap(image, adaptedWidth, ((image.getHeight() * adaptedWidth) / image.getWidth()), true);
         imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
         imgView.setImageBitmap(imageEditing);
 
@@ -208,7 +197,7 @@ public class PhotoEditing extends AppCompatActivity {
         undoBut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                imageEditing = Bitmap.createScaledBitmap(image, adaptedWidth, (int) ((image.getHeight() * adaptedWidth) / image.getWidth()), true);
+                imageEditing = Bitmap.createScaledBitmap(image, adaptedWidth, ((image.getHeight() * adaptedWidth) / image.getWidth()), true);
                 imageEditingCopy = imageEditing.copy(Bitmap.Config.ARGB_8888, true);
                 undo(imageEditing);
             }
@@ -233,7 +222,7 @@ public class PhotoEditing extends AppCompatActivity {
      * to share the image in all social's network
      * When we share the image, we save it too
      *
-     * @param bitmap
+     * @param bitmap the bitmap that we want to share
      */
     public void share(Bitmap bitmap) {
 
@@ -250,15 +239,11 @@ public class PhotoEditing extends AppCompatActivity {
     /**
      * to save the image
      *
-     * @param bmp
+     * @param bmp the bitmap that we want to save
      */
     private void saveImageToGallery(Bitmap bmp) {
         File dir = new File(Environment.getExternalStorageDirectory(), "Projet");
-        if (!dir.exists()) {
-            dir.mkdir();
-        }
-        System.out.println(dir);
-        final String fileName = System.currentTimeMillis() + "";
+        String fileName = System.currentTimeMillis() + "";
         File file = new File(dir, fileName);
 
         try {
@@ -266,9 +251,6 @@ public class PhotoEditing extends AppCompatActivity {
             bmp.compress(Bitmap.CompressFormat.JPEG, 100, out);
             out.flush();
             out.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            System.out.println(e);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -284,7 +266,7 @@ public class PhotoEditing extends AppCompatActivity {
     /**
      * to define the imageView in layout
      *
-     * @param bmp
+     * @param bmp the bitmap
      */
     public void undo(Bitmap bmp) {
         imgView.setImageBitmap(bmp);
@@ -302,18 +284,12 @@ public class PhotoEditing extends AppCompatActivity {
     }
 
     @Override
-    /**
-     *
-     */
     protected void onStart() {
         super.onStart();
         Log.i("CV", "onStart()");
     }
 
     @Override
-    /**
-     *
-     */
     protected void onResume() {
         super.onResume();
         Log.i("CV", "onResume()");
@@ -322,36 +298,24 @@ public class PhotoEditing extends AppCompatActivity {
     }
 
     @Override
-    /**
-     *
-     */
     protected void onPause() {
         super.onPause();
         Log.i("CV", "onPause()");
     }
 
     @Override
-    /**
-     *
-     */
     protected void onStop() {
         super.onStop();
         Log.i("CV", "onStop()");
     }
 
     @Override
-    /**
-     *
-     */
     protected void onRestart() {
         super.onRestart();
         Log.i("CV", "onRestart()");
     }
 
     @Override
-    /**
-     *
-     */
     protected void onDestroy() {
         super.onDestroy();
         Log.i("CV", "onDestroy()");

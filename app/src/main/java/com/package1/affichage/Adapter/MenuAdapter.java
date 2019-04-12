@@ -1,20 +1,21 @@
 package com.package1.affichage.Adapter;
 
+import android.content.Context;
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.package1.R;
+import com.package1.affichage.PhotoEditing;
 import com.package1.affichage.Struct.FilterStruct;
 import com.package1.affichage.Struct.MenuStruct;
 
 import java.util.List;
-
-import static com.package1.affichage.PhotoEditing.applyMenu;
-import static com.package1.affichage.PhotoEditing.nightMode;
 
 /**
  * @author Mathieu
@@ -29,19 +30,27 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
      */
     private List<MenuStruct> menuList;
 
-    public MenuAdapter(List<MenuStruct> menuList) {
+    private PhotoEditing context;
+
+    public MenuAdapter(List<MenuStruct> menuList, Context context) {
         this.menuList = menuList;
+        this.context = (PhotoEditing) context;
     }
 
     /**
      * To initialise the viewHolder
      *
-     * @param parent
-     * @param viewType
-     * @return
+     * @param parent the ViewGroup
+     *               @see ViewGroup
+     *
+     * @param viewType int
+     *
+     * @return MenuViewHolder
+     * @see MenuViewHolder
      */
+    @NonNull
     @Override
-    public MenuViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MenuViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //inflate the layout file
         View photoProductView = LayoutInflater.from(parent.getContext()).inflate(R.layout.pattern_recycler, parent, false);
         return new MenuViewHolder(photoProductView);
@@ -51,16 +60,16 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
     /**
      * Modify the actual case in the recyclerView
      *
-     * @param holder
-     * @param position
+     * @param holder the holder
+     * @param position the position where we are
      */
     @Override
-    public void onBindViewHolder(final MenuViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final MenuViewHolder holder, final int position) {
 
         holder.imageView.setImageBitmap(menuList.get(position).getImage());
         holder.textView.setText(menuList.get(position).getFilterName());
         // Change the text's color depending the situation
-        if (nightMode == true) {
+        if (context.nightMode) {
             holder.textView.setTextColor(Color.WHITE);
         } else {
             holder.textView.setTextColor(Color.BLACK);
@@ -70,7 +79,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
             @Override
             public void onClick(View v) {
                 // use adequate function with the select image
-                applyMenu.modifyList(menuList.get(position).getRecyclerType());
+                context.applyMenu.modifyList(menuList.get(position).getRecyclerType());
             }
         });
 
@@ -78,7 +87,8 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
 
     /**
      * The size of the list
-     * @return
+     *
+     * @return the size of the list
      */
     @Override
     public int getItemCount() {
@@ -86,11 +96,11 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
     }
 
 
-    public class MenuViewHolder extends RecyclerView.ViewHolder {
+    class MenuViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
         TextView textView;
 
-        public MenuViewHolder(View view) {
+        MenuViewHolder(View view) {
             super(view);
             imageView = view.findViewById(R.id.idProductImage);
             textView = view.findViewById(R.id.idProductName);

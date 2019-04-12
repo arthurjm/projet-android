@@ -33,9 +33,9 @@ public class FilterStruct {
 
     /**
      * Constructor
-     *
-     * @param filterName
-     * @param image
+     * @param filterName the name of the filter
+     * @param image the image
+     * @param filterType the FilterType
      */
     public FilterStruct(String filterName, Bitmap image, FilterType filterType) {
         this.filterName = filterName;
@@ -51,7 +51,7 @@ public class FilterStruct {
         return filterName;
     }
 
-    public void setFilterName(String productName) {
+    void setFilterName(String productName) {
         this.filterName = productName;
     }
 

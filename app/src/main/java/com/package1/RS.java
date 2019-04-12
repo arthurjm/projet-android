@@ -6,7 +6,6 @@ import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.Type;
-import android.util.Log;
 
 import com.android.rssample.ScriptC_applyLUT;
 import com.android.rssample.ScriptC_colorize;
@@ -19,9 +18,7 @@ import com.android.rssample.ScriptC_keepHue;
 import com.android.rssample.ScriptC_posterisation;
 import com.android.rssample.ScriptC_posterisationRGB;
 import com.android.rssample.ScriptC_sobel;
-import com.package1.Mask.LaplacienMask;
 import com.package1.Mask.Mask;
-import com.package1.Mask.SobelMask;
 
 /**
  * Created by amondon001 on 22/02/19.
@@ -268,9 +265,8 @@ public class RS {
      * @param channel R or G or B or H or S or V
      * @return Histogram int tab
      */
-    public int[] createHistogram(Bitmap bmp, ChanelType channel) {
+    int[] createHistogram(Bitmap bmp, ChanelType channel) {
         setInputOutput(bmp);
-        Bitmap res = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), bmp.getConfig());
 
         ScriptC_createHistogram script = new ScriptC_createHistogram(rs);
 

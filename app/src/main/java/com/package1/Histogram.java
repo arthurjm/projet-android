@@ -4,53 +4,40 @@ package com.package1;
 import static com.package1.MainActivity.NumberofValues;
 
 /**
- * Class permettant de créer des histogrammes à partir de tableaux de valeurs numériques
+ * @author Elias
+ * This class create histogram with numerical value
  */
 public class Histogram {
 
-    /**
-     *
-     */
     private int histogramValue[] = new int[NumberofValues];
-    /**
-     *
-     */
     private int min, max, count;
-    /**
-     *
-     */
     private ChanelType chanel;
 
     /**
      * This constructor is used with the renderscript version of the creation of the histogram that return the array already
-     * in the good format. Altought, we need to extract the min and max values.
+     * in the good format. Although, we need to extract the min and max values.
      *
      * @param tab    The array which correspond to the histogram
-     * @param chanel
+     * @param chanel ChanelType (Red, Green, Blue, Hue, Saturation, Variance)
+     * @see ChanelType
      */
-    public Histogram(int[] tab, ChanelType chanel, int count) {
+     Histogram(int[] tab, ChanelType chanel, int count) {
         this.chanel = chanel;
-        //  histogramValue=tab;
         this.count = count;
         min = NumberofValues;
         max = -1;
         for (int i = 0; i < NumberofValues; i++) {
             histogramValue[i] = tab[i];
-            if (histogramValue[i] != 0 && i < min) {
-                min = i;
-            }
-            if (histogramValue[i] != 0 && i > max) {
-                max = i;
-            }
-
+            if (histogramValue[i] != 0 && i < min) min = i;
+            if (histogramValue[i] != 0 && i > max) max = i;
         }
     }
 
-    public int getMin() {
+    int getMin() {
         return min;
     }
 
-    public int getMax() {
+    int getMax() {
         return max;
     }
 
@@ -58,15 +45,11 @@ public class Histogram {
         return count;
     }
 
-    public void setCount(int count) {
-        this.count = count;
-    }
-
-    public ChanelType getChanel() {
+    ChanelType getChanel() {
         return chanel;
     }
 
-    public int getHistogramValue(int index) {
+    int getHistogramValue(int index) {
         return histogramValue[index];
     }
 

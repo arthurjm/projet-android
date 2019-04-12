@@ -1,19 +1,18 @@
 package com.package1;
 
 import android.Manifest;
-import android.content.Context;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.media.ExifInterface;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
@@ -27,8 +26,6 @@ import com.package1.affichage.PhotoEditing;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * This class corresponding to the layout activity_main
@@ -49,22 +46,20 @@ public class MainActivity extends AppCompatActivity {
     /**
      * The image displayed on the screen
      */
+    @SuppressLint("StaticFieldLeak")
     public static ImageView imgView;
-
-    private String photoPath;
-
-    private int PICK_IMAGE_REQUEST = 1;
-    private int TAKE_PHOTO = 1;
-    private int REQUEST_CODE = 1;
-
     /**
      * The Number of values that can be taken by the values of the histogram,
      * must be the same value as in the "HistogramManipulation" class
      */
     public static int NumberofValues = 256;
+    private String photoPath;
+    private int PICK_IMAGE_REQUEST = 1;
+    private int TAKE_PHOTO = 1;
 
     /**
-     * @param savedInstanceState
+     * @param savedInstanceState Bundle object
+     * @see Bundle
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,15 +75,15 @@ public class MainActivity extends AppCompatActivity {
      * To check permissions
      */
     public void permission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    != PackageManager.PERMISSION_GRANTED) {
-                requestAlertWindowPermission();
-            }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestAlertWindowPermission();
         }
+
     }
 
     private void requestAlertWindowPermission() {
+        int REQUEST_CODE = 1;
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE);
     }
 
@@ -125,25 +120,21 @@ public class MainActivity extends AppCompatActivity {
 
         if (intent.resolveActivity(getPackageManager()) != null) {
             // Create unique name
-            String time = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
             File photoDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
             try {
-                File photoFile = File.createTempFile("photo" + time, ".jpg", photoDir);
+                File photoFile = File.createTempFile("photo" + System.currentTimeMillis() + "", ".jpg", photoDir);
                 // Register complet path
                 photoPath = photoFile.getAbsolutePath();
                 // create URI
                 Uri photoUri;
-                if (photoFile != null) {
-                    photoUri = FileProvider.getUriForFile(getApplicationContext(), "com.package1.fileprovider", photoFile);
-                    // transfert URI to intent for register photo in temp file
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-                    startActivityForResult(intent, TAKE_PHOTO);
-                }
+                photoUri = FileProvider.getUriForFile(getApplicationContext(), "com.package1.fileprovider", photoFile);
+                // transfert URI to intent for register photo in temp file
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                startActivityForResult(intent, TAKE_PHOTO);
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
 
         }
     }
@@ -170,8 +161,8 @@ public class MainActivity extends AppCompatActivity {
      */
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        Uri filePath = null;
-        String imagepath = null;
+        Uri filePath;
+        String imagepath;
 
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -205,21 +196,27 @@ public class MainActivity extends AppCompatActivity {
     /**
      * To get the path of Uri
      *
-     * @param uri
+     * @param uri Uri object
      * @return a variable of type String
+     * @see Uri
      */
     public String getPath(Uri uri) {
+        String res = "";
         String[] projection = {MediaStore.Images.Media.DATA};
-        Cursor cursor = managedQuery(uri, projection, null, null, null);
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        return cursor.getString(column_index);
+        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+        assert cursor != null;
+        if (cursor.moveToFirst()) {
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            res = cursor.getString(column_index);
+        }
+        cursor.close();
+        return res;
     }
 
     /**
      * To have a good axe in our photo
      *
-     * @param photoFilePath
+     * @param photoFilePath The file's path
      * @return a Bitmap
      */
     public Bitmap rotateBitmap(String photoFilePath) {
@@ -238,6 +235,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        assert exif != null;
         int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
         Matrix matrix = new Matrix();
         switch (orientation) {
@@ -253,9 +251,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
 
-        Bitmap rotatedBitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);
-
-        return rotatedBitmap;
+        return Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);
     }
 
     /**
@@ -265,54 +261,36 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this, PhotoEditing.class));
     }
 
-    /**
-     *
-     */
     @Override
     protected void onStart() {
         super.onStart();
         Log.i("CV", "onStart()");
     }
 
-    /**
-     *
-     */
     @Override
     protected void onResume() {
         super.onResume();
         Log.i("CV", "onResume()");
     }
 
-    /**
-     *
-     */
     @Override
     protected void onPause() {
         super.onPause();
         Log.i("CV", "onPause()");
     }
 
-    /**
-     *
-     */
     @Override
     protected void onStop() {
         super.onStop();
         Log.i("CV", "onStop()");
     }
 
-    /**
-     *
-     */
     @Override
     protected void onRestart() {
         super.onRestart();
         Log.i("CV", "onRestart()");
     }
 
-    /**
-     *
-     */
     @Override
     protected void onDestroy() {
         super.onDestroy();

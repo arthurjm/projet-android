@@ -5,16 +5,12 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.RectF;
-import android.util.Log;
 import android.util.SparseArray;
 
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
-import com.google.android.gms.vision.face.Landmark;
 
 /**
  * @author Arthur
@@ -24,8 +20,6 @@ import com.google.android.gms.vision.face.Landmark;
 public class FaceDetection {
 
     private Bitmap sunglasses;
-    //private Bitmap hat;
-    //private Bitmap beard;
     private FaceDetector faceDetector;
     private Canvas canvas;
 
@@ -36,8 +30,6 @@ public class FaceDetection {
      */
     public FaceDetection(Context ctx) {
         sunglasses = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.sunglasses);
-        //hat = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.hat);
-        //beard = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.beard);
 
         faceDetector = new FaceDetector.Builder(ctx)
                 .setTrackingEnabled(false)

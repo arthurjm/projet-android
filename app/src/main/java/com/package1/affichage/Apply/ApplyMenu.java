@@ -15,6 +15,7 @@ import com.package1.Mask.SobelMask;
 import com.package1.R;
 import com.package1.RS;
 import com.package1.affichage.Adapter.FilterAdapter;
+import com.package1.affichage.PhotoEditing;
 import com.package1.affichage.Struct.FilterStruct;
 import com.package1.affichage.Struct.MenuStruct;
 import com.package1.affichage.Type.FilterType;
@@ -22,55 +23,45 @@ import com.package1.affichage.Type.MenuType;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Filter;
 
 import static com.package1.MainActivity.image;
-import static com.package1.MainActivity.imageEditing;
 import static com.package1.MainActivity.imageEditingCopy;
 import static com.package1.MainActivity.imgView;
-import static com.package1.affichage.PhotoEditing.back;
-import static com.package1.affichage.PhotoEditing.menuAdapter;
-import static com.package1.affichage.PhotoEditing.menuRecyclerView;
-import static com.package1.affichage.PhotoEditing.filterAdapter;
-import static com.package1.affichage.PhotoEditing.filterRecyclerView;
-import static com.package1.affichage.PhotoEditing.actualMiniImage;
-import static com.package1.affichage.PhotoEditing.nightMode;
-import static com.package1.affichage.PhotoEditing.renderscript;
 
 /**
  * @author Mathieu
- * In this class, we can find all functions that we use to modify the menuRecyclerView
- * We have different list which contains filter's list
- * In colorList we have different filter's that we use to modify the basic color of a picture ...
- * In contrastList we have different filter's that we use to modify the contrast/saturation of a picture ...
- * In maskList we have different filter's that we use to apply blur effects ...
- * In extraList we have different filter's like the rotation or the faceDetection ...
- * There is also some variables like renderscript or faceDetection. They are there to apply some effects
+ *         In this class, we can find all functions that we use to modify the menuRecyclerView
+ *         We have different list which contains filter's list
+ *         In colorList we have different filter's that we use to modify the basic color of a picture ...
+ *         In contrastList we have different filter's that we use to modify the contrast/saturation of a picture ...
+ *         In maskList we have different filter's that we use to apply blur effects ...
+ *         In extraList we have different filter's like the rotation or the faceDetection ...
+ *         There is also some variables like renderscript or faceDetection. They are there to apply some effects
  */
 public class ApplyMenu {
 
-    public List<MenuStruct> menuList;
-    public List<FilterStruct> colorList;
-    public List<FilterStruct> contrastList;
-    public List<FilterStruct> maskList;
-    public List<FilterStruct> extraList;
-    public Context ctx;
-    public RS renderscript;
-    public FaceDetection faceDetection;
-    public HistogramManipulation hist;
-    public Bitmap resizeImageEditing;
-    public Bitmap resizeCopy;
+    private List<MenuStruct> menuList;
+    private List<FilterStruct> colorList;
+    private List<FilterStruct> contrastList;
+    private List<FilterStruct> maskList;
+    private List<FilterStruct> extraList;
+    private RS renderscript;
+    private FaceDetection faceDetection;
+    private HistogramManipulation hist;
+    private Bitmap resizeImageEditing;
+    private Bitmap resizeCopy;
+
+    private PhotoEditing context;
 
     /**
      * Constructor
      *
-     * @param ctx
-     * @param renderScript
-     * @param faceDetection
-     * @param hist
+     * @param ctx           The context
+     * @param renderScript  the renderscript
+     * @param faceDetection the facedection
+     * @param hist          the histogram
      */
     public ApplyMenu(Context ctx, RS renderScript, FaceDetection faceDetection, HistogramManipulation hist) {
-        this.ctx = ctx;
         this.renderscript = renderScript;
         this.faceDetection = faceDetection;
         this.hist = hist;
@@ -81,8 +72,18 @@ public class ApplyMenu {
         extraList = new ArrayList<>();
         maskList = new ArrayList<>();
         contrastList = new ArrayList<>();
-        resizeImageEditing = Bitmap.createScaledBitmap(image, 100, (int) ((image.getHeight() * 100) / image.getWidth()), true);
+        resizeImageEditing = Bitmap.createScaledBitmap(image, 100, ((image.getHeight() * 100) / image.getWidth()), true);
 
+        context = (PhotoEditing) ctx;
+
+    }
+
+    public List<MenuStruct> getMenuList() {
+        return menuList;
+    }
+
+    public List<FilterStruct> getColorList() {
+        return colorList;
     }
 
     /**
@@ -92,31 +93,31 @@ public class ApplyMenu {
 
         MenuStruct ms;
 
-        Bitmap imgMenu = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.color);
+        Bitmap imgMenu = BitmapFactory.decodeResource(context.getResources(), R.drawable.color);
         ms = new MenuStruct("Color", imgMenu, MenuType.Color);
         menuList.add(ms);
 
-        imgMenu = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.contrast);
+        imgMenu = BitmapFactory.decodeResource(context.getResources(), R.drawable.contrast);
         ms = new MenuStruct("Contrast", imgMenu, MenuType.Contrast);
         menuList.add(ms);
 
-        imgMenu = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.mask);
+        imgMenu = BitmapFactory.decodeResource(context.getResources(), R.drawable.mask);
         ms = new MenuStruct("Mask", imgMenu, MenuType.Mask);
         menuList.add(ms);
 
-        imgMenu = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.extra);
+        imgMenu = BitmapFactory.decodeResource(context.getResources(), R.drawable.extra);
         ms = new MenuStruct("Extras", imgMenu, MenuType.Extras);
         menuList.add(ms);
 
-        menuAdapter.notifyDataSetChanged();
+        context.menuAdapter.notifyDataSetChanged();
     }
 
     /**
      * To change the actual list in RecyclerView
      *
-     * @param menuType
+     * @param menuType the actual menuType
      */
-    public void changeList(MenuType menuType) {
+    private void changeList(MenuType menuType) {
         switch (menuType) {
             case Color:
                 colorList();
@@ -139,13 +140,13 @@ public class ApplyMenu {
     /**
      * Use a function to modify the actual recyclerView
      *
-     * @param menuType
+     * @param menuType the actual menuType
      */
     public void modifyList(MenuType menuType) {
         imgView.setImageBitmap(imageEditingCopy);
-        menuRecyclerView.setVisibility(View.GONE);
-        filterRecyclerView.setVisibility(View.VISIBLE);
-        back.setVisibility(View.VISIBLE);
+        context.menuRecyclerView.setVisibility(View.GONE);
+        context.filterRecyclerView.setVisibility(View.VISIBLE);
+        context.back.setVisibility(View.VISIBLE);
         switch (menuType) {
             case Color:
                 changeList(MenuType.Color);
@@ -167,13 +168,13 @@ public class ApplyMenu {
     /**
      * To initiate different list
      */
-    public void colorList() {
+    private void colorList() {
 
-        filterAdapter = new FilterAdapter(colorList, ctx, MenuType.Color);
-        filterRecyclerView.setAdapter(filterAdapter);
-        actualMiniImage = image.copy(Bitmap.Config.ARGB_8888, true);
+        context.filterAdapter = new FilterAdapter(colorList, context, MenuType.Color);
+        context.filterRecyclerView.setAdapter(context.filterAdapter);
+        context.actualMiniImage = image.copy(Bitmap.Config.ARGB_8888, true);
 
-        if (colorList.isEmpty() == true) {
+        if (colorList.isEmpty()) {
 
             FilterStruct fs;
 
@@ -210,17 +211,17 @@ public class ApplyMenu {
             fs = new FilterStruct("IsohelieRGB", renderscript.posterisationRGB(resizeCopy, 25), FilterType.IsoHelieRGB);
             colorList.add(fs);
         }
-        filterAdapter.notifyDataSetChanged();
+        context.filterAdapter.notifyDataSetChanged();
 
     }
 
-    public void contrastList() {
+    private void contrastList() {
 
-        filterAdapter = new FilterAdapter(contrastList, ctx, MenuType.Contrast);
-        filterRecyclerView.setAdapter(filterAdapter);
-        actualMiniImage = image.copy(Bitmap.Config.ARGB_8888, true);
+        context.filterAdapter = new FilterAdapter(contrastList, context, MenuType.Contrast);
+        context.filterRecyclerView.setAdapter(context.filterAdapter);
+        context.actualMiniImage = image.copy(Bitmap.Config.ARGB_8888, true);
 
-        if (contrastList.isEmpty() == true) {
+        if (contrastList.isEmpty()) {
 
             FilterStruct fs;
 
@@ -261,17 +262,17 @@ public class ApplyMenu {
             fs = new FilterStruct("EquaLight", renderscript.applyLUT(resizeCopy, hist), FilterType.EquaLight);
             contrastList.add(fs);
         }
-        filterAdapter.notifyDataSetChanged();
+        context.filterAdapter.notifyDataSetChanged();
 
     }
 
-    public void maskList() {
+    private void maskList() {
 
-        filterAdapter = new FilterAdapter(maskList, ctx, MenuType.Mask);
-        filterRecyclerView.setAdapter(filterAdapter);
-        actualMiniImage = image.copy(Bitmap.Config.ARGB_8888, true);
+        context.filterAdapter = new FilterAdapter(maskList, context, MenuType.Mask);
+        context.filterRecyclerView.setAdapter(context.filterAdapter);
+        context.actualMiniImage = image.copy(Bitmap.Config.ARGB_8888, true);
 
-        if (maskList.isEmpty() == true) {
+        if (maskList.isEmpty()) {
 
             FilterStruct fs;
 
@@ -315,17 +316,17 @@ public class ApplyMenu {
             fs = new FilterStruct("Increase Border", renderscript.increaseBorder(resizeCopy, 25), FilterType.IncreaseBorder);
             maskList.add(fs);
         }
-        filterAdapter.notifyDataSetChanged();
+        context.filterAdapter.notifyDataSetChanged();
 
     }
 
-    public void extrasList() {
-        filterAdapter = new FilterAdapter(extraList, ctx, MenuType.Extras);
-        filterRecyclerView.setAdapter(filterAdapter);
-        actualMiniImage = image.copy(Bitmap.Config.ARGB_8888, true);
+    private void extrasList() {
+        context.filterAdapter = new FilterAdapter(extraList, context, MenuType.Extras);
+        context.filterRecyclerView.setAdapter(context.filterAdapter);
+        context.actualMiniImage = image.copy(Bitmap.Config.ARGB_8888, true);
 
         FilterStruct fs;
-        if (extraList.isEmpty() == true) {
+        if (extraList.isEmpty()) {
             // FaceDetection
             resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
             fs = new FilterStruct("Face Detection", faceDetection.drawOnImage(resizeCopy), FilterType.FaceDetection);
@@ -347,17 +348,17 @@ public class ApplyMenu {
             extraList.add(fs);
 
             // Rotate
-            resizeCopy = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.rotate);
+            resizeCopy = BitmapFactory.decodeResource(context.getResources(), R.drawable.rotate);
             fs = new FilterStruct("Rotate", resizeCopy, FilterType.Rotate);
             extraList.add(fs);
 
             // Flip Horizontal
-            resizeCopy = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.flip_h);
+            resizeCopy = BitmapFactory.decodeResource(context.getResources(), R.drawable.flip_h);
             fs = new FilterStruct("FlipH", resizeCopy, FilterType.FlipHorizontal);
             extraList.add(fs);
 
             // Flip vertical
-            resizeCopy = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.flip_v);
+            resizeCopy = BitmapFactory.decodeResource(context.getResources(), R.drawable.flip_v);
             fs = new FilterStruct("FlipV", resizeCopy, FilterType.FlipVertical);
             extraList.add(fs);
 
@@ -366,28 +367,31 @@ public class ApplyMenu {
         } else {
 
             // Remove Night/Day mode to update it
-            extraList.remove(extraList.get(extraList.size() - 1));
-            nightDayMode();
+            for (FilterStruct filterStruct : extraList) {
+                if (filterStruct.getFilterType() == FilterType.NightMode || filterStruct.getFilterType() == FilterType.DayMode) {
+                    extraList.remove(filterStruct);
+                    nightDayMode();
+                }
+            }
         }
-        filterAdapter.notifyDataSetChanged();
-
+        context.filterAdapter.notifyDataSetChanged();
     }
 
     /**
      * To change the filterStruct, if we are in night or day Mode
      */
-    public void nightDayMode() {
+    private void nightDayMode() {
         Bitmap bmp;
         FilterStruct fs;
 
-        if (nightMode == false) {
-            bmp = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.nightmode);
+        if (!context.nightMode) {
+            bmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.nightmode);
             fs = new FilterStruct("NightMode", bmp, FilterType.NightMode);
             extraList.add(fs);
         }
         // Return in normal case
         else {
-            bmp = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.daymode);
+            bmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.daymode);
             fs = new FilterStruct("DayMode", bmp, FilterType.DayMode);
             extraList.add(fs);
         }
