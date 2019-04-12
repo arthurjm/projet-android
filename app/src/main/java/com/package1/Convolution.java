@@ -26,7 +26,7 @@ public class Convolution {
     /**
      * construction of a convolution with a mask (newHeight and newWidth are different)
      *
-     * @param tab
+     * @param tab Convolution mask
      * @param newWidth  the width of mask
      * @param newHeight the height of height
      */
@@ -49,13 +49,12 @@ public class Convolution {
     /**
      * construction of a convolution with a mask (same newHeight and newWidth)
      *
-     * @param tab
+     * @param tab Convolution mask
      * @param newWidth the width of mask
      */
     public Convolution(int[][] tab, int newWidth) {
         this(tab, newWidth, newWidth);
     }
-
 
     /**
      * construction of a convolution with a mask (same newHeight and newWidth)
@@ -105,7 +104,7 @@ public class Convolution {
     /**
      * to creat a sobel mask
      *
-     * @param isVertical
+     * @param isVertical True = vertical, False = horizontal
      */
     public void setSobelMask(boolean isVertical) {
         weightTotal = 1;
@@ -169,7 +168,7 @@ public class Convolution {
     /**
      * to get the mask
      *
-     * @return
+     * @return Convolution mask
      */
     public int[][] getMask() {
         return mask;
@@ -178,7 +177,7 @@ public class Convolution {
     /**
      * to set the mask
      *
-     * @param mask
+     * @param mask Convolution mask
      */
     public void setMask(int[][] mask) {
         this.mask = mask;
@@ -188,12 +187,11 @@ public class Convolution {
      * to limit the value not exceeding a value limit
      *
      * @param value the value to limit
-     * @param limit the value limit
-     * @return
+     * @return the limitValue
      */
-    private int limitValue(int value, int limit) {
-        if (value > limit) {
-            value = limit;
+    private int limitValue(int value) {
+        if (value > 255) {
+            value = 255;
         } else if (value < 0) {
             value = 0;
         }
@@ -211,7 +209,7 @@ public class Convolution {
     /**
      * to apply the mask to the image
      *
-     * @param original the orginal image
+     * @param original the original image
      * @return image processed
      */
     public Bitmap applicationConvolution(Bitmap original) {
@@ -330,9 +328,9 @@ public class Convolution {
                         }
                     }
 
-                    tempR = limitValue(tempR, 255);
-                    tempG = limitValue(tempG, 255);
-                    tempB = limitValue(tempB, 255);
+                    tempR = limitValue(tempR);
+                    tempG = limitValue(tempG);
+                    tempB = limitValue(tempB);
                 } else { //sinon, on applique le traitement d'une bordure
                     localWeight = 0;
                     for (int j = 0; j < pxHeight; j++) {
@@ -351,9 +349,9 @@ public class Convolution {
                         tempG = 0;
                         tempB = 0;
                     } else {
-                        tempR = limitValue(tempR / localWeight, 255);
-                        tempG = limitValue(tempG / localWeight, 255);
-                        tempB = limitValue(tempB / localWeight, 255);
+                        tempR = limitValue(tempR / localWeight);
+                        tempG = limitValue(tempG / localWeight);
+                        tempB = limitValue(tempB / localWeight);
                     }
                 }
                 tabPixels[index] = Color.rgb(tempR, tempG, tempB);

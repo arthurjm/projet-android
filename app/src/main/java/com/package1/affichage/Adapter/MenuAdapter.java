@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.package1.R;
 import com.package1.affichage.PhotoEditing;
 import com.package1.affichage.Struct.FilterStruct;
