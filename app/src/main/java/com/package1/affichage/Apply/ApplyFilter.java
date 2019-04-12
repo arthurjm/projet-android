@@ -25,8 +25,6 @@ import com.package1.affichage.Type.MenuType;
 import static com.package1.MainActivity.imageEditing;
 import static com.package1.MainActivity.imageEditingCopy;
 import static com.package1.MainActivity.imgView;
-import static com.package1.affichage.PhotoEditing.dayMode;
-import static com.package1.affichage.PhotoEditing.faceDetection;
 import static com.package1.affichage.PhotoEditing.hist;
 import static com.package1.affichage.PhotoEditing.animationIV;
 /**
@@ -56,7 +54,7 @@ public class ApplyFilter {
      * @param menuType the menuType
      */
     public ApplyFilter(Context ctx, MenuType menuType) {
-        this.ctx = ctx;
+        this.context = (PhotoEditing) ctx;
         this.menuType = menuType;
         context = (PhotoEditing) ctx;
 
@@ -365,6 +363,7 @@ public class ApplyFilter {
                 imageEditingCopy = renderscript.toGrey(imageEditing);
                 imageEditingCopy = renderscript.sobel(imageEditingCopy);
                 imageEditingCopy = renderscript.invert(imageEditingCopy);
+                imageEditingCopy = renderscript.increaseBorder(imageEditingCopy, 120);
                 break;
             default:
                 break;
@@ -542,7 +541,7 @@ public class ApplyFilter {
                     imageEditingCopy = renderscript.increaseBorder(Bitmap[0], (progressBar1 + 3) * 10);
                     break;
                 case FaceDetection:
-                    imageEditingCopy = faceDetection.drawOnImage(imageEditing);
+                    imageEditingCopy = context.faceDetection.drawOnImage(imageEditing);
                     break;
                 default:
                     break;

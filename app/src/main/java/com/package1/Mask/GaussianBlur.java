@@ -1,7 +1,5 @@
 package com.package1.Mask;
 
-import android.util.Log;
-
 public class GaussianBlur extends Mask{
 
     public GaussianBlur(int size, double gamma) {

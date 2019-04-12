@@ -34,7 +34,7 @@ public class FaceDetection {
         faceDetector = new FaceDetector.Builder(ctx)
                 .setTrackingEnabled(false)
                 .setLandmarkType(FaceDetector.NO_LANDMARKS)
-                .setMode(FaceDetector.FAST_MODE)
+                .setMode(FaceDetector.ACCURATE_MODE)
                 .build();
     }
 
