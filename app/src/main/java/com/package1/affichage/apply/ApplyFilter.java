@@ -218,6 +218,7 @@ public class ApplyFilter {
                 setNormalBackground(seekBar1);
                 seekBar1.setProgress(2);
                 setFilterType(FilterType.IsoHelieRGB);
+                break;
             default:
                 break;
         }
