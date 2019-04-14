@@ -38,8 +38,5 @@ public enum FilterType {
     FlipVertical,
     FlipHorizontal,
     Cartoon,
-    Draw,
-    Elias,
-    Elias1,
-    Elias2
+    Draw
 }

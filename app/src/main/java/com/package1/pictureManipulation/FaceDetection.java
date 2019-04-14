@@ -17,11 +17,10 @@ import com.package1.R;
 /**
  * @author Arthur
  * Work with the Google api vision com.google.android.gms.vision.face
- * Detect faces and draw sunglasses on these faces
+ * Detect faces and draw eyes and a nose on those faces
  */
 public class FaceDetection {
 
-    private Bitmap sunglasses;
     private Bitmap eye;
     private Bitmap ear;
     private Bitmap nose;
@@ -34,10 +33,10 @@ public class FaceDetection {
      * @param ctx Context
      */
     public FaceDetection(Context ctx) {
-        sunglasses = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.sunglasses);
-        eye = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.red);
+
+        eye = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.eye);
         ear = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.blue);
-        nose = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.green);
+        nose = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.nose);
 
         faceDetector = new FaceDetector.Builder(ctx)
                 .setTrackingEnabled(false)
@@ -89,7 +88,7 @@ public class FaceDetection {
     }
 
     /**
-     * To trick the face with sunglasses
+     * To trick the face with new eyes
      *
      */
     private void drawEye(int cx, int cy) {
@@ -104,28 +103,23 @@ public class FaceDetection {
             canvas.drawBitmap(eye, cx - eye.getWidth()/2, cy - eye.getHeight()/2, null);
     }
 
+    /**
+     * To trick the face with new ears
+     *
+     */
     private void drawEar(int cx, int cy) {
         int scaleHeight = ear.getScaledHeight(canvas);
         canvas.drawBitmap(ear, cx - ear.getWidth()/2, cy - ear.getHeight()/2, null);
     }
 
+    /**
+     * To trick the face with new nose
+     *
+     */
     private void drawNose(int cx, int cy) {
         int scaleHeight = nose.getScaledHeight(canvas);
         canvas.drawBitmap(nose, cx - nose.getWidth()/2, cy - nose.getHeight()/2, null);
     }
 
-    /**
-     * To trick the face with sunglasses
-     *
-     * @param face The face to put the sunglasses
-     */
-    private void drawSunglasses(Face face) {
-        float x1 = face.getPosition().x;
-        float y1 = face.getPosition().y;
-        float x2 = x1 + face.getWidth();
-        float y2 = y1 + face.getHeight();
-        RectF rectF = new RectF(x1, y1, x2, y2);
 
-        canvas.drawBitmap(sunglasses, null, rectF, null);
-    }
 }

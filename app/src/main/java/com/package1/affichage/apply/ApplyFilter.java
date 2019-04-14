@@ -362,15 +362,6 @@ public class ApplyFilter {
                 imageEditingCopy = renderscript.invert(imageEditingCopy);
                 imageEditingCopy = renderscript.increaseBorder(imageEditingCopy, 120);
                 break;
-            case Elias:
-                setGone(seekBar1, seekBar2);
-                break;
-            case Elias1:
-                setGone(seekBar1, seekBar2);
-                break;
-            case Elias2:
-                setGone(seekBar1, seekBar2);
-                break;
             default:
                 break;
 

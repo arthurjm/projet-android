@@ -359,21 +359,6 @@ public class ApplyMenu {
             fs = new FilterStruct("FlipV", resizeCopy, FilterType.FlipVertical);
             extraList.add(fs);
 
-            // Elias
-            resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            fs = new FilterStruct("Elias", resizeCopy, FilterType.FlipVertical);
-            extraList.add(fs);
-
-            // Elias1
-            resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            fs = new FilterStruct("Elias1", resizeCopy, FilterType.FlipVertical);
-            extraList.add(fs);
-
-            // Elias2
-            resizeCopy = resizeImageEditing.copy(Bitmap.Config.ARGB_8888, true);
-            fs = new FilterStruct("Elias2", resizeCopy, FilterType.FlipVertical);
-            extraList.add(fs);
-
             // Day / Night mode
             nightDayMode();
 

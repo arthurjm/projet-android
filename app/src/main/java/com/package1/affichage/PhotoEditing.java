@@ -74,7 +74,7 @@ public class PhotoEditing extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.apply_filter);
 
-        adaptedWidth = 2000;
+        adaptedWidth = 1500;
         initiate();
     }
 

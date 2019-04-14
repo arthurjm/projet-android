@@ -2,7 +2,7 @@
     <string name="appName">Projet Android</string>
     <string name="undo">Annuler</string>
     <string name="apply">Appliquer</string>
-    <string name="presentation">Mathieu DUBAN, Arthur MONDON, Elias KHATI-LEFRANCOIS, LiangLiang PAN</string>
+    <string name="presentation">Mathieu DUBAN, Elias KHATI-LEFRANCOIS,\nArthur MONDON, LiangLiang PAN</string>
     <string name="gallery">Galerie</string>
     <string name="camera">Camera</string>
 
