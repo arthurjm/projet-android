@@ -469,8 +469,7 @@ public class ApplyFilter {
             super.onPreExecute();
             imgView.setVisibility(View.GONE);
             context.animationIV.setVisibility(View.VISIBLE);
-            //animationDrawable = (AnimationDrawable) animationIV.getDrawable();
-            //animationDrawable.start();
+            //creat the animation
             FrameAnimationDrawable.create().animateRawManuallyFromXML(R.drawable.animation1, context.animationIV);
 
 
@@ -553,7 +552,7 @@ public class ApplyFilter {
          */
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
-            //animationDrawable.stop();
+            //stop the animation
             FrameAnimationDrawable.create().stopAnimation(true);
             context.animationIV.setVisibility(View.GONE);
             imgView.setImageBitmap(bitmap);

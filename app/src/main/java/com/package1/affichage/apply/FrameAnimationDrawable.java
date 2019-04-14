@@ -17,15 +17,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * To solve the problem of OOM from the method "animationdrawable" and add method "stop" for the animation
+ */
 public class FrameAnimationDrawable {
     private static FrameAnimationDrawable fDrawable;
     private boolean isStop = false;
     private int frameNumber;
 
     /**
-     *
-     *
+     *  To creat a frameAnimationDrawable
      * @return
      */
     public static FrameAnimationDrawable create() {
@@ -39,6 +40,9 @@ public class FrameAnimationDrawable {
         return fDrawable;
     }
 
+    /**
+     * constructor
+     */
     public static class MyFrame {
         byte[] bytes;
         int duration;
@@ -47,7 +51,7 @@ public class FrameAnimationDrawable {
     }
 
     /***
-     *
+     * use the fonction loadFromXml to set time in the list of animation
      * **/
     public void animateRawManuallyFromXML(int resourceId, ImageView imageView) {
         isStop = false;
@@ -60,7 +64,6 @@ public class FrameAnimationDrawable {
      * @param resourceId
      * @param imageView
      */
-    //2
     private void loadFromXml(final int resourceId, final ImageView imageView) {
         final Context context = imageView.getContext();
 
@@ -122,12 +125,12 @@ public class FrameAnimationDrawable {
         }).run();
     }
 
-    // 3
+
     private void animateRawManually(List<MyFrame> myFrames, ImageView imageView) {
         animateRawManually(myFrames, imageView, 0);
     }
 
-    // 4
+    // if the animation end then clean the animation
     private void animateRawManually(final List<MyFrame> myFrames,
                                     final ImageView imageView, final int currentFrameNumber) {
         if (isStop) {
@@ -195,8 +198,7 @@ public class FrameAnimationDrawable {
     }
 
     /**
-     *
-     *
+     *To stop the animation
      * @param isStop
      */
     public void stopAnimation(boolean isStop) {
