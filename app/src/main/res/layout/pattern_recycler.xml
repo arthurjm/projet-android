@@ -8,7 +8,7 @@
         android:id="@+id/idProductImage"
         android:layout_width="125dp"
         android:layout_height="83dp"
-        android:contentDescription="TODO" />
+        android:contentDescription="@string/filter_preview" />
 
     <TextView
         android:id="@+id/idProductName"

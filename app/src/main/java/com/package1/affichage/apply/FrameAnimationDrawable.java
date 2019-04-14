@@ -26,8 +26,10 @@ public class FrameAnimationDrawable {
     private int frameNumber;
 
     /**
-     *  To creat a frameAnimationDrawable
-     * @return
+     * To create a frameAnimationDrawable
+     *
+     * @return FrameAnimationDrawable
+     * @see FrameAnimationDrawable
      */
     public static FrameAnimationDrawable create() {
         if (fDrawable == null) {
@@ -43,7 +45,7 @@ public class FrameAnimationDrawable {
     /**
      * constructor
      */
-    public static class MyFrame {
+    private static class MyFrame {
         byte[] bytes;
         int duration;
         Drawable drawable;
@@ -51,7 +53,7 @@ public class FrameAnimationDrawable {
     }
 
     /***
-     * use the fonction loadFromXml to set time in the list of animation
+     * use the function loadFromXml to set time in the list of animation
      * **/
     public void animateRawManuallyFromXML(int resourceId, ImageView imageView) {
         isStop = false;
@@ -61,8 +63,8 @@ public class FrameAnimationDrawable {
     /**
      * XmlPullParser
      *
-     * @param resourceId
-     * @param imageView
+     * @param resourceId a layout
+     * @param imageView  a ImageView
      */
     private void loadFromXml(final int resourceId, final ImageView imageView) {
         final Context context = imageView.getContext();
@@ -77,9 +79,7 @@ public class FrameAnimationDrawable {
                 try {
                     int eventType = parser.getEventType();
                     while (eventType != XmlPullParser.END_DOCUMENT) {
-                        if (eventType == XmlPullParser.START_DOCUMENT) {
-
-                        } else if (eventType == XmlPullParser.START_TAG) {
+                        if (eventType == XmlPullParser.START_TAG) {
                             if (parser.getName().equals("item")) {
                                 byte[] bytes = null;
                                 int duration = 1000;
@@ -105,10 +105,6 @@ public class FrameAnimationDrawable {
                                 myFrame.duration = duration;
                                 myFrames.add(myFrame);
                             }
-
-                        } else if (eventType == XmlPullParser.END_TAG) {
-
-                        } else if (eventType == XmlPullParser.TEXT) {
 
                         }
 
@@ -198,11 +194,12 @@ public class FrameAnimationDrawable {
     }
 
     /**
-     *To stop the animation
-     * @param isStop
+     * To stop the animation
+     *
+     * @param isStop a boolean value
      */
     public void stopAnimation(boolean isStop) {
         this.isStop = isStop;
-
     }
+
 }

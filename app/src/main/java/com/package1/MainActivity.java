@@ -52,10 +52,10 @@ public class MainActivity extends AppCompatActivity {
      * The Number of values that can be taken by the values of the histogram,
      * must be the same value as in the "HistogramManipulation" class
      */
-    public static int NumberofValues = 256;
+    public static final int NumberofValues = 256;
     private String photoPath;
-    private int PICK_IMAGE_REQUEST = 1;
-    private int TAKE_PHOTO = 1;
+    private final int PICK_IMAGE_REQUEST = 1;
+    private final int TAKE_PHOTO = 1;
 
     /**
      * @param savedInstanceState Bundle object

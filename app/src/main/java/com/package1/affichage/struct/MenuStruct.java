@@ -16,19 +16,19 @@ public class MenuStruct {
      *
      * @see FilterStruct#getFilterName()
      */
-    private String filterName;
+    private final String filterName;
     /**
      * Image with filter
      *
      * @see FilterStruct#getImage()
      */
-    private Bitmap image;
+    private final Bitmap image;
     /**
      * Type of filter
      *
      * @see FilterType
      */
-    private MenuType menuType;
+    private final MenuType menuType;
 
     /**
      * Constructor

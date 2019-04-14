@@ -35,13 +35,13 @@ import static com.package1.affichage.PhotoEditing.hist;
 public class ApplyFilter {
 
     private FilterType filterType;
-    private MenuType menuType;
+    private final MenuType menuType;
     private int progressBar1, progressBar2;
 
-    private PhotoEditing context;
+    private final PhotoEditing context;
 
-    private SeekBar seekBar1;
-    private SeekBar seekBar2;
+    private final SeekBar seekBar1;
+    private final SeekBar seekBar2;
     private RS renderscript;
 
     /**
@@ -124,7 +124,7 @@ public class ApplyFilter {
      * @see SeekBar#setBackgroundResource(int)
      */
     private void setRGBBackground(SeekBar sb) {
-        sb.setBackgroundResource(R.drawable.seekbar_progess);
+        sb.setBackgroundResource(R.mipmap.seekbar_progess);
     }
 
     /**
@@ -134,7 +134,7 @@ public class ApplyFilter {
      * @see SeekBar#setBackgroundResource(int)
      */
     private void setNormalBackground(SeekBar sb) {
-        sb.setBackgroundResource(R.drawable.icon);
+        sb.setBackgroundResource(R.mipmap.seekbar_daymode);
     }
 
     /**

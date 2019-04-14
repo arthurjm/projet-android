@@ -29,9 +29,9 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
      *
      * @see FilterStruct
      */
-    private List<MenuStruct> menuList;
+    private final List<MenuStruct> menuList;
 
-    private PhotoEditing context;
+    private final PhotoEditing context;
 
     public MenuAdapter(List<MenuStruct> menuList, Context context) {
         this.menuList = menuList;
@@ -98,8 +98,8 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
 
 
     class MenuViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageView;
-        TextView textView;
+        final ImageView imageView;
+        final TextView textView;
 
         MenuViewHolder(View view) {
             super(view);

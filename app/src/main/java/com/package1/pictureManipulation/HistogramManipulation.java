@@ -14,8 +14,8 @@ import static com.package1.MainActivity.NumberofValues;
 public class HistogramManipulation {
 
 
-    int[] LUT = new int[NumberofValues];
-    Histogram histogram;
+    final int[] LUT = new int[NumberofValues];
+    final Histogram histogram;
     private int R, G, B;
 
     /**

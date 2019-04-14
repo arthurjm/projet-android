@@ -40,18 +40,18 @@ import static com.package1.MainActivity.imgView;
  */
 public class ApplyMenu {
 
-    private List<MenuStruct> menuList;
-    private List<FilterStruct> colorList;
+    private final List<MenuStruct> menuList;
+    private final List<FilterStruct> colorList;
     private List<FilterStruct> contrastList;
-    private List<FilterStruct> maskList;
-    private List<FilterStruct> extraList;
-    private RS renderscript;
-    private FaceDetection faceDetection;
+    private final List<FilterStruct> maskList;
+    private final List<FilterStruct> extraList;
+    private final RS renderscript;
+    private final FaceDetection faceDetection;
     private HistogramManipulation hist;
-    private Bitmap resizeImageEditing;
+    private final Bitmap resizeImageEditing;
     private Bitmap resizeCopy;
 
-    private PhotoEditing context;
+    private final PhotoEditing context;
 
     /**
      * Constructor
@@ -93,19 +93,19 @@ public class ApplyMenu {
 
         MenuStruct ms;
 
-        Bitmap imgMenu = BitmapFactory.decodeResource(context.getResources(), R.drawable.color);
+        Bitmap imgMenu = BitmapFactory.decodeResource(context.getResources(), R.mipmap.color);
         ms = new MenuStruct("Color", imgMenu, MenuType.Color);
         menuList.add(ms);
 
-        imgMenu = BitmapFactory.decodeResource(context.getResources(), R.drawable.contrast);
+        imgMenu = BitmapFactory.decodeResource(context.getResources(), R.mipmap.contrast);
         ms = new MenuStruct("Contrast", imgMenu, MenuType.Contrast);
         menuList.add(ms);
 
-        imgMenu = BitmapFactory.decodeResource(context.getResources(), R.drawable.mask);
+        imgMenu = BitmapFactory.decodeResource(context.getResources(), R.mipmap.mask);
         ms = new MenuStruct("Mask", imgMenu, MenuType.Mask);
         menuList.add(ms);
 
-        imgMenu = BitmapFactory.decodeResource(context.getResources(), R.drawable.extra);
+        imgMenu = BitmapFactory.decodeResource(context.getResources(), R.mipmap.extra);
         ms = new MenuStruct("Extras", imgMenu, MenuType.Extras);
         menuList.add(ms);
 
@@ -345,17 +345,17 @@ public class ApplyMenu {
             extraList.add(fs);
 
             // Rotate
-            resizeCopy = BitmapFactory.decodeResource(context.getResources(), R.drawable.rotate);
+            resizeCopy = BitmapFactory.decodeResource(context.getResources(), R.mipmap.rotate);
             fs = new FilterStruct("Rotate", resizeCopy, FilterType.Rotate);
             extraList.add(fs);
 
             // Flip Horizontal
-            resizeCopy = BitmapFactory.decodeResource(context.getResources(), R.drawable.flip_h);
+            resizeCopy = BitmapFactory.decodeResource(context.getResources(), R.mipmap.flip_h);
             fs = new FilterStruct("FlipH", resizeCopy, FilterType.FlipHorizontal);
             extraList.add(fs);
 
             // Flip vertical
-            resizeCopy = BitmapFactory.decodeResource(context.getResources(), R.drawable.flip_v);
+            resizeCopy = BitmapFactory.decodeResource(context.getResources(), R.mipmap.flip_v);
             fs = new FilterStruct("FlipV", resizeCopy, FilterType.FlipVertical);
             extraList.add(fs);
 
@@ -383,13 +383,13 @@ public class ApplyMenu {
         FilterStruct fs;
 
         if (!context.nightMode) {
-            bmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.nightmode);
+            bmp = BitmapFactory.decodeResource(context.getResources(), R.mipmap.nightmode);
             fs = new FilterStruct("NightMode", bmp, FilterType.NightMode);
             extraList.add(fs);
         }
         // Return in normal case
         else {
-            bmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.daymode);
+            bmp = BitmapFactory.decodeResource(context.getResources(), R.mipmap.daymode);
             fs = new FilterStruct("DayMode", bmp, FilterType.DayMode);
             extraList.add(fs);
         }

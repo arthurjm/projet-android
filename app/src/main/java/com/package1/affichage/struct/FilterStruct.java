@@ -15,19 +15,19 @@ public class FilterStruct {
      *
      * @see FilterStruct#getFilterName()
      */
-    private String filterName;
+    private final String filterName;
     /**
      * Image with filter
      *
      * @see FilterStruct#getImage()
      */
-    private Bitmap image;
+    private final Bitmap image;
     /**
      * Type of filter
      *
      * @see FilterType
      */
-    private FilterType filterType;
+    private final FilterType filterType;
 
     /**
      * Constructor

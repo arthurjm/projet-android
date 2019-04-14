@@ -1,6 +1,9 @@
 package com.package1.pictureManipulation.mask;
 
+import android.support.annotation.NonNull;
+
 import java.util.Arrays;
+
 
 public class Mask {
 
@@ -45,6 +48,7 @@ public class Mask {
         return weight;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Mask{" +

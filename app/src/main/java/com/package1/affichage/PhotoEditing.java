@@ -268,7 +268,7 @@ public class PhotoEditing extends AppCompatActivity {
             dir.mkdirs();
         }
 
-        final String path = insertImage(getContentResolver(), bmp, System.currentTimeMillis() + "_profile.jpg", null);
+        final String path = insertImage(getContentResolver(), bmp, System.currentTimeMillis() + "_profile.jpg");
         ConstraintLayout test = findViewById(R.id.applyFilter);
         Snackbar snackbar = Snackbar.make(test, "Image sauvegardée dans la galerie !", Snackbar.LENGTH_LONG).setAction("OPEN", new View.OnClickListener() {
             @Override
@@ -286,15 +286,14 @@ public class PhotoEditing extends AppCompatActivity {
      * @param cr the layout
      * @param source the bitmap that we want to save
      * @param title the name of the image
-     * @param description the description
      * @return the path of this bitmap
      */
-    private String insertImage(ContentResolver cr, Bitmap source, String title, String description) {
+    private String insertImage(ContentResolver cr, Bitmap source, String title) {
 
         ContentValues values = new ContentValues();
         values.put(MediaStore.Images.Media.TITLE, title);
         values.put(MediaStore.Images.Media.DISPLAY_NAME, title);
-        values.put(MediaStore.Images.Media.DESCRIPTION, description);
+        values.put(MediaStore.Images.Media.DESCRIPTION, (String) null);
         values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
         // Add the date meta data to ensure the image is added at the front of the gallery
         values.put(MediaStore.Images.Media.DATE_ADDED, System.currentTimeMillis());

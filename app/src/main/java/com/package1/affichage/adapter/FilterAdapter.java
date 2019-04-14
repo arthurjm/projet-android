@@ -31,11 +31,11 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
      *
      * @see FilterStruct
      */
-    private List<FilterStruct> FilterList;
+    private final List<FilterStruct> FilterList;
 
-    private ApplyFilter applyFilter;
+    private final ApplyFilter applyFilter;
 
-    private PhotoEditing context;
+    private final PhotoEditing context;
 
     /**
      * Constructor
@@ -106,8 +106,8 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
     }
 
     class FilterViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageView;
-        TextView textView;
+        final ImageView imageView;
+        final TextView textView;
 
         FilterViewHolder(View view) {
             super(view);

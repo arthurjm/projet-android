@@ -29,7 +29,7 @@ import com.package1.pictureManipulation.mask.Mask;
 
 public class RS {
 
-    private RenderScript rs;
+    private final RenderScript rs;
     private Allocation input; // Source image
     private Allocation output; // Returned image
 

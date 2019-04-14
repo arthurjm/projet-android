@@ -3,7 +3,7 @@ package com.package1.pictureManipulation.unusedJavaVersion;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 
-public class ColorManipulation {
+class ColorManipulation {
 
     /**
      * a list of variable int

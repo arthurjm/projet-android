@@ -5,5 +5,8 @@
     <string name="presentation">Mathieu DUBAN, Elias KHATI-LEFRANCOIS,\nArthur MONDON, LiangLiang PAN</string>
     <string name="gallery">Galerie</string>
     <string name="camera">Camera</string>
+    <string name="logoFac">logo de la fac</string>
+    <string name="animationLoading">animation loading</string>
+    <string name="filter_preview">filter preview</string>
 
 </resources>

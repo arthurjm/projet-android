@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 
 
-public class Convolution {
+class Convolution {
     /**
      * the height of convolution
      */

@@ -1,6 +1,8 @@
 package com.package1.pictureManipulation;
 
 
+import android.support.annotation.NonNull;
+
 import com.package1.pictureManipulation.ChanelType;
 
 import static com.package1.MainActivity.NumberofValues;
@@ -11,9 +13,11 @@ import static com.package1.MainActivity.NumberofValues;
  */
 public class Histogram {
 
-    private int histogramValue[] = new int[NumberofValues];
-    private int min, max, count;
-    private ChanelType chanel;
+    private final int[] histogramValue = new int[NumberofValues];
+    private int min;
+    private int max;
+    private final int count;
+    private final ChanelType chanel;
 
     /**
      * This constructor is used with the renderscript version of the creation of the histogram that return the array already
@@ -92,6 +96,7 @@ public class Histogram {
     //End of the java unused functions
 
     @Override
+    @NonNull
     public String toString() {
         return "histogram of : " + chanel + "\tmin : " + min + "\tmax : " + max + "\tcount : " + count;
     }
