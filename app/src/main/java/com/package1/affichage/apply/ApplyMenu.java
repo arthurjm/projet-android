@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.view.View;
 
 import com.package1.pictureManipulation.ChanelType;
+import com.package1.pictureManipulation.FaceDetection;
 import com.package1.pictureManipulation.HistogramManipulation;
 import com.package1.pictureManipulation.mask.BlurMask;
 import com.package1.pictureManipulation.mask.GaussianBlur;

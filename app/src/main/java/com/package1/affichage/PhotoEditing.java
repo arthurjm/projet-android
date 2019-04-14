@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
+import com.package1.pictureManipulation.FaceDetection;
 import com.package1.pictureManipulation.HistogramManipulation;
 import com.package1.R;
 import com.package1.pictureManipulation.RS;
