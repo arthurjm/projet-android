@@ -17,12 +17,11 @@ import com.package1.R;
 /**
  * @author Arthur
  * Work with the Google api vision com.google.android.gms.vision.face
- * Detect faces and draw eyes and a nose on those faces
+ * It detects faces on a picture and draws green eyes and clown nose on those faces
  */
 public class FaceDetection {
 
     private Bitmap eye;
-    private Bitmap ear;
     private Bitmap nose;
     private FaceDetector faceDetector;
     private Canvas canvas;
@@ -35,7 +34,6 @@ public class FaceDetection {
     public FaceDetection(Context ctx) {
 
         eye = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.eye);
-        ear = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.blue);
         nose = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.nose);
 
         faceDetector = new FaceDetector.Builder(ctx)
@@ -59,7 +57,7 @@ public class FaceDetection {
         Frame frame = new Frame.Builder().setBitmap(bmp).build();
         SparseArray<Face> sparseArray = faceDetector.detect(frame); // Detect all the faces
 
-        // Draw sunglasses on each faces
+        // Draw on each faces
         for (int i = 0; i < sparseArray.size(); i++) {
             Face face = sparseArray.valueAt(i);
             directLandmarks(face);
@@ -68,57 +66,50 @@ public class FaceDetection {
         return tmpBmp;
     }
 
+    /**
+     * Browse all the face landmarks and call functions to draw new eyes and new nose
+     * @param face The face to modify
+     */
     private void directLandmarks(Face face) {
-        for (Landmark landmark:face.getLandmarks()) {
+        for (Landmark landmark : face.getLandmarks()) {
             int cx = (int) (landmark.getPosition().x);
             int cy = (int) (landmark.getPosition().y);
-
-            if (landmark.getType() == Landmark.LEFT_EYE || landmark.getType() == Landmark.RIGHT_EYE) {
-                drawEye(cx, cy);
-            }
-
-            if (landmark.getType() == Landmark.LEFT_EAR || landmark.getType() == Landmark.RIGHT_EAR) {
-                drawEar(cx, cy);
-            }
+            // scaleWidth and scaleHeight to scale the bitmaps to the face size
+            int scaleWidth = eye.getScaledWidth((int) face.getWidth()/4);
+            int scaleHeight = eye.getScaledHeight((int) face.getWidth()/4);
 
             if (landmark.getType() == Landmark.NOSE_BASE) {
-                drawNose(cx, cy);
+                drawNose(cx, cy, scaleWidth, scaleHeight);
+            }
+
+            if (landmark.getType() == Landmark.LEFT_EYE || landmark.getType() == Landmark.RIGHT_EYE) {
+                drawEye(cx, cy, scaleWidth, scaleHeight);
             }
         }
     }
 
     /**
-     * To trick the face with new eyes
-     *
+     * Draw green eyes
+     * @param cx Eye x coordinate
+     * @param cy Eye y coordinate
+     * @param scaleWidth scaleWidth for the scaled nose bitmap
+     * @param scaleHeight scaleHeight for the scaled nose bitmap
      */
-    private void drawEye(int cx, int cy) {
-            /*float x1 = face.getPosition().x;
-            float y1 = face.getPosition().y;
-            float x2 = x1 + face.getWidth();
-            float y2 = y1 + face.getHeight();
-            RectF rectF = new RectF(x1, y1, x2, y2);
-
-            canvas.drawBitmap(sunglasses, null, rectF, null);*/
-            int scaleHeight = eye.getScaledHeight(canvas);
-            canvas.drawBitmap(eye, cx - eye.getWidth()/2, cy - eye.getHeight()/2, null);
+    private void drawEye(int cx, int cy, int scaleWidth, int scaleHeight) {
+        Bitmap scaledEye = Bitmap.createScaledBitmap(eye, scaleWidth, scaleHeight, true);
+        canvas.drawBitmap(scaledEye, cx - scaleWidth / 2, cy - scaleHeight / 2, null);
     }
 
     /**
-     * To trick the face with new ears
-     *
+     * Draw clown nose
+     * @param cx Nose x coordinate
+     * @param cy Nose y coordinate
+     * @param scaleWidth scaleWidth for the scaled nose bitmap
+     * @param scaleHeight scaleHeight for the scaled nose bitmap
      */
-    private void drawEar(int cx, int cy) {
-        int scaleHeight = ear.getScaledHeight(canvas);
-        canvas.drawBitmap(ear, cx - ear.getWidth()/2, cy - ear.getHeight()/2, null);
-    }
-
-    /**
-     * To trick the face with new nose
-     *
-     */
-    private void drawNose(int cx, int cy) {
-        int scaleHeight = nose.getScaledHeight(canvas);
-        canvas.drawBitmap(nose, cx - nose.getWidth()/2, cy - nose.getHeight()/2, null);
+    private void drawNose(int cx, int cy, int scaleWidth, int scaleHeight) {
+        Bitmap scaledNose = Bitmap.createScaledBitmap(nose, scaleWidth, scaleHeight, true);
+        canvas.drawBitmap(scaledNose, cx - scaleWidth / 2, cy - scaleHeight / 2, null);
     }
 
 
