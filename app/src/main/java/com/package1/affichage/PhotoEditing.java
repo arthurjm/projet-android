@@ -267,10 +267,9 @@ public class PhotoEditing extends AppCompatActivity {
         if (dir.exists()) {
             dir.mkdirs();
         }
-
         final String path = insertImage(getContentResolver(), bmp, System.currentTimeMillis() + "_profile.jpg");
         ConstraintLayout test = findViewById(R.id.applyFilter);
-        Snackbar snackbar = Snackbar.make(test, "Image sauvegardée dans la galerie !", Snackbar.LENGTH_LONG).setAction("OPEN", new View.OnClickListener() {
+        Snackbar snackbar = Snackbar.make(test, "Image sauvegardée dans la galerie !", Snackbar.LENGTH_LONG).setAction("OUVRIR", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 openImage(path);
@@ -408,8 +407,6 @@ public class PhotoEditing extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.i("CV", "onResume()");
-        // reset color at black
-        nightMode = false;
     }
 
     @Override

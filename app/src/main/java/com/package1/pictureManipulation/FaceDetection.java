@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.RectF;
 import android.util.SparseArray;
 
 import com.google.android.gms.vision.Frame;
@@ -21,9 +20,9 @@ import com.package1.R;
  */
 public class FaceDetection {
 
-    private Bitmap eye;
-    private Bitmap nose;
-    private FaceDetector faceDetector;
+    private final Bitmap eye;
+    private final Bitmap nose;
+    private final FaceDetector faceDetector;
     private Canvas canvas;
 
     /**
@@ -97,7 +96,7 @@ public class FaceDetection {
      */
     private void drawEye(int cx, int cy, int scaleWidth, int scaleHeight) {
         Bitmap scaledEye = Bitmap.createScaledBitmap(eye, scaleWidth, scaleHeight, true);
-        canvas.drawBitmap(scaledEye, cx - scaleWidth / 2, cy - scaleHeight / 2, null);
+        canvas.drawBitmap(scaledEye, cx - (scaleWidth >> 1), cy - (scaleHeight >> 1), null);
     }
 
     /**
@@ -109,7 +108,7 @@ public class FaceDetection {
      */
     private void drawNose(int cx, int cy, int scaleWidth, int scaleHeight) {
         Bitmap scaledNose = Bitmap.createScaledBitmap(nose, scaleWidth, scaleHeight, true);
-        canvas.drawBitmap(scaledNose, cx - scaleWidth / 2, cy - scaleHeight / 2, null);
+        canvas.drawBitmap(scaledNose, cx - (scaleWidth >> 1), cy - (scaleHeight >> 1), null);
     }
 
 
